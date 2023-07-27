@@ -1,7 +1,7 @@
 <template>
   <v-app>
-    <PageHeader style="z-index: 1000;"/>
-    <router-view/>
+    <PageHeader style="z-index: 1000;" :key="$route.fullPath"/>
+    <router-view :key="$route.fullPath"/>
     <PageFooter/>
   </v-app>
 </template>

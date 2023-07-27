@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <v-app>
     <v-carousel
       cycle
       height="400"
@@ -17,19 +17,19 @@
 
         <v-row>
           <v-col cols="6" md="2" offset="2">
-            <v-card class="mx-auto rounded-0" width="300" height="1350" flat style="border-right:1px solid #eee;">
+            <v-card class="mx-auto rounded-0" width="300" height="1300" flat style="border-right:1px solid #eee;">
               <v-img src="https://cdn.vuetifyjs.com/images/lists/ali.png" height="300px" style="border-right:1px solid #eee;">
               <v-row class="fill-height">
                 <v-card-title class="white--text pl-12 pt-12">
                   <div class="text-h4 pl-5 pt-15">
-                    Ali Conners
+                    test
                   </div>
                 </v-card-title>
               </v-row>
             </v-img> 
             <v-list>
               <v-list-item>
-                <v-btn class="pa-7 ma-2 rounded-0" width="250" color="primary" style="font-size: 25px;">
+                <v-btn class="pa-7 ma-2 rounded-0" width="" color="primary" style="font-size: 22px;">
                   <v-icon left size="25">
                     mdi-pencil
                   </v-icon>
@@ -81,7 +81,7 @@
             <v-toolbar flat style="border-bottom: 3px solid #eee;">
               <v-toolbar-title style="font-weight: bold; font-size: 18px;">주요소식</v-toolbar-title>
               <v-spacer></v-spacer>
-              <ul style="list-style-type: none; position: absolute; bottom: 20px; left:89%; transform: translate(-50%, 0%);">
+              <ul style="list-style-type: none; position: absolute; width: 120px; bottom: 20px; left:88%; transform: translate(-50%, 0%);">
                 <li>
                   <btn
                     color="grey darken-4"
@@ -104,7 +104,7 @@
                   </btn>
                 </li>
               </ul>
-              <v-btn icon>
+              <v-btn icon @click="$router.push('/notice/detail')">
                 <v-icon>mdi-view-module</v-icon>
               </v-btn>
             </v-toolbar>
@@ -131,7 +131,7 @@
             <v-toolbar flat style="border-bottom: 3px solid #eee;">
               <v-toolbar-title style="font-weight: bold; font-size: 18px;">공지사항</v-toolbar-title>
               <v-spacer></v-spacer>
-              <ul style="list-style-type: none; position: absolute; bottom: 20px; left:89%; transform: translate(-50%, 0%);">
+              <ul style="list-style-type: none; position: absolute; width: 120px; bottom: 20px; left:88%; transform: translate(-50%, 0%);">
                 <li>
                   <btn
                     color="grey darken-4"
@@ -154,7 +154,7 @@
                   </btn>
                 </li>
               </ul>
-              <v-btn icon>
+              <v-btn icon @click="$router.push('/notice/detail')">
                 <v-icon>mdi-view-module</v-icon>
               </v-btn>
             </v-toolbar>
@@ -182,7 +182,7 @@
               <!-- <v-btn icon>
                 <v-icon>mdi-magnify</v-icon>
               </v-btn> -->
-              <ul style="list-style-type: none; position: absolute; bottom: 20px; left:89%; transform: translate(-50%, 0%);">
+              <ul style="list-style-type: none; position: absolute; width: 120px; bottom: 20px; left:88%; transform: translate(-50%, 0%);">
                 <li>
                   <btn
                     color="grey darken-4"
@@ -205,7 +205,7 @@
                   </btn>
                 </li>
               </ul>
-              <v-btn icon>
+              <v-btn icon @click="$router.push('/notice/detail')">
                 <v-icon>mdi-view-module</v-icon>
               </v-btn>
             </v-toolbar>
@@ -227,7 +227,7 @@
         </v-col>       
       </v-row>
 
-  </div>
+  </v-app>
 </template>
 
 <script>

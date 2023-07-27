@@ -1,4 +1,5 @@
 import HomeView from '@/views/HomeView.vue'
+import NoticeView from '@/views/NoticeView.vue'
 import Vue from 'vue'
 import VueRouter from 'vue-router'
 
@@ -15,11 +16,15 @@ const routes = [
     name: 'home',
     component: HomeView
   },
-
   {
     path: '/about',
     name: 'about',
     component: () => import(/* webpackChunkName: "about" */ '../views/AboutView.vue')
+  },
+  {
+    path: '/notice/detail',
+    name: 'notice',
+    component: NoticeView
   }
 ]
 
