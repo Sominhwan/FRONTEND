@@ -14,27 +14,26 @@
         </v-sheet>
       </v-carousel-item>
     </v-carousel>
-
         <v-row>
           <v-col cols="6" md="2" offset="2">
             <v-card class="mx-auto rounded-0" width="300" height="1300" flat style="border-right:1px solid #eee;">
               <v-img src="https://cdn.vuetifyjs.com/images/lists/ali.png" height="300px" style="border-right:1px solid #eee;">
               <v-row class="fill-height">
                 <v-card-title class="white--text pl-12 pt-12">
-                  <div class="text-h4 pl-5 pt-15">
+                  <!-- <div class="text-h4 pl-5 pt-15" style="margin:auto">
                     test
-                  </div>
+                  </div> -->
                 </v-card-title>
               </v-row>
             </v-img> 
             <v-list>
-              <v-list-item>
-                <v-btn class="pa-7 ma-2 rounded-0" width="" color="primary" style="font-size: 22px;">
-                  <v-icon left size="25">
+              <v-list-item class="write-btn ma-3 pa-2" @click="$router.push({name: 'notice'})" style="background-color: #2889f1;">
+                <div style="display: flex; margin: auto;">
+                  <v-icon left size="25" color="white">
                     mdi-pencil
-                  </v-icon>
-                  글 쓰기
-                </v-btn>     
+                  </v-icon> 
+                  <v-list-item-title style="font-size: 20px; color: white; font-weight: bold;">글 쓰기</v-list-item-title> 
+                </div>                 
               </v-list-item>
               <v-list-item>
                 <v-list-item-icon>
@@ -83,7 +82,7 @@
               <v-spacer></v-spacer>
               <ul style="list-style-type: none; position: absolute; width: 120px; bottom: 20px; left:88%; transform: translate(-50%, 0%);">
                 <li>
-                  <btn
+                  <!-- <btn
                     color="grey darken-4"
                     large
                     plain
@@ -101,10 +100,10 @@
                     @click="nextPage"
                   >
                   〉
-                  </btn>
+                  </btn> -->
                 </li>
               </ul>
-              <v-btn icon @click="$router.push('/notice/detail')">
+              <v-btn icon @click="$router.push({name: 'notice'})">
                 <v-icon>mdi-view-module</v-icon>
               </v-btn>
             </v-toolbar>
@@ -116,12 +115,12 @@
                   </v-icon>
                 </v-list-item-avatar>
                 <v-list-item-content>
-                  <v-list-item-title><v-text style="color: #2889f1; font-weight: bold; font-size: 16px; margin-right: 10px;">[진행 이벤트]</v-text>{{ folder.title }}</v-list-item-title>
-                  <v-list-item-subtitle><v-text style="font-size: 14px; margin-right: 30px;">GM사무국</v-text>{{ folder.subtitle }}</v-list-item-subtitle>
+                  <v-list-item-title><span style="color: #2889f1; font-weight: bold; font-size: 16px; margin-right: 10px;">[진행 이벤트]</span>{{ folder.title }}</v-list-item-title>
+                  <v-list-item-subtitle><span style="font-size: 14px; margin-right: 30px;">GM사무국</span>{{ folder.subtitle }}</v-list-item-subtitle>
                 </v-list-item-content>  
                   <v-icon color="orange lighten-1" style="margin-right: 20px;">mdi-information</v-icon>
                   <v-icon color="grey lignten-2">mdi-message-text</v-icon>
-                  <v-text style="position: relative; right: 15px; top: 20px; font-size: 13px; color: grey;">7</v-text>       
+                  <span style="position: relative; right: 15px; top: 20px; font-size: 13px; color: grey;">7</span>       
               </v-list-item>
               <v-divider></v-divider>        
               <v-subheader></v-subheader>
@@ -133,7 +132,7 @@
               <v-spacer></v-spacer>
               <ul style="list-style-type: none; position: absolute; width: 120px; bottom: 20px; left:88%; transform: translate(-50%, 0%);">
                 <li>
-                  <btn
+                  <!-- <btn
                     color="grey darken-4"
                     large
                     plain
@@ -151,10 +150,10 @@
                     @click="nextPage"
                   >
                   〉
-                  </btn>
+                  </btn> -->
                 </li>
               </ul>
-              <v-btn icon @click="$router.push('/notice/detail')">
+              <v-btn icon @click="$router.push({name: 'notice'})">
                 <v-icon>mdi-view-module</v-icon>
               </v-btn>
             </v-toolbar>
@@ -164,12 +163,12 @@
                   <v-icon :class="file.color" dark>{{ file.icon }}</v-icon>
                 </v-list-item-avatar>
                 <v-list-item-content>
-                  <v-list-item-title><v-text style="color: #2889f1; font-weight: bold; font-size: 16px; margin-right: 10px;">[공지사항]</v-text>{{ file.title }}</v-list-item-title>
-                  <v-list-item-subtitle><v-text style="font-size: 14px; margin-right: 30px;">GM사무국</v-text>{{ file.subtitle }}</v-list-item-subtitle>
+                  <v-list-item-title><span style="color: #2889f1; font-weight: bold; font-size: 16px; margin-right: 10px;">[공지사항]</span>{{ file.title }}</v-list-item-title>
+                  <v-list-item-subtitle><span style="font-size: 14px; margin-right: 30px;">GM사무국</span>{{ file.subtitle }}</v-list-item-subtitle>
                 </v-list-item-content>
                   <v-icon color="grey lighten-1" style="margin-right: 20px;">mdi-information</v-icon>
                   <v-icon color="grey lignten-2">mdi-message-text</v-icon>
-                  <v-text style="position: relative; right: 15px; top: 20px; font-size: 13px; color: grey;">7</v-text>   
+                  <span style="position: relative; right: 15px; top: 20px; font-size: 13px; color: grey;">7</span>   
               </v-list-item>
               <v-divider></v-divider>
               <v-subheader></v-subheader>
@@ -184,7 +183,7 @@
               </v-btn> -->
               <ul style="list-style-type: none; position: absolute; width: 120px; bottom: 20px; left:88%; transform: translate(-50%, 0%);">
                 <li>
-                  <btn
+                  <!-- <btn
                     color="grey darken-4"
                     large
                     plain
@@ -202,10 +201,10 @@
                     @click="nextPage"
                   >
                   〉
-                  </btn>
+                  </btn> -->
                 </li>
               </ul>
-              <v-btn icon @click="$router.push('/notice/detail')">
+              <v-btn icon @click="$router.push({name: 'notice'})">
                 <v-icon>mdi-view-module</v-icon>
               </v-btn>
             </v-toolbar>
@@ -216,10 +215,12 @@
                 </v-list-item-avatar>
                 <v-list-item-content>
                   <v-list-item-title>{{ file.title }}</v-list-item-title>
-                  <v-list-item-subtitle><v-text style="font-size: 14px; margin-right: 30px;">홍길동</v-text>{{ file.subtitle }}</v-list-item-subtitle>
+                  <v-list-item-subtitle><span style="font-size: 14px; margin-right: 30px;">홍길동</span>{{ file.subtitle }}</v-list-item-subtitle>
                 </v-list-item-content>
+                  <v-icon color="primary" style="margin-right: 20px;">mdi-thumb-up</v-icon>
+                  <span style="position: relative; right: 35px; top: 20px; font-size: 13px; color: grey;">7</span>   
                   <v-icon color="grey lignten-2">mdi-message-text</v-icon>
-                  <v-text style="position: relative; right: 15px; top: 20px; font-size: 13px; color: grey;">7</v-text>   
+                  <span style="position: relative; right: 15px; top: 20px; font-size: 13px; color: grey;">7</span>   
               </v-list-item>
               <v-divider></v-divider>
             </v-list>
@@ -277,19 +278,19 @@
           color: 'amber',
           icon: 'mdi-gesture-tap-button',
           subtitle: '2023.01.01 23:13',
-          title: 'Kitchen remodel',
+          title: 'Kitchen2 remodel',
         },
         {
           color: 'amber',
           icon: 'mdi-gesture-tap-button',
           subtitle: '2023.01.01 23:13',
-          title: 'Kitchen remodel',
+          title: 'Kitchen3 remodel',
         },
         {
           color: 'amber',
           icon: 'mdi-gesture-tap-button',
           subtitle: '2023.01.01 23:13',
-          title: 'Kitchen remodel',
+          title: 'Kitchen4 remodel',
         },
       ],
       folders: [
@@ -307,11 +308,11 @@
         },
         {
           subtitle: '2023.01.01 23:13',
-          title: 'Work',
+          title: 'Work2',
         },
         {
           subtitle: '2023.01.01 23:13',
-          title: 'Work',
+          title: 'Work3',
         },
       ],  
       }
@@ -319,5 +320,7 @@
   }
 </script>
 <style scoped>
-
+  .write-btn{
+    cursor: pointer;
+  }
 </style>

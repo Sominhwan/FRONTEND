@@ -41,8 +41,8 @@
 
             <v-spacer></v-spacer>
                 <v-sheet class="search-box" height="50" width="250">
-                    <v-text-field class="search-input" flat hide-details solo label="검색" prepend-inner-icon="mdi-magnify"></v-text-field>
-                </v-sheet>                    
+                 <v-text-field class="search-input" flat hide-details solo label="검색" prepend-inner-icon="mdi-magnify"></v-text-field>
+                </v-sheet>                       
             <!-- <v-btn icon>
                 <v-icon>mdi-magnify</v-icon>
             </v-btn> -->         
