@@ -2,7 +2,7 @@
     <v-app>
         <v-row>
         <v-col cols="6" md="2" offset="2">
-            <v-card class="mx-auto rounded-0" width="300" height="1300" flat style="border-right:1px solid #eee;">
+            <v-card class="mx-auto rounded-0" width="300" height="1470" flat style="border-right:1px solid #eee;">
               <v-img src="https://cdn.vuetifyjs.com/images/lists/ali.png" height="300px" style="border-right:1px solid #eee;">
               <v-row class="fill-height">
                 <v-card-title class="white--text pl-12 pt-12">
@@ -61,24 +61,38 @@
               </v-list>
             </v-card>
         </v-col>
-        <v-col cols="6" md="5" offset="0" style="position: relative; top: 50px;">
+        <v-col cols="6" md="5" offset="0" style="position: relative; top: 40px;">
+
+          <v-carousel
+            :continuous="false"
+            :cycle="cycle"
+            :show-arrows="false"
+            hide-delimiter-background
+            delimiter-icon="mdi-minus"
+            height="275"
+            style="margin-bottom: 15px;"
+          >
+            <v-carousel-item v-for="(slide, i) in slides" :key="i">
+              <v-sheet :color="colors[i]" height="100%" tile>
+                <v-row class="fill-height" align="center" justify="center">
+                  <div class="text-h2">{{ slide }} Slide</div>
+                </v-row>
+              </v-sheet>
+            </v-carousel-item>
+          </v-carousel>
+
+          <v-card class="d-flex" color="" flat tile style="border-bottom: 1px solid #eee;"> 
+              <v-col class="pa-2 mr-auto" cols="6" sm="2" style="position: relative;">
+                <v-select v-select class="rounded-0" :items="items" on="5" label="정렬" solo flat outlined dense></v-select>
+              </v-col>
+              <v-col class="pa-2" cols="12" sm="2" outlined tile>
+                <v-select v-select class="rounded-0" :items="items" label="정렬" solo flat outlined dense></v-select>
+              </v-col>
+              <v-col class="pa-2" cols="12" sm="3">
+                <v-text-field class="search-input rounded-0" flat hide-details solo dense label="검색" prepend-inner-icon="mdi-magnify"></v-text-field>
+              </v-col>
+            </v-card>
           <v-card class="rounded-0" flat>
-            <v-toolbar flat style="border-bottom: 3px solid #eee;">
-           
-                <v-col class="" cols="6" sm="2" style="position: relative; right: 30px;">
-                    <v-select v-select class="rounded-0" :items="items" label="정렬" solo></v-select>
-                </v-col>
-                
-                <v-col class="ml-auto" cols="12" sm="2" style="position: relative; right: 30px;">
-                    <v-select v-select class="rounded-0" :items="items" label="정렬" solo></v-select>
-                </v-col>
-                <v-col class="ml-auto" cols="12" sm="3" style="position: relative; left: 25px; bottom: 15px;">
-                
-                <v-text-field class="search-input rounded-0" flat hide-details solo label="검색" prepend-inner-icon="mdi-magnify"></v-text-field>
-                
-                </v-col>
-              
-            </v-toolbar>
             <v-list>
               <v-list-item v-for="folder in folders" :key="folder.title">
                 <v-list-item-avatar>
@@ -87,7 +101,7 @@
                   </v-icon>
                 </v-list-item-avatar>
                 <v-list-item-content>
-                  <v-list-item-title><span style="color: #2889f1; font-weight: bold; font-size: 16px; margin-right: 10px;">[진행 이벤트]</span>{{ folder.title }}</v-list-item-title>
+                  <v-list-item-title><span style="color: #2889f1; font-weight: bold; font-size: 16px; margin-right: 10px;">[진행 이벤트]</span><span class="notice-title">{{ folder.title }}</span></v-list-item-title>
                   <v-list-item-subtitle><span style="font-size: 14px; margin-right: 30px;">GM사무국</span>{{ folder.subtitle }}</v-list-item-subtitle>
                 </v-list-item-content>  
                   <v-icon color="orange lighten-1" style="margin-right: 20px;">mdi-information</v-icon>
@@ -111,6 +125,21 @@ export default {
     data () {
         return {
             page: 1,
+            colors: [
+          'green',
+          'secondary',
+          'yellow darken-4',
+          'red lighten-2',
+          'orange darken-1',
+        ],
+        cycle: false,
+        slides: [
+          'First',
+          'Second',
+          'Third',
+          'Fourth',
+          'Fifth',
+        ],
             items: ['Foo', 'Bar', 'Fizz', 'Buzz'],
             cruds: [
                 ['Create', 'mdi-plus-outline'],
@@ -185,8 +214,14 @@ export default {
 }
 </script>
 <style scoped>
- .search-input {
-        border-radius: 5px;
-        border: 1px solid #eee;
+    .search-input {
+      border: 1px solid #9E9E9E;
+    }
+
+    .notice-title {
+      cursor: pointer;
+    }
+    .notice-title:hover {
+      text-decoration: underline;
     }
 </style>
