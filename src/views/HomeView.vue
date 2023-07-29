@@ -27,7 +27,7 @@
               </v-row>
             </v-img> 
             <v-list>
-              <v-list-item class="write-btn ma-3 pa-2" @click="$router.push({name: 'notice'})" style="background-color: #2889f1;">
+              <v-list-item class="write-btn ma-3 pa-2" @click="$router.push({name: 'write'})" style="background-color: #2889f1;">
                 <div style="display: flex; margin: auto;">
                   <v-icon left size="25" color="white">
                     mdi-pencil
@@ -119,6 +119,8 @@
                   <v-list-item-subtitle><span style="font-size: 14px; margin-right: 30px;">GM사무국</span>{{ folder.subtitle }}</v-list-item-subtitle>
                 </v-list-item-content>  
                   <v-icon color="orange lighten-1" style="margin-right: 20px;">mdi-information</v-icon>
+                  <v-icon color="primary" style="margin-right: 20px;">mdi-thumb-up</v-icon>
+                  <span style="position: relative; right: 35px; top: 20px; font-size: 13px; color: grey;">7</span> 
                   <v-icon color="grey lignten-2">mdi-message-text</v-icon>
                   <span style="position: relative; right: 15px; top: 20px; font-size: 13px; color: grey;">7</span>       
               </v-list-item>
@@ -167,6 +169,8 @@
                   <v-list-item-subtitle><span style="font-size: 14px; margin-right: 30px;">GM사무국</span>{{ file.subtitle }}</v-list-item-subtitle>
                 </v-list-item-content>
                   <v-icon color="grey lighten-1" style="margin-right: 20px;">mdi-information</v-icon>
+                  <v-icon color="primary" style="margin-right: 20px;">mdi-thumb-up</v-icon>
+                  <span style="position: relative; right: 35px; top: 20px; font-size: 13px; color: grey;">7</span> 
                   <v-icon color="grey lignten-2">mdi-message-text</v-icon>
                   <span style="position: relative; right: 15px; top: 20px; font-size: 13px; color: grey;">7</span>   
               </v-list-item>

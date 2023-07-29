@@ -1,3 +1,4 @@
+import BoardWriteView from '@/views/BoardWriteView.vue'
 import HomeView from '@/views/HomeView.vue'
 import NoticeView from '@/views/NoticeView.vue'
 import Vue from 'vue'
@@ -25,6 +26,11 @@ const routes = [
     path: '/notice/detail',
     name: 'notice',
     component: NoticeView
+  },
+  {
+    path: '/board/write',
+    name: 'write',
+    component: BoardWriteView
   }
 ]
 

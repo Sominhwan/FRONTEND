@@ -62,37 +62,20 @@
             </v-card>
         </v-col>
         <v-col cols="6" md="5" offset="0" style="position: relative; top: 40px;">
-
-          <v-carousel
-            :continuous="false"
-            :cycle="cycle"
-            :show-arrows="false"
-            hide-delimiter-background
-            delimiter-icon="mdi-minus"
-            height="275"
-            style="margin-bottom: 15px;"
-          >
-            <v-carousel-item v-for="(slide, i) in slides" :key="i">
-              <v-sheet :color="colors[i]" height="100%" tile>
-                <v-row class="fill-height" align="center" justify="center">
-                  <div class="text-h2">{{ slide }} Slide</div>
-                </v-row>
-              </v-sheet>
-            </v-carousel-item>
-          </v-carousel>
-
-          <v-card class="d-flex" color="" flat tile style="border-bottom: 1px solid #eee;"> 
-              <v-col class="pa-2 mr-auto" cols="6" sm="2" style="position: relative;">
+          <v-card class="d-flex" flat tile > 
+            <v-row>
+              <v-col class="pa-2 mr-auto" cols="12" style="position: relative;">
                 <v-select v-select class="rounded-0" :items="items" v-model="items_select" hide-details solo flat outlined dense></v-select>
               </v-col>
-              <v-col class="pa-2" cols="12" sm="2" outlined tile>
-                <v-select v-select class="rounded-0" :items="search_items" v-model="search_items_select" hide-details solo flat outlined dense></v-select>
+              <v-col class="pa-2 mr-auto" cols="12" sm="2" style="position: relative;">
+                <v-select v-select class="rounded-0" :items="brackets" v-model="brackets_select" hide-details solo flat outlined dense></v-select>
               </v-col>
-              <v-col class="pa-2" cols="12" sm="3">
-                <v-text-field class="search-input rounded-0" flat hide-details solo dense label="검색" prepend-inner-icon="mdi-magnify"></v-text-field>
+              <v-col class="pa-2" cols="12" sm="10">
+                <v-text-field class="search-input rounded-0" maxlength="50" flat hide-details solo dense label="제목" v-model="title"></v-text-field>
               </v-col>
-            </v-card>
-          <v-card class="rounded-0" flat>
+            </v-row>
+          </v-card>
+          <!-- <v-card class="rounded-0" flat>
             <v-list>
               <v-list-item v-for="folder in folders" :key="folder.title">
                 <v-list-item-avatar>
@@ -112,10 +95,18 @@
               </v-list-item>
               <v-divider></v-divider>      
             </v-list>
-          </v-card>   
-        <div class="text-center ma-5">
-            <v-pagination v-model="page" :length="5"></v-pagination>
-        </div>              
+          </v-card>    -->
+          <v-card height="590" style="top: 20px;" flat>
+            <vue-editor v-model="content" :placeholder="placeholder" style="height: 500px;"></vue-editor>
+          </v-card>
+          <v-card class="d-flex justify-center" flat>
+            <v-card class="pa-2" flat>
+              <v-btn class="rounded-0" outlined color="grey">취소</v-btn>
+            </v-card>
+            <v-card class="pa-2" flat>
+              <v-btn class="rounded-0" outlined color="primary" @click="write()">작성하기</v-btn>
+            </v-card>
+          </v-card>
         </v-col> 
         
     </v-row>
@@ -123,110 +114,73 @@
 </template>
 
 <script>
+import { VueEditor } from "vue2-editor";
 export default {
-    data () {
+    data() {
         return {
-            page: 1,
-            colors: [
-              'green',
-              'secondary',
-              'yellow darken-4',
-              'red lighten-2',
-              'orange darken-1',
-            ],
-            cycle: false,
-            slides: [
-              'First',
-              'Second',
-              'Third',
-              'Fourth',
-              'Fifth',
-            ],
-            items_select : '최신글순',
-            items: ['최신글순', '많은댓글순', '좋아요순'],
-            search_items: ['제목', '글 작성자'],
-            search_items_select: '제목',
+            items_select : '자유게시판',
+            items: ['자유게시판', '공지사항', '주요소식'],
+            brackets: ['진행 이벤트', '업데이트', '공지사항'],
+            brackets_select: '진행 이벤트',
             cruds: [
                 ['Create', 'mdi-plus-outline'],
                 ['Read', 'mdi-file-outline'],
                 ['Update', 'mdi-update'],
                 ['Delete', 'mdi-delete'],
             ],
-            folders: [
-                {
-                subtitle: '2023.01.01 23:13',
-                title: 'Photos',
-                },
-                {
-                subtitle: '2023.01.01 23:13',
-                title: 'Recipes',
-                },
-                {
-                subtitle: '2023.01.01 23:13',
-                title: 'Work',
-                },
-                {
-                subtitle: '2023.01.01 23:13',
-                title: 'Work2',
-                },
-                {
-                subtitle: '2023.01.01 23:13',
-                title: 'Work3',
-                },
-                {
-                subtitle: '2023.01.01 23:13',
-                title: 'Work4',
-                },
-                {
-                subtitle: '2023.01.01 23:13',
-                title: 'Work5',
-                },
-                {
-                subtitle: '2023.01.01 23:13',
-                title: 'Work6',
-                },
-                {
-                subtitle: '2023.01.01 23:13',
-                title: 'Work7',
-                },
-                {
-                subtitle: '2023.01.01 23:13',
-                title: 'Work8',
-                },
-                {
-                subtitle: '2023.01.01 23:13',
-                title: 'Work9',
-                },
-                {
-                subtitle: '2023.01.01 23:13',
-                title: 'Work10',
-                },
-                {
-                subtitle: '2023.01.01 23:13',
-                title: 'Work11',
-                },
-                {
-                subtitle: '2023.01.01 23:13',
-                title: 'Work12',
-                },
-                {
-                subtitle: '2023.01.01 23:13',
-                title: 'Work13',
-                },
-            ],  
+            title: "",
+            content: "",
+                    
         }
+    },
+    components: {
+      VueEditor
+    },
+    props: {
+      id: {
+        type: String,
+        default: "quill-container"
+      },
+      placeholder: {
+        type: String,
+        default: "내용을 입력해주세요"
+      },
+      value: {
+        type: String,
+        default: ""
+      },
+      disabled: {
+        type: Boolean
+      },
+      editorToolbar: {
+        type: Array,
+        default: () => []
+      },
+      editorOptions: {
+        type: Object,
+        required: false,
+        default: () => ({})
+      },
+      useCustomImageHandler: {
+        type: Boolean,
+        default: false
+      },
+      useMarkdownShortcuts: {
+        type: Boolean,
+        default: false
+      }
+    },
+    methods: {
+      write(){
+        alert(this.content);
+        alert(this.title);
+      }
     }
 }
 </script>
+
 <style scoped>
     .search-input {
-      border: 1px solid #9E9E9E;
-    }
-
-    .notice-title {
-      cursor: pointer;
-    }
-    .notice-title:hover {
-      text-decoration: underline;
+      /* border: 1px solid #9E9E9E; */
     }
 </style>
