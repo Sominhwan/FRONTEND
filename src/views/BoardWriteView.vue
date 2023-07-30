@@ -75,27 +75,6 @@
               </v-col>
             </v-row>
           </v-card>
-          <!-- <v-card class="rounded-0" flat>
-            <v-list>
-              <v-list-item v-for="folder in folders" :key="folder.title">
-                <v-list-item-avatar>
-                  <v-icon class="grey lighten-1" dark>
-                    mdi-folder
-                  </v-icon>
-                </v-list-item-avatar>
-                <v-list-item-content>
-                  <v-list-item-title><span style="color: #2889f1; font-weight: bold; font-size: 16px; margin-right: 10px;">[진행 이벤트]</span><span class="notice-title">{{ folder.title }}</span></v-list-item-title>
-                  <v-list-item-subtitle><span style="font-size: 14px; margin-right: 30px;">GM사무국</span>{{ folder.subtitle }}</v-list-item-subtitle>
-                </v-list-item-content>  
-                  <v-icon color="orange lighten-1" style="margin-right: 20px;">mdi-information</v-icon>
-                  <v-icon color="primary" style="margin-right: 20px;">mdi-thumb-up</v-icon>
-                  <span style="position: relative; right: 35px; top: 20px; font-size: 13px; color: grey;">7</span> 
-                  <v-icon color="grey lignten-2">mdi-message-text</v-icon>
-                  <span style="position: relative; right: 15px; top: 20px; font-size: 13px; color: grey;">7</span>       
-              </v-list-item>
-              <v-divider></v-divider>      
-            </v-list>
-          </v-card>    -->
           <v-card height="590" style="top: 20px;" flat>
             <vue-editor v-model="content" :placeholder="placeholder" style="height: 500px;"></vue-editor>
           </v-card>
@@ -114,6 +93,7 @@
 </template>
 
 <script>
+import { insertNoticeBoard } from "@/api/noticeBoard/noticeBoard";
 import { VueEditor } from "vue2-editor";
 export default {
     data() {
@@ -129,8 +109,7 @@ export default {
                 ['Delete', 'mdi-delete'],
             ],
             title: "",
-            content: "",
-                    
+            content: "",              
         }
     },
     components: {
@@ -171,9 +150,25 @@ export default {
       }
     },
     methods: {
-      write(){
-        alert(this.content);
-        alert(this.title);
+      write(){      
+        const data = { title: this.title, writer: "민환", content: this.content}
+        if(this.items_select === "자유게시판") {
+          insertNoticeBoard(data)
+            .then((res) => {
+                console.log(res.data)
+            })
+            .catch((error) => {
+              console.log(error)
+            })
+            .finally(() => {
+
+            })
+        } else if(this.items_select === "공지사항") {
+          alert("공지사항")
+        } else if(this.items_select === "주요소식") {
+          alert("주요소식")
+        }
+
       }
     }
 }
