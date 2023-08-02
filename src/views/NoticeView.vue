@@ -123,10 +123,10 @@
 </template>
 
 <script>
+import { searchNoticeBoard } from "@/api/noticeBoard/noticeBoard";
 export default {
     data () {
         return {
-            page: 1,
             colors: [
               'green',
               'secondary',
@@ -215,6 +215,25 @@ export default {
                 },
             ],  
         }
+    },
+    mounted() {
+      console.log(this.$route.query.id),
+      this.search() // 공지사항 페이지 시작시 데이터 불러옴
+      
+    },
+    methods: {
+      search(){    
+        searchNoticeBoard(this.$route.query.id)
+          .then((res) => {
+            console.log(res.data)
+          })
+          .catch((error) => {
+            console.log(error)
+          })
+          .finally(() => {
+
+          })
+      }
     }
 }
 </script>

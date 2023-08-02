@@ -25,6 +25,7 @@ const routes = [
   {
     path: '/notice/detail',
     name: 'notice',
+
     component: NoticeView
   },
   {

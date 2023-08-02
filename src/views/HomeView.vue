@@ -155,7 +155,7 @@
                   </btn> -->
                 </li>
               </ul>
-              <v-btn icon @click="$router.push({name: 'notice'})">
+              <v-btn icon @click="$router.push({name: 'notice', query: { id:1 }})">
                 <v-icon>mdi-view-module</v-icon>
               </v-btn>
             </v-toolbar>

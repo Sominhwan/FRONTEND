@@ -155,7 +155,7 @@ export default {
         if(this.items_select === "자유게시판") {
           insertNoticeBoard(data)
             .then((res) => {
-                console.log(res.data)
+              console.log(res.data)
             })
             .catch((error) => {
               console.log(error)
