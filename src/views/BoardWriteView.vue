@@ -155,7 +155,8 @@ export default {
         if(this.items_select === "자유게시판") {
           insertNoticeBoard(data)
             .then((res) => {
-              console.log(res.data)
+              console.log(res.data),
+              this.$router.replace({name: 'notice', query: { page:1 }})
             })
             .catch((error) => {
               console.log(error)

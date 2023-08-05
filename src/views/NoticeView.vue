@@ -2,7 +2,7 @@
     <v-app>
         <v-row>
         <v-col cols="6" md="2" offset="2">
-            <v-card class="mx-auto rounded-0" width="300" height="1470" flat style="border-right:1px solid #eee;">
+            <v-card class="mx-auto rounded-0" width="300" height="1380" flat style="border-right:1px solid #eee;">
               <v-img src="https://cdn.vuetifyjs.com/images/lists/ali.png" height="300px" style="border-right:1px solid #eee;">
               <v-row class="fill-height">
                 <v-card-title class="white--text pl-12 pt-12">
@@ -62,7 +62,6 @@
             </v-card>
         </v-col>
         <v-col cols="6" md="5" offset="0" style="position: relative; top: 40px;">
-
           <v-carousel
             :continuous="false"
             :cycle="cycle"
@@ -80,7 +79,6 @@
               </v-sheet>
             </v-carousel-item>
           </v-carousel>
-
           <v-card class="d-flex" color="" flat tile style="border-bottom: 1px solid #eee;"> 
               <v-col class="pa-2 mr-auto" cols="6" sm="2" style="position: relative;">
                 <v-select v-select class="rounded-0" :items="items" v-model="items_select" hide-details solo flat outlined dense></v-select>
@@ -92,41 +90,46 @@
                 <v-text-field class="search-input rounded-0" flat hide-details solo dense label="검색" prepend-inner-icon="mdi-magnify"></v-text-field>
               </v-col>
             </v-card>
+          <!-- 공지사항 목록 -->  
           <v-card class="rounded-0" flat>
             <v-list>
-              <v-list-item v-for="folder in folders" :key="folder.title">
+              <v-list-item v-for="(notice_board_list, idx) in notice_board_list" :key="idx">
                 <v-list-item-avatar>
                   <v-icon class="grey lighten-1" dark>
                     mdi-folder
                   </v-icon>
                 </v-list-item-avatar>
                 <v-list-item-content>
-                  <v-list-item-title><span style="color: #2889f1; font-weight: bold; font-size: 16px; margin-right: 10px;">[진행 이벤트]</span><span class="notice-title">{{ folder.title }}</span></v-list-item-title>
-                  <v-list-item-subtitle><span style="font-size: 14px; margin-right: 30px;">GM사무국</span>{{ folder.subtitle }}</v-list-item-subtitle>
+                  <v-list-item-title><span style="color: #2889f1; font-weight: bold; font-size: 16px; margin-right: 10px;">[진행 이벤트]</span><span class="notice-title">{{ notice_board_list.title }}</span></v-list-item-title>
+                  <v-list-item-subtitle><span style="font-size: 14px; margin-right: 30px;">{{ notice_board_list.writer }}</span>{{ notice_board_list.insertDate }}</v-list-item-subtitle>
                 </v-list-item-content>  
                   <v-icon color="orange lighten-1" style="margin-right: 20px;">mdi-information</v-icon>
                   <v-icon color="primary" style="margin-right: 20px;">mdi-thumb-up</v-icon>
-                  <span style="position: relative; right: 35px; top: 20px; font-size: 13px; color: grey;">7</span> 
+                  <span style="position: relative; right: 35px; top: 20px; font-size: 13px; color: grey;">{{ notice_board_list.likeCount }}</span> 
                   <v-icon color="grey lignten-2">mdi-message-text</v-icon>
-                  <span style="position: relative; right: 15px; top: 20px; font-size: 13px; color: grey;">7</span>       
+                  <span style="position: relative; right: 15px; top: 20px; font-size: 13px; color: grey;">{{ notice_board_list.commentCount }}</span>       
               </v-list-item>
               <v-divider></v-divider>      
             </v-list>
-          </v-card>   
-        <div class="text-center ma-5">
-            <v-pagination v-model="page" :length="5"></v-pagination>
-        </div>              
-        </v-col> 
-        
+          </v-card>               
+        </v-col>
+        <v-col cols="11" md="0" offset="1" style="position: relative; bottom: 40px;">
+          <div class="text-center ma-5">
+            <v-pagination v-model="page" :length="this.totalPage" @input="changePage()"></v-pagination>
+          </div>  
+        </v-col>
     </v-row>
     </v-app>
 </template>
 
 <script>
-import { searchNoticeBoard } from "@/api/noticeBoard/noticeBoard";
+import { selectNoticeBoard } from "@/api/noticeBoard/noticeBoard";
 export default {
     data () {
         return {
+            page: this.$route.query.page,
+            totalPage: 0,
+            notice_board_list: [],
             colors: [
               'green',
               'secondary',
@@ -152,87 +155,31 @@ export default {
                 ['Update', 'mdi-update'],
                 ['Delete', 'mdi-delete'],
             ],
-            folders: [
-                {
-                subtitle: '2023.01.01 23:13',
-                title: 'Photos',
-                },
-                {
-                subtitle: '2023.01.01 23:13',
-                title: 'Recipes',
-                },
-                {
-                subtitle: '2023.01.01 23:13',
-                title: 'Work',
-                },
-                {
-                subtitle: '2023.01.01 23:13',
-                title: 'Work2',
-                },
-                {
-                subtitle: '2023.01.01 23:13',
-                title: 'Work3',
-                },
-                {
-                subtitle: '2023.01.01 23:13',
-                title: 'Work4',
-                },
-                {
-                subtitle: '2023.01.01 23:13',
-                title: 'Work5',
-                },
-                {
-                subtitle: '2023.01.01 23:13',
-                title: 'Work6',
-                },
-                {
-                subtitle: '2023.01.01 23:13',
-                title: 'Work7',
-                },
-                {
-                subtitle: '2023.01.01 23:13',
-                title: 'Work8',
-                },
-                {
-                subtitle: '2023.01.01 23:13',
-                title: 'Work9',
-                },
-                {
-                subtitle: '2023.01.01 23:13',
-                title: 'Work10',
-                },
-                {
-                subtitle: '2023.01.01 23:13',
-                title: 'Work11',
-                },
-                {
-                subtitle: '2023.01.01 23:13',
-                title: 'Work12',
-                },
-                {
-                subtitle: '2023.01.01 23:13',
-                title: 'Work13',
-                },
-            ],  
         }
     },
+    beforeCreate() {
+      this.page = this.$route.query.page;
+    },
     mounted() {
-      console.log(this.$route.query.id),
-      this.search() // 공지사항 페이지 시작시 데이터 불러옴
-      
+      this.search(this.page) // 공지사항 페이지 시작시 데이터 불러옴
     },
     methods: {
-      search(){    
-        searchNoticeBoard(this.$route.query.id)
+      async search(curPage){    
+        await selectNoticeBoard(curPage)
           .then((res) => {
-            console.log(res.data)
+            history.pushState(null, null, 'detail?page='+this.page);
+            this.notice_board_list = res.data.data.noticeBoardList,
+            this.totalPage = res.data.data.totalPage
           })
           .catch((error) => {
-            console.log(error)
+            console.log(error);
           })
           .finally(() => {
 
           })
+      },
+      changePage(){
+        this.search(this.page)
       }
     }
 }
@@ -248,4 +195,5 @@ export default {
     .notice-title:hover {
       text-decoration: underline;
     }
+
 </style>

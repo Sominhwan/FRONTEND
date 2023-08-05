@@ -1,3 +1,4 @@
+import BoardView from '@/views/BoardDetailView.vue'
 import BoardWriteView from '@/views/BoardWriteView.vue'
 import HomeView from '@/views/HomeView.vue'
 import NoticeView from '@/views/NoticeView.vue'
@@ -32,11 +33,16 @@ const routes = [
     path: '/board/write',
     name: 'write',
     component: BoardWriteView
+  },
+  {
+    path: '/board_view',
+    name: 'boardView',
+    component: BoardView
   }
 ]
 
 const router = new VueRouter({
-  mode: '',
+  mode: 'history', // history 모드를 사용시 # 이 붙여서 url 중복이 허용되지 않음, hash 모드일 경우 # 이 붙여서 중복 허용가능
   base: process.env.BASE_URL,
   routes
 })
