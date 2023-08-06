@@ -79,59 +79,82 @@
                     </v-sheet>
                     </v-carousel-item>
                 </v-carousel>
-                <v-card width="1050" class="mx-auto">
+                <v-card width="1050" class="mx-auto" flat>
                     <v-col cols="12" sm="12" md="12">
-                        <div>sks,ddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddasdaddsadasds</div>
+                        <div class="board-detail-header">
+                            <h4>
+                                <span>[공지사항]</span>
+                            </h4>
+                            <h1>
+                                <div class="board-detail-title">제목입니다.</div>
+                            </h1>
+                            <v-list two-line>
+                                <v-list-item>
+                                    <v-list-item-avatar style="border: 1px solid #eee;">
+                                        <v-img :src="require('@/assets/boardDetail/igns_logo.png')"></v-img>
+                                    </v-list-item-avatar>
+                                    <v-list-item-content>
+                                        <v-list-title-title>민환이</v-list-title-title>
+                                        <v-list-item-subtitle style="position: relative; top: 2px;">2023.08.01</v-list-item-subtitle>
+                                    </v-list-item-content>
+                                </v-list-item>
+                            </v-list>
+                        </div>
+                        <div class="board-detail-content" style="min-height: 300px;">
+                            <div>컨텐츠 칸</div>
+                            <div>컨텐츠 칸</div>
+                            <div>컨텐츠 칸</div>
+                            <div>컨텐츠 칸</div>
+                            <div>컨텐츠 칸</div>
+                            <div>컨텐츠 칸</div>
+                        </div>
+                        <div class="like-btn text-center">
+                            <div v-if="like_btn">
+                            <v-btn class="ma-10" outlined rounded color="grey" @click="changeLikeBtn()">
+                                <v-icon color="primary">mdi-thumb-up</v-icon>
+                                <span style="position: relative; left: 5px;">10</span>
+                            </v-btn>
+                            </div>
+                            <div v-else>
+                            <v-btn class="ma-10" outlined rounded color="grey" @click="changeLikeBtn()">
+                                <v-icon color="grey">mdi-thumb-up</v-icon>
+                                <span style="position: relative; left: 5px;">10</span>
+                            </v-btn>
+                            </div>
+                        </div>
                     </v-col>
-                    <v-col cols="12" sm="12" md="12">
-                        <v-text-field
-                            prepend-icon="mdi-comment"
-                            color="indigo"
-                            outlined
-                            v-model="comment"
-                            clearable
-                            label="댓글을 입력해주세요"
-                            ref="comment"
-                            type="text"
-                            style="border-radius: 3px;"
-                            counter
-                            maxlength="100"
-                            height="90"
-                        >
-                        <template v-slot:append-outer>
-                            <v-menu v-model="menu" :close-on-content-click="false" :nudge-width="50" offset-y>
-                                <template v-slot:activator="{ on, attrs }">
-                                    <v-btn text color="indigo" style="height:20px" v-bind="attrs" v-on="on">
-                                        등록
-                                    </v-btn>
-                                </template>
-                                <v-card>
-                                    <v-list>
-                                        <v-list-item>
-                                            <v-list-item-content>
-                                                <v-text-field label="닉네임" outlined color="indigo" ref="nickName" v-model="nickName"></v-text-field>
-                                            </v-list-item-content>
-                                        </v-list-item>
-                                    </v-list>
-                                    <v-card-actions>
-                                        <v-spacer></v-spacer>
-                                        <v-btn text @click="menu = false">취소</v-btn>
-                                        <v-btn color="indigo" text @click="getIpAddress">올리기</v-btn>
-                                    </v-card-actions>
-                                </v-card>
-                            </v-menu>
-                        </template>
-                        </v-text-field>
+                    <v-col cols="12" sm="12" md="13">
+                        <v-subheader style="margin-left: 3px; margin-bottom: 5px; font-weight: bold;">댓글 <span style="color: #2889f1;">{{ commentTotal }}</span> 개</v-subheader>
+                        <v-row>
+                            <v-textarea
+                                class="comment-input rounded-0"
+                                prepend-icon="mdi-comment"
+                                color="grey"
+                                outlined
+                                v-model="comment"
+                                clearable
+                                label="댓글을 입력해주세요"
+                                ref="comment"
+                                type="text"
+                                counter
+                                no-resize
+                                maxlength="200"
+                                height="100"
+                                background-color="#F9F9F9"
+                            >
+                            </v-textarea>
+                            <v-btn class="comment-btn rounded-0" text color="black" outlined style="height: 100px; left: 1px;" v-bind="attrs" v-on="on">
+                                등록
+                            </v-btn>
+                        </v-row>
                     </v-col> 
                     <!-- 댓글 리스트 -->
                     <v-list three-line v-if="commentTotal !== ''">
-                        <v-subheader>{{ commentTotal }}</v-subheader>
-                        <br>
-                        <template v-for="(comment_list, index) in comment_list">
-                    
+                        <v-card max-height="1000" flat style="margin-bottom: 100px;">
+                        <template v-for="(comment_list, index) in comment_list">            
                             <v-list-item v-if="comment_list" :key="comment_list.writer">
                             <v-list-item-avatar>
-                                <!-- <v-img :src="require('@/assets/igns_logo.png')"></v-img> -->
+                                <v-img :src="require('@/assets/boardDetail/igns_logo.png')" style="border: 1px solid #eee;"></v-img>
                             </v-list-item-avatar>
                             <v-list-item-content>
                                 <v-list-title-title>{{ comment_list.writer }} <span style="color: grey;">(192.138.08.2)</span></v-list-title-title>
@@ -143,13 +166,16 @@
                             </v-list-item>
                             <v-divider v-if="comment_list" :key="index"></v-divider>
                         </template>
+                    </v-card>
                     </v-list>
                     <v-list three-line v-else>
-                        <div class="container" style="position: relative; width: 40%; height: 280px; bottom: 10px;">
-                            <v-img :src="require('@/assets/boardDetail/commentIcon.svg')" width="75" style="left: 50%; transform: translate(-50%, 0); top: 45px;"></v-img>
-                            <div style="position: relative; color: #5E5E5E; font-size: 20px; font-family: 'Helvetica', sans-serif; font-weight: lighter; left: 50%; top: 80px; transform: translate(-22%, 0);">댓글이 없습니다.</div>
-                            <div style="position: relative; color: #5E5E5E; font-size: 20px; font-family: 'Helvetica', sans-serif; font-weight: lighter; left: 50%; top: 90px; transform: translate(-35%, 0);">첫번째 댓글을 남겨주세요.</div>
-                        </div>
+                        <v-card height="300" flat> 
+                                <v-img :src="require('@/assets/boardDetail/commentIcon.svg')" width="75" style="left: 50%; transform: translate(-50%, 0); top: 45px;"></v-img>
+                                <div style="margin-top: 70px;">
+                                <div class="text-center">댓글이 없습니다.</div>
+                                <div class="text-center">첫번째 댓글을 남겨주세요.</div>
+                                </div>
+                        </v-card>
                     </v-list>
                 </v-card> 
             </v-col>
@@ -158,9 +184,12 @@
 </template>
 
 <script>
+import { selectNoticeBoardDetail } from "@/api/noticeBoard/noticeBoard";
 export default {
     data () {
         return {
+            board_detail_list: [],
+            like_btn: false,
             colors: [
               'green',
               'secondary',
@@ -176,7 +205,7 @@ export default {
               'Fourth',
               'Fifth',
             ],
-            commentTotal: 2,
+            commentTotal: '2',
             comment_list: [
                 {
                     writer: '소민환',
@@ -196,10 +225,53 @@ export default {
                 ['Delete', 'mdi-delete'],
             ],
         }
+    },
+    mounted() {
+        if(this.$route.query.notice_board === '1'){ // 공지사항 
+            console.log("공지사항")
+            this.select()
+        } else if (this.$route.query.notice_board === '2') { // 자유게alert("참") 시판
+            console.log("자유게시판")
+        }
+    },
+
+    methods: {
+        changeLikeBtn() {
+            this.like_btn =  !this.like_btn;
+        },
+        select() {
+            const data = { id: this.$route.query.board }
+            selectNoticeBoardDetail(data)
+                .then((res) => {
+                   this.board_detail_list = res.data.data[0]
+                console.log(res.data.data[0])
+                })
+                .catch((error) => {
+                console.log(error)
+                })
+                .finally(() => {
+
+                })
+        }
     }
 }
 </script>
 
 <style scoped>
-
+    .board-detail-header {
+        padding-top: 20px;
+        padding-bottom: 20px;
+        border-top: 1px solid #eee;
+        border-bottom: 1px solid #eee;
+    }
+    .board-detail-title {
+        font-weight: normal;
+    }
+    .board-detail-content {
+        padding-top: 30px;
+        padding-bottom: 30px;
+    }
+    .comment-btn {
+        border-color: black !important;
+    }
 </style>
