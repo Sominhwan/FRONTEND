@@ -1,5 +1,11 @@
 <template>
     <v-app>
+        <div class="loading text-center" v-if="loading">
+            <v-progress-circular
+            indeterminate
+            color="primary"
+            ></v-progress-circular>
+        </div>
         <v-row>
             <v-col cols="6" md="2" offset="2">
                 <v-card class="mx-auto rounded-0" width="300" height="1380" flat style="border-right:1px solid #eee;">
@@ -83,10 +89,10 @@
                     <v-col cols="12" sm="12" md="12">
                         <div class="board-detail-header">
                             <h4>
-                                <span>[공지사항]</span>
+                                <span>{{ board_category }}</span>
                             </h4>
                             <h1>
-                                <div class="board-detail-title">제목입니다.</div>
+                                <div class="board-detail-title">{{ board_detail_list.title }}</div>
                             </h1>
                             <v-list two-line>
                                 <v-list-item>
@@ -94,19 +100,14 @@
                                         <v-img :src="require('@/assets/boardDetail/igns_logo.png')"></v-img>
                                     </v-list-item-avatar>
                                     <v-list-item-content>
-                                        <v-list-title-title>민환이</v-list-title-title>
-                                        <v-list-item-subtitle style="position: relative; top: 2px;">2023.08.01</v-list-item-subtitle>
+                                        <v-list-title-title>{{ board_detail_list.writer }}</v-list-title-title>
+                                        <v-list-item-subtitle style="position: relative; top: 2px;">{{ board_detail_list.insertDate }}</v-list-item-subtitle>
                                     </v-list-item-content>
                                 </v-list-item>
                             </v-list>
                         </div>
                         <div class="board-detail-content" style="min-height: 300px;">
-                            <div>컨텐츠 칸</div>
-                            <div>컨텐츠 칸</div>
-                            <div>컨텐츠 칸</div>
-                            <div>컨텐츠 칸</div>
-                            <div>컨텐츠 칸</div>
-                            <div>컨텐츠 칸</div>
+                            <div v-html="board_detail_list.content"></div>
                         </div>
                         <div class="like-btn text-center">
                             <div v-if="like_btn">
@@ -124,7 +125,7 @@
                         </div>
                     </v-col>
                     <v-col cols="12" sm="12" md="13">
-                        <v-subheader style="margin-left: 3px; margin-bottom: 5px; font-weight: bold;">댓글 <span style="color: #2889f1;">{{ commentTotal }}</span> 개</v-subheader>
+                        <v-subheader style="margin-left: 3px; margin-bottom: 5px; font-weight: bold;">댓글 <span style="color: #2889f1;">{{ board_detail_list.commentCount }}</span> 개</v-subheader>
                         <v-row>
                             <v-textarea
                                 class="comment-input rounded-0"
@@ -188,7 +189,9 @@ import { selectNoticeBoardDetail } from "@/api/noticeBoard/noticeBoard";
 export default {
     data () {
         return {
-            board_detail_list: [],
+            loading: true,
+            board_category : '',
+            board_detail_list: {},
             like_btn: false,
             colors: [
               'green',
@@ -226,13 +229,11 @@ export default {
             ],
         }
     },
+    created() {
+        
+    },
     mounted() {
-        if(this.$route.query.notice_board === '1'){ // 공지사항 
-            console.log("공지사항")
-            this.select()
-        } else if (this.$route.query.notice_board === '2') { // 자유게alert("참") 시판
-            console.log("자유게시판")
-        }
+        this.select()
     },
 
     methods: {
@@ -240,11 +241,13 @@ export default {
             this.like_btn =  !this.like_btn;
         },
         select() {
-            const data = { id: this.$route.query.board }
+            const data = { id: this.$route.query.board, category: this.$route.query.notice_board }
             selectNoticeBoardDetail(data)
                 .then((res) => {
+                   this.loading = false,
+                   this.board_category = '[공지사항]',
                    this.board_detail_list = res.data.data[0]
-                console.log(res.data.data[0])
+                    console.log(res.data.data[0])
                 })
                 .catch((error) => {
                 console.log(error)
@@ -273,5 +276,15 @@ export default {
     }
     .comment-btn {
         border-color: black !important;
+    }
+    .v-progress-circular {
+        margin: 1rem;
+    }
+    .loading {
+        z-index: 2;
+        position: fixed;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
     }
 </style>

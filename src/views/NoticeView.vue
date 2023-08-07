@@ -1,5 +1,11 @@
 <template>
     <v-app>
+      <div class="loading text-center" v-if="loading">
+            <v-progress-circular
+            indeterminate
+            color="primary"
+            ></v-progress-circular>
+      </div>
         <v-row>
         <v-col cols="6" md="2" offset="2">
             <v-card class="mx-auto rounded-0" width="300" height="1380" flat style="border-right:1px solid #eee;">
@@ -127,6 +133,7 @@ import { selectNoticeBoard } from "@/api/noticeBoard/noticeBoard";
 export default {
     data () {
         return {
+            loading: true,
             page: this.$route.query.page,
             totalPage: 0,
             notice_board_list: [],
@@ -167,6 +174,7 @@ export default {
       async search(curPage){    
         await selectNoticeBoard(curPage)
           .then((res) => {
+            this.loading = false,
             history.pushState(null, null, 'detail?page='+this.page);
             this.notice_board_list = res.data.data.noticeBoardList,
             this.totalPage = res.data.data.totalPage
@@ -195,5 +203,11 @@ export default {
     .notice-title:hover {
       text-decoration: underline;
     }
-
+    .loading {
+        z-index: 2;
+        position: fixed;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+    }
 </style>
