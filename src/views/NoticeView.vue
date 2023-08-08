@@ -164,15 +164,20 @@ export default {
             ],
         }
     },
+    watch: {
+      items_select: function() {
+        this.changePage()
+      }
+    },
     beforeCreate() {
       this.page = this.$route.query.page;
     },
     mounted() {
-      this.search(this.page) // 공지사항 페이지 시작시 데이터 불러옴
+      this.search(this.page, this.items_select) // 공지사항 페이지 시작시 데이터 불러옴
     },
     methods: {
-      async search(curPage){    
-        await selectNoticeBoard(curPage)
+      async search(curPage, category){    
+        await selectNoticeBoard(curPage, category)
           .then((res) => {
             this.loading = false,
             history.pushState(null, null, 'detail?page='+this.page);
@@ -187,7 +192,7 @@ export default {
           })
       },
       changePage(){
-        this.search(this.page)
+        this.search(this.page, this.items_select)
       }
     }
 }

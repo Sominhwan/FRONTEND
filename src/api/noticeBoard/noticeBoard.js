@@ -10,11 +10,11 @@ export function insertNoticeBoard(data) { // 게시판 등록
     })
 }
 
-export function selectNoticeBoard(data) { // 게시판 목록 가져오기
+export function selectNoticeBoard(data, data2) { // 게시판 목록 가져오기
     return request({
         url: `/api/v1/noticeboard/select`,
         method: 'GET',
-        params: { page: data },
+        params: { page: data, category: data2 },
         meta: { apiVersion: '1.0.0' },
         headers: { 'Content-Type': 'application/json;charset=utf8' }
     })
