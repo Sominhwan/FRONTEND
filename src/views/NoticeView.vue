@@ -6,68 +6,66 @@
             color="primary"
             ></v-progress-circular>
       </div>
-        <v-row>
-        <v-col cols="6" md="2" offset="2">
-            <v-card class="mx-auto rounded-0" width="300" height="1380" flat style="border-right:1px solid #eee;">
-              <v-img src="https://cdn.vuetifyjs.com/images/lists/ali.png" height="300px" style="border-right:1px solid #eee;">
-              <v-row class="fill-height">
-                <v-card-title class="white--text pl-12 pt-12">
-                  <!-- <div class="text-h4 pl-5 pt-15" style="margin:auto">
-                    test
-                  </div> -->
-                </v-card-title>
-              </v-row>
-            </v-img> 
-            <v-list>
-              <v-list-item class="write-btn ma-3 pa-2" @click="$router.push({name: 'write'})" style="background-color: #2889f1;">
-                <div style="display: flex; margin: auto;">
-                  <v-icon left size="25" color="white">
-                    mdi-pencil
-                  </v-icon> 
-                  <v-list-item-title style="font-size: 20px; color: white; font-weight: bold;">글 쓰기</v-list-item-title> 
-                </div>                 
-              </v-list-item>
-              <v-list-item>
+        <v-card class="mx-auto rounded-0" width="300" flat style="position: fixed; top: 65px;">
+          <v-img src="https://cdn.vuetifyjs.com/images/lists/ali.png" height="300px" style="border-right:1px solid #eee;">
+          <v-row class="fill-height">
+            <v-card-title class="white--text pl-12 pt-12">
+              <!-- <div class="text-h4 pl-5 pt-15" style="margin:auto">
+                test
+              </div> -->
+            </v-card-title>
+          </v-row>
+        </v-img> 
+        <v-list>
+          <v-list-item class="write-btn ma-3 pa-2" @click="$router.push({name: 'write'})" style="background-color: #2889f1;">
+            <div style="display: flex; margin: auto;">
+              <v-icon left size="25" color="white">
+                mdi-pencil
+              </v-icon> 
+              <v-list-item-title style="font-size: 20px; color: white; font-weight: bold;">글 쓰기</v-list-item-title> 
+            </div>                 
+          </v-list-item>
+          <v-list-item>
+            <v-list-item-icon>
+              <v-icon>mdi-home</v-icon>
+            </v-list-item-icon>
+            <v-list-item-title>Home</v-list-item-title>
+          </v-list-item>
+          <v-list-group :value="true" prepend-icon="mdi-account-circle">
+            <template v-slot:activator>
+              <v-list-item-title>Users</v-list-item-title>
+            </template>
+          <v-list-group :value="true" no-action sub-group>
+            <template v-slot:activator>
+              <v-list-item-content>       
+                <v-list-item-title>Actions</v-list-item-title>
+              </v-list-item-content>
+            </template>
+            <v-list-item v-for="([title, icon], i) in cruds" :key="i" link>
+              <v-list-item-title>{{ title }}</v-list-item-title>
                 <v-list-item-icon>
-                  <v-icon>mdi-home</v-icon>
+                  <v-icon >{{ icon }}</v-icon>
                 </v-list-item-icon>
-                <v-list-item-title>Home</v-list-item-title>
               </v-list-item>
-              <v-list-group :value="true" prepend-icon="mdi-account-circle">
-                <template v-slot:activator>
-                  <v-list-item-title>Users</v-list-item-title>
-                </template>
-              <v-list-group :value="true" no-action sub-group>
-                <template v-slot:activator>
-                  <v-list-item-content>       
-                    <v-list-item-title>Actions</v-list-item-title>
-                  </v-list-item-content>
-                </template>
-                <v-list-item v-for="([title, icon], i) in cruds" :key="i" link>
-                  <v-list-item-title>{{ title }}</v-list-item-title>
-                    <v-list-item-icon>
-                      <v-icon >{{ icon }}</v-icon>
-                    </v-list-item-icon>
-                  </v-list-item>
-                </v-list-group>
-                <v-list-group :value="true" no-action sub-group>
-                <template v-slot:activator>
-                  <v-list-item-content>
-                    <v-list-item-title>Actions</v-list-item-title>
-                  </v-list-item-content>
-                </template>
-                <v-list-item v-for="([title, icon], i) in cruds" :key="i" link>
-                  <v-list-item-title>{{ title }}</v-list-item-title>
-                    <v-list-item-icon>
-                      <v-icon>{{ icon }}</v-icon>
-                    </v-list-item-icon>
-                  </v-list-item>
-                </v-list-group>        
-              </v-list-group>
-              </v-list>
-            </v-card>
-        </v-col>
-        <v-col cols="6" md="5" offset="0" style="position: relative; top: 40px;">
+            </v-list-group>
+            <v-list-group :value="true" no-action sub-group>
+            <template v-slot:activator>
+              <v-list-item-content>
+                <v-list-item-title>Actions</v-list-item-title>
+              </v-list-item-content>
+            </template>
+            <v-list-item v-for="([title, icon], i) in cruds" :key="i" link>
+              <v-list-item-title>{{ title }}</v-list-item-title>
+                <v-list-item-icon>
+                  <v-icon>{{ icon }}</v-icon>
+                </v-list-item-icon>
+              </v-list-item>
+            </v-list-group>        
+          </v-list-group>
+          </v-list>
+        </v-card>
+      <v-row justify="center">
+        <v-col cols="12" md="5" offset="0" style="position: relative; top: 105px;">
           <v-carousel
             :continuous="false"
             :cycle="cycle"
@@ -98,7 +96,7 @@
             </v-card>
           <!-- 공지사항 목록 -->  
           <v-card class="rounded-0" flat>
-            <v-list>
+            <v-list min-height="1000">
               <v-list-item v-for="(notice_board_list, idx) in notice_board_list" :key="idx">
                 <v-list-item-avatar>
                   <v-icon class="grey lighten-1" dark>
@@ -117,14 +115,16 @@
               </v-list-item>
               <v-divider></v-divider>      
             </v-list>
+            <div class="text-center">
+              <v-pagination v-model="page" :length="this.totalPage" @input="changePage()"></v-pagination>
+            </div> 
           </v-card>               
         </v-col>
-        <v-col cols="11" md="0" offset="1" style="position: relative; bottom: 40px;">
-          <div class="text-center ma-5">
-            <v-pagination v-model="page" :length="this.totalPage" @input="changePage()"></v-pagination>
-          </div>  
-        </v-col>
-    </v-row>
+
+      </v-row>
+
+
+
     </v-app>
 </template>
 

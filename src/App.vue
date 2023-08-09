@@ -1,9 +1,9 @@
 <template>
   <v-app>
     <!-- <PageHeader style="z-index: 1000;" :key="$route.fullPath"/> -->
-    <PageHeader style="z-index: 1000;"/>
+    <PageHeader style="z-index: 1000"/>
     <router-view :key="$route.fullPath"/>
-    <PageFooter/>
+    <PageFooter v-if="$route.name !== 'notice'"/>
   </v-app>
 </template>
 

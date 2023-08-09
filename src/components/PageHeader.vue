@@ -1,7 +1,7 @@
 <template>
 <!-- class="ma-12 pa-12" toolbar: flat-->
-    <div class="">
-        <v-toolbar dense flat height="65px" color="#F9F9F9">
+    <div class="" style="position: fixed;">
+        <v-toolbar dense flat height="65px" color="#F9F9F9" style="position: fixed; width: 100%;">
             <v-app-bar-nav-icon @click.stop="drawer = !drawer" class="drawer-icon"></v-app-bar-nav-icon>
             <v-toolbar-title class="menu-text pa-1">메뉴</v-toolbar-title>
             <v-spacer></v-spacer>
