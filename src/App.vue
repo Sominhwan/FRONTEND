@@ -3,7 +3,7 @@
     <!-- <PageHeader style="z-index: 1000;" :key="$route.fullPath"/> -->
     <PageHeader style="z-index: 1000"/>
     <router-view :key="$route.fullPath"/>
-    <PageFooter v-if="$route.name !== 'notice'"/>
+    <PageFooter v-if="$route.name !== 'notice' && $route.name !== 'error404'"/>
   </v-app>
 </template>
 

@@ -1,5 +1,6 @@
 import BoardView from '@/views/BoardDetailView.vue'
 import BoardWriteView from '@/views/BoardWriteView.vue'
+import ErrorView from '@/views/ErrorView.vue'
 import HomeView from '@/views/HomeView.vue'
 import NoticeView from '@/views/NoticeView.vue'
 import Vue from 'vue'
@@ -38,6 +39,15 @@ const routes = [
     path: '/board_view',
     name: 'boardView',
     component: BoardView
+  },
+  {
+    path: '/error404',
+    name: "error404",
+    component: ErrorView
+  },
+  {
+    path: '*',
+    redirect: "/error404"
   }
 ]
 

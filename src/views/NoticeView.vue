@@ -96,7 +96,7 @@
             </v-card>
           <!-- 공지사항 목록 -->  
           <v-card class="rounded-0" flat>
-            <v-list min-height="1000">
+            <v-list min-height="950">
               <v-list-item v-for="(notice_board_list, idx) in notice_board_list" :key="idx">
                 <v-list-item-avatar>
                   <v-icon class="grey lighten-1" dark>
@@ -115,16 +115,12 @@
               </v-list-item>
               <v-divider></v-divider>      
             </v-list>
-            <div class="text-center">
+            <div class="text-center ma-5">
               <v-pagination v-model="page" :length="this.totalPage" @input="changePage()"></v-pagination>
             </div> 
           </v-card>               
         </v-col>
-
       </v-row>
-
-
-
     </v-app>
 </template>
 

@@ -6,68 +6,66 @@
             color="primary"
             ></v-progress-circular>
         </div>
-        <v-row>
-            <v-col cols="6" md="2" offset="2">
-                <v-card class="mx-auto rounded-0" width="300" height="1380" flat style="border-right:1px solid #eee;">
-                <v-img src="https://cdn.vuetifyjs.com/images/lists/ali.png" height="300px" style="border-right:1px solid #eee;">
-                <v-row class="fill-height">
-                    <v-card-title class="white--text pl-12 pt-12">
-                    <!-- <div class="text-h4 pl-5 pt-15" style="margin:auto">
-                        test
-                    </div> -->
-                    </v-card-title>
-                </v-row>
-                </v-img> 
-                <v-list>
-                <v-list-item class="write-btn ma-3 pa-2" @click="$router.push({name: 'write'})" style="background-color: #2889f1;">
-                    <div style="display: flex; margin: auto;">
-                    <v-icon left size="25" color="white">
-                        mdi-pencil
-                    </v-icon> 
-                    <v-list-item-title style="font-size: 20px; color: white; font-weight: bold;">글 쓰기</v-list-item-title> 
-                    </div>                 
-                </v-list-item>
-                <v-list-item>
-                    <v-list-item-icon>
-                    <v-icon>mdi-home</v-icon>
-                    </v-list-item-icon>
-                    <v-list-item-title>Home</v-list-item-title>
-                </v-list-item>
-                <v-list-group :value="true" prepend-icon="mdi-account-circle">
-                    <template v-slot:activator>
-                    <v-list-item-title>Users</v-list-item-title>
-                    </template>
-                <v-list-group :value="true" no-action sub-group>
-                    <template v-slot:activator>
-                    <v-list-item-content>       
-                        <v-list-item-title>Actions</v-list-item-title>
-                    </v-list-item-content>
-                    </template>
-                    <v-list-item v-for="([title, icon], i) in cruds" :key="i" link>
-                    <v-list-item-title>{{ title }}</v-list-item-title>
-                        <v-list-item-icon>
-                        <v-icon >{{ icon }}</v-icon>
-                        </v-list-item-icon>
-                    </v-list-item>
-                    </v-list-group>
-                    <v-list-group :value="true" no-action sub-group>
-                    <template v-slot:activator>
-                    <v-list-item-content>
-                        <v-list-item-title>Actions</v-list-item-title>
-                    </v-list-item-content>
-                    </template>
-                    <v-list-item v-for="([title, icon], i) in cruds" :key="i" link>
-                    <v-list-item-title>{{ title }}</v-list-item-title>
-                        <v-list-item-icon>
-                        <v-icon>{{ icon }}</v-icon>
-                        </v-list-item-icon>
-                    </v-list-item>
-                    </v-list-group>        
-                </v-list-group>
-                </v-list>
-                </v-card>
-            </v-col>
-            <v-col cols="6" md="5" offset="0" style="position: relative; top: 40px;">
+        <v-card class="mx-auto rounded-0" width="300" flat style="position: fixed; top: 65px;">
+          <v-img src="https://cdn.vuetifyjs.com/images/lists/ali.png" height="300px" style="border-right:1px solid #eee;">
+          <v-row class="fill-height">
+            <v-card-title class="white--text pl-12 pt-12">
+              <!-- <div class="text-h4 pl-5 pt-15" style="margin:auto">
+                test
+              </div> -->
+            </v-card-title>
+          </v-row>
+        </v-img> 
+        <v-list>
+          <v-list-item class="write-btn ma-3 pa-2" @click="$router.push({name: 'write'})" style="background-color: #2889f1;">
+            <div style="display: flex; margin: auto;">
+              <v-icon left size="25" color="white">
+                mdi-pencil
+              </v-icon> 
+              <v-list-item-title style="font-size: 20px; color: white; font-weight: bold;">글 쓰기</v-list-item-title> 
+            </div>                 
+          </v-list-item>
+          <v-list-item>
+            <v-list-item-icon>
+              <v-icon>mdi-home</v-icon>
+            </v-list-item-icon>
+            <v-list-item-title>Home</v-list-item-title>
+          </v-list-item>
+          <v-list-group :value="true" prepend-icon="mdi-account-circle">
+            <template v-slot:activator>
+              <v-list-item-title>Users</v-list-item-title>
+            </template>
+          <v-list-group :value="true" no-action sub-group>
+            <template v-slot:activator>
+              <v-list-item-content>       
+                <v-list-item-title>Actions</v-list-item-title>
+              </v-list-item-content>
+            </template>
+            <v-list-item v-for="([title, icon], i) in cruds" :key="i" link>
+              <v-list-item-title>{{ title }}</v-list-item-title>
+                <v-list-item-icon>
+                  <v-icon >{{ icon }}</v-icon>
+                </v-list-item-icon>
+              </v-list-item>
+            </v-list-group>
+            <v-list-group :value="true" no-action sub-group>
+            <template v-slot:activator>
+              <v-list-item-content>
+                <v-list-item-title>Actions</v-list-item-title>
+              </v-list-item-content>
+            </template>
+            <v-list-item v-for="([title, icon], i) in cruds" :key="i" link>
+              <v-list-item-title>{{ title }}</v-list-item-title>
+                <v-list-item-icon>
+                  <v-icon>{{ icon }}</v-icon>
+                </v-list-item-icon>
+              </v-list-item>
+            </v-list-group>        
+          </v-list-group>
+          </v-list>
+        </v-card>
+        <v-row justify="center">
+            <v-col cols="6" md="5" offset="0" style="position: relative; top: 105px;">
                 <v-carousel
                     :continuous="false"
                     :cycle="cycle"
@@ -131,27 +129,29 @@
                                 class="comment-input rounded-0"
                                 prepend-icon="mdi-comment"
                                 color="grey"
+                                solo
                                 outlined
                                 v-model="comment"
-                                clearable
+                                auto-grow
+                                flat
                                 label="댓글을 입력해주세요"
                                 ref="comment"
-                                type="text"
                                 counter
                                 no-resize
-                                maxlength="200"
-                                height="100"
+                                maxlength="500"
+                                clearable
+                                clear-icon="mdi-close-circle"
                                 background-color="#F9F9F9"
                             >
                             </v-textarea>
-                            <v-btn class="comment-btn rounded-0" text color="black" outlined style="height: 100px; left: 1px;" v-bind="attrs" v-on="on">
+                            <v-btn class="comment-btn rounded-0" text color="black" outlined style="height: 130px; left: 1px;" v-bind="attrs" v-on="on">
                                 등록
                             </v-btn>
                         </v-row>
                     </v-col> 
                     <!-- 댓글 리스트 -->
                     <v-list three-line v-if="commentTotal !== ''">
-                        <v-card max-height="1000" flat style="margin-bottom: 100px;">
+                        <v-card max-height="1000" flat style="margin-bottom: 200px;">
                         <template v-for="(comment_list, index) in comment_list">            
                             <v-list-item v-if="comment_list" :key="comment_list.writer">
                             <v-list-item-avatar>
@@ -170,7 +170,7 @@
                     </v-card>
                     </v-list>
                     <v-list three-line v-else>
-                        <v-card height="300" flat> 
+                        <v-card height="400" flat> 
                                 <v-img :src="require('@/assets/boardDetail/commentIcon.svg')" width="75" style="left: 50%; transform: translate(-50%, 0); top: 45px;"></v-img>
                                 <div style="margin-top: 70px;">
                                 <div class="text-center">댓글이 없습니다.</div>

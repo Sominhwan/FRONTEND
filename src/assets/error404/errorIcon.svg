@@ -1,0 +1,12 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="313.831" height="274.542" viewBox="0 0 313.831 274.542">
+    <g data-name="그룹 389">
+        <g data-name="그룹 388">
+            <g data-name="Icon feather-monitor">
+                <path data-name="패스 663" d="M26.684 4.5H216.16a23.684 23.684 0 0 1 23.684 23.684v118.423a23.684 23.684 0 0 1-23.684 23.684H26.684A23.684 23.684 0 0 1 3 146.607V28.184A23.684 23.684 0 0 1 26.684 4.5z" transform="translate(.5 53.381)" style="fill:none;stroke:#000;stroke-linecap:round;stroke-linejoin:round;stroke-width:7px"/>
+                <path data-name="패스 664" d="M12 31.5h94.738" transform="translate(62.553 239.541)" style="fill:none;stroke:#000;stroke-linecap:round;stroke-linejoin:round;stroke-width:7px"/>
+                <path data-name="패스 665" d="M18 25.5v47.369" transform="translate(103.922 198.172)" style="fill:none;stroke:#000;stroke-linecap:round;stroke-linejoin:round;stroke-width:7px"/>
+            </g>
+        </g>
+        <path data-name="Icon material-error" d="M66.437 3a63.437 63.437 0 1 0 63.437 63.437A63.46 63.46 0 0 0 66.437 3zm6.343 95.155H60.093V85.467H72.78zm0-25.375H60.093V34.718H72.78z" transform="translate(183.958 -3)" style="fill:#395daf"/>
+    </g>
+</svg>
