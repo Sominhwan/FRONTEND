@@ -228,6 +228,7 @@
 </template>
 
 <script>
+import { getBoard } from "@/api/main/main";
   export default {
     data () {
       return {
@@ -313,6 +314,23 @@
       ],  
       }
     },
+    mounted() {
+      this.search();
+    },
+    methods: {
+      search(){    
+        getBoard()
+          .then((res) => {
+            console.log(res.data);
+          })
+          .catch((error) => {
+            console.log(error);
+          })
+          .finally(() => {
+
+          })
+      },
+    }
   }
 </script>
 <style scoped>
