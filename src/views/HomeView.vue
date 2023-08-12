@@ -121,7 +121,7 @@
                 <v-subheader></v-subheader>
               </v-list>
             </v-card>    
-            <v-card class="rounded-0" flat>
+            <v-card class="notice-container rounded-0" flat >
               <v-toolbar flat style="border-bottom: 3px solid #eee;">
                 <v-toolbar-title style="font-weight: bold; font-size: 18px;">공지사항</v-toolbar-title>
                 <v-spacer></v-spacer>
@@ -152,23 +152,30 @@
                   <v-icon>mdi-view-module</v-icon>
                 </v-btn>
               </v-toolbar>
-              <v-list>
-                <v-list-item v-for="file in files" :key="file.title">
+              <v-list class="notice-list" style="border-bottom: 3px solid #eee;">
+                <v-skeleton-loader class="loader" type="list-item-avatar" v-if="loading"></v-skeleton-loader>
+                <v-skeleton-loader class="loader" type="list-item-avatar" v-if="loading"></v-skeleton-loader>
+                <v-skeleton-loader class="loader" type="list-item-avatar" v-if="loading"></v-skeleton-loader>
+                <v-skeleton-loader class="loader" type="list-item-avatar" v-if="loading"></v-skeleton-loader>
+                <v-skeleton-loader class="loader" type="list-item-avatar" v-if="loading"></v-skeleton-loader>
+                <v-list-item v-for="(notice_board_list, idx) in notice_board_list" :key="idx">
                   <v-list-item-avatar>
-                    <v-icon :class="file.color" dark>{{ file.icon }}</v-icon>
+                    <v-icon class="blue" dark>mdi-clipboard-text</v-icon>
                   </v-list-item-avatar>
                   <v-list-item-content>
-                    <v-list-item-title><span style="color: #2889f1; font-weight: bold; font-size: 16px; margin-right: 10px;">[공지사항]</span>{{ file.title }}</v-list-item-title>
-                    <v-list-item-subtitle><span style="font-size: 14px; margin-right: 30px;">GM사무국</span>{{ file.subtitle }}</v-list-item-subtitle>
+                    <v-list-item-title>
+                      <span style="color: #2889f1; font-weight: bold; font-size: 16px; margin-right: 10px;">[공지사항]</span>
+                      <span class="notice-title" @click="$router.push({name: 'boardView', query: { notice_board: 1, board: notice_board_list.noticeId }})">{{ notice_board_list.title }}</span>
+                    </v-list-item-title>
+                    <v-list-item-subtitle><span style="font-size: 14px; margin-right: 30px;">{{ notice_board_list.writer }}</span>{{ notice_board_list.insertDate }}</v-list-item-subtitle>
                   </v-list-item-content>
                     <v-icon color="grey lighten-1" style="margin-right: 20px;">mdi-information</v-icon>
                     <v-icon color="primary" style="margin-right: 20px;">mdi-thumb-up</v-icon>
-                    <span style="position: relative; right: 35px; top: 20px; font-size: 13px; color: grey;">7</span> 
+                    <span style="position: relative; right: 35px; top: 20px; font-size: 13px; color: grey;">{{ notice_board_list.likeCount }}</span> 
                     <v-icon color="grey lignten-2">mdi-message-text</v-icon>
-                    <span style="position: relative; right: 15px; top: 20px; font-size: 13px; color: grey;">7</span>   
+                    <span style="position: relative; right: 15px; top: 20px; font-size: 13px; color: grey;">{{ notice_board_list.commentCount }}</span>   
                 </v-list-item>
-                <v-divider></v-divider>
-                <v-subheader></v-subheader>
+
               </v-list>
             </v-card> 
             <v-card class="rounded-0" flat>
@@ -232,8 +239,10 @@ import { getBoard } from "@/api/main/main";
   export default {
     data () {
       return {
+        loading: true,
         curpage: 1,
         totalpage: 4,
+        notice_board_list: [],
         colors: [
           'indigo',
           'warning',
@@ -321,7 +330,9 @@ import { getBoard } from "@/api/main/main";
       search(){    
         getBoard()
           .then((res) => {
-            console.log(res.data);
+            this.loading = false,
+            console.log(res.data.data);
+            this.notice_board_list = res.data.data;
           })
           .catch((error) => {
             console.log(error);
@@ -337,10 +348,28 @@ import { getBoard } from "@/api/main/main";
   @media (max-width: 1200px) {
     .left-banner {display:none}
   } 
+  .loader {
+    margin-bottom: 15px;
+  }
+
   .left-banner {
     z-index: 100;
   }
   .write-btn {
     cursor: pointer;
   }
+  .notice-title:hover {
+    cursor: pointer;
+    text-decoration: underline;
+
+  }
+  .notice-container {
+    margin-bottom: 50px;
+  }
+  .notice-list {
+    min-height: 330px;
+  }
+  /* .notice-list {
+    min-height: 50px;
+  } */
 </style>

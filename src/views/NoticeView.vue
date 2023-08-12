@@ -6,7 +6,7 @@
             color="primary"
             ></v-progress-circular>
       </div>
-        <v-card class="mx-auto rounded-0" width="300" flat style="position: fixed; top: 65px;">
+        <v-card class="left-banner mx-auto rounded-0" width="300" flat style="position: fixed; top: 65px;">
           <v-img src="https://cdn.vuetifyjs.com/images/lists/ali.png" height="300px" style="border-right:1px solid #eee;">
           <v-row class="fill-height">
             <v-card-title class="white--text pl-12 pt-12">
@@ -194,6 +194,9 @@ export default {
 }
 </script>
 <style scoped>
+    @media (max-width: 1200px) {
+      .left-banner {display:none}
+    } 
     .search-input {
       border: 1px solid #9E9E9E;
     }

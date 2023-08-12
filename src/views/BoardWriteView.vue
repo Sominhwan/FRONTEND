@@ -1,6 +1,6 @@
 <template>
     <v-app>
-      <v-card class="mx-auto rounded-0" width="300" flat style="position: fixed; top: 65px;">
+      <v-card class="left-banner mx-auto rounded-0" width="300" flat style="position: fixed; top: 65px;">
           <v-img src="https://cdn.vuetifyjs.com/images/lists/ali.png" height="300px" style="border-right:1px solid #eee;">
           <v-row class="fill-height">
             <v-card-title class="white--text pl-12 pt-12">
@@ -73,9 +73,13 @@
               </v-col>
             </v-row>
           </v-card>
+          <v-row>
+            <v-col class="pa-2 mr-auto" cols="12">
           <v-card height="590" style="top: 20px;" flat>
             <vue-editor v-model="content" :placeholder="placeholder" style="height: 500px;"></vue-editor>
           </v-card>
+        </v-col>
+         </v-row>
           <v-card class="d-flex justify-center" flat>
             <v-card class="pa-2" flat>
               <v-btn class="rounded-0" outlined color="grey">취소</v-btn>
@@ -174,6 +178,9 @@ export default {
 </script>
 
 <style scoped>
+    @media (max-width: 1200px) {
+      .left-banner {display:none}
+    } 
     .search-input {
       /* border: 1px solid #9E9E9E; */
     }
