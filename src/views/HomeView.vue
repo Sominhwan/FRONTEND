@@ -1,5 +1,6 @@
 <template>
-  <v-app style="top: 65px;">
+  <v-app>
+    <!-- 좌측 메뉴바 -->
     <v-card class="left-banner mx-auto rounded-0" width="300" flat style="position: fixed; top: 65px;">
           <v-img src="https://cdn.vuetifyjs.com/images/lists/ali.png" height="300px" style="border-right:1px solid #eee;">
           <v-row class="fill-height">
@@ -58,7 +59,7 @@
           </v-list-group>
           </v-list>
         </v-card>
-        <v-row class="mt-3" justify="center" style="position: relative; margin-bottom: 100px;">
+        <v-row class="mt-3" justify="center" style="position: relative; margin-bottom: 100px; top: 65px;">
           <v-col cols="6" md="5" offset="0">
             <v-carousel class="main-banner" cycle height="350" hide-delimiter-background show-arrows-on-hover>
               <v-carousel-item  v-for="(slide, i) in slides" :key="i">
@@ -148,7 +149,7 @@
                     </btn> -->
                   </li>
                 </ul>
-                <v-btn icon @click="$router.push({name: 'notice', query: { page:1 }})">
+                <v-btn icon @click="$router.push({name: 'notice', query: { count: totalPage, page:1, category:'최신글순' }})">
                   <v-icon>mdi-view-module</v-icon>
                 </v-btn>
               </v-toolbar>
@@ -236,12 +237,17 @@
 
 <script>
 import { getBoard } from "@/api/main/main";
+import { selectNoticePage } from "@/api/noticeBoard/noticeBoard";
   export default {
     data () {
       return {
+        drawer: false,
+        group: null,
+        sheet: false,
+        menu: false,
         loading: true,
         curpage: 1,
-        totalpage: 4,
+        totalpage: '',
         notice_board_list: [],
         colors: [
           'indigo',
@@ -323,16 +329,37 @@ import { getBoard } from "@/api/main/main";
       ],  
       }
     },
+    watch: {
+      group () {
+        this.drawer = false
+      },
+    },  
     mounted() {
       this.search();
+      this.pageCount();
     },
     methods: {
+      menuBackground() {
+            this.menu = true
+      },
       search(){    
         getBoard()
           .then((res) => {
             this.loading = false,
             console.log(res.data.data);
             this.notice_board_list = res.data.data;
+          })
+          .catch((error) => {
+            console.log(error);
+          })
+          .finally(() => {
+
+          })
+      },
+      pageCount(){    
+        selectNoticePage()
+          .then((res) => {
+            this.totalPage = res.data.data;
           })
           .catch((error) => {
             console.log(error);
@@ -348,8 +375,20 @@ import { getBoard } from "@/api/main/main";
   @media (max-width: 1200px) {
     .left-banner {display:none}
   } 
+  .drawer-icon:hover {
+      color: #1877F2;
+  }
+  .nav-content:hover {
+      cursor: pointer;
+      color: #1877F2;
+  }
+
+  .search-input {
+      border-radius: 5px;
+      border: 1px solid #eee;
+  }
   .loader {
-    margin-bottom: 15px;
+    margin-bottom: 14px;
   }
 
   .left-banner {
