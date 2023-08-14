@@ -1,64 +1,20 @@
 <template>
   <v-app>
-    <!-- 좌측 메뉴바 -->
-    <v-card class="left-banner mx-auto rounded-0" width="300" flat style="position: fixed; top: 65px;">
-          <v-img src="https://cdn.vuetifyjs.com/images/lists/ali.png" height="300px" style="border-right:1px solid #eee;">
-          <v-row class="fill-height">
-            <v-card-title class="white--text pl-12 pt-12">
-              <!-- <div class="text-h4 pl-5 pt-15" style="margin:auto">
-                test
-              </div> -->
-            </v-card-title>
-          </v-row>
-        </v-img> 
-        <v-list>
-          <v-list-item class="write-btn ma-3 pa-2" @click="$router.push({name: 'write'})" style="background-color: #2889f1;">
-            <div style="display: flex; margin: auto;">
-              <v-icon left size="25" color="white">
-                mdi-pencil
-              </v-icon> 
-              <v-list-item-title style="font-size: 20px; color: white; font-weight: bold;">글 쓰기</v-list-item-title> 
-            </div>                 
-          </v-list-item>
-          <v-list-item>
-            <v-list-item-icon>
-              <v-icon>mdi-home</v-icon>
-            </v-list-item-icon>
-            <v-list-item-title>Home</v-list-item-title>
-          </v-list-item>
-          <v-list-group :value="true" prepend-icon="mdi-account-circle">
-            <template v-slot:activator>
-              <v-list-item-title>Users</v-list-item-title>
-            </template>
-          <v-list-group :value="true" no-action sub-group>
-            <template v-slot:activator>
-              <v-list-item-content>       
-                <v-list-item-title>Actions</v-list-item-title>
-              </v-list-item-content>
-            </template>
-            <v-list-item v-for="([title, icon], i) in cruds" :key="i" link>
-              <v-list-item-title>{{ title }}</v-list-item-title>
-                <v-list-item-icon>
-                  <v-icon >{{ icon }}</v-icon>
-                </v-list-item-icon>
-              </v-list-item>
-            </v-list-group>
-            <v-list-group :value="true" no-action sub-group>
-            <template v-slot:activator>
-              <v-list-item-content>
-                <v-list-item-title>Actions</v-list-item-title>
-              </v-list-item-content>
-            </template>
-            <v-list-item v-for="([title, icon], i) in cruds" :key="i" link>
-              <v-list-item-title>{{ title }}</v-list-item-title>
-                <v-list-item-icon>
-                  <v-icon>{{ icon }}</v-icon>
-                </v-list-item-icon>
-              </v-list-item>
-            </v-list-group>        
-          </v-list-group>
-          </v-list>
-        </v-card>
+    <!-- scroll to top 버튼 -->
+        <v-btn
+      class="md-5 mr-3 elevation-21"
+      dark
+      fab
+      button
+      right
+      color="indigo darken-3"
+      fixed
+      @click="top"
+      v-scroll="onScroll"
+      style="z-index: 1000;"
+      v-show="showGoToTop"
+     
+    />
         <v-row class="mt-3" justify="center" style="position: relative; margin-bottom: 100px; top: 65px;">
           <v-col cols="6" md="5" offset="0">
             <v-carousel class="main-banner" cycle height="350" hide-delimiter-background show-arrows-on-hover>
@@ -329,18 +285,38 @@ import { selectNoticePage } from "@/api/noticeBoard/noticeBoard";
       ],  
       }
     },
+    computed:{
+      showGoToTop () {
+        return this.offsetTop > 100;
+      },
+    },
     watch: {
       group () {
         this.drawer = false
       },
     },  
+    // computed:{
+    //   showGoToTop () {
+    //     return this.offsetTop > 50;
+    //   },
+    // },
     mounted() {
       this.search();
       this.pageCount();
     },
     methods: {
+      onScroll (event) {
+    this.offsetTop = event.target.scrollingElement.scrollTop;
+  },
+      top(){
+        window.scrollTo({
+          top: 0,
+          left: 0,
+          behavior: 'smooth'
+        });
+      },
       menuBackground() {
-            this.menu = true
+        this.menu = true
       },
       search(){    
         getBoard()

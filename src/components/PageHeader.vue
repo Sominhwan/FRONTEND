@@ -1,14 +1,12 @@
 <template>
 <!-- class="ma-12 pa-12" toolbar: flat-->
     <v-app style="position: fixed;">
-        <v-app-bar dense elevation="1" height="65px" color="#F9F9F9" style="position: fixed; width: 100%; z-index: 1000;">
-            <v-app-bar-nav-icon @click.stop="drawer = !drawer" class="drawer-icon"></v-app-bar-nav-icon>
+        <v-app-bar dense elevation="0" height="65px" color="#F9F9F9" style="position: fixed; width: 100%; z-index: 1000;">
+            <!-- <v-app-bar-nav-icon @click.stop="drawer = !drawer" class="drawer-icon"></v-app-bar-nav-icon> -->
+            <v-app-bar-nav-icon @click.stop="mini = !mini" class="drawer-icon"></v-app-bar-nav-icon>
             <v-toolbar-title class="header-main-icon pa-1" @click="$router.push({name: 'home'})">메인</v-toolbar-title>
             <v-spacer/>
-              <v-text-field class="search-input shrink mx-3" flat hide-details solo label="검색" prepend-inner-icon="mdi-magnify"></v-text-field>
-            <!-- <v-btn icon>
-                <v-icon>mdi-magnify</v-icon>
-            </v-btn> -->         
+              <v-text-field class="search-input shrink mx-3" flat hide-details solo label="검색" prepend-inner-icon="mdi-magnify"></v-text-field>    
             <v-btn icon>
                 <v-icon>mdi-heart</v-icon>
             </v-btn>
@@ -38,8 +36,8 @@
                         <v-divider/>
                         <v-list-item v-for="item in items" :key="item.title" link>
                             <v-list-item-icon>
-                            <v-icon v-if="item.icon" color="pink">
-                                mdi-star
+                            <v-icon class="material-icons" color="">
+                                {{ item.icon }}
                             </v-icon>
                             </v-list-item-icon>
                             <v-list-item-content>
@@ -47,14 +45,77 @@
                             </v-list-item-content>
 
                             <v-list-item-avatar>
-                            <v-img :src="item.avatar"></v-img>
+                            <!-- <v-img :src="item.avatar"></v-img> -->
                             </v-list-item-avatar>
                         </v-list-item>
                     </v-list>
                 </v-card>
             </v-menu>
         </v-app-bar>
-        <v-navigation-drawer v-model="drawer" absolute temporary width="350px" style="position: fixed; z-index: 1001;">
+        <v-navigation-drawer
+            v-model="drawer"
+            :mini-variant.sync="mini"
+            permanent
+            width="350px"
+            style="margin-top: 65px;"
+            color="#F9F9F9"
+            >
+            <v-list-item-group
+          v-model="selectedItem"
+
+        >
+            <v-list-item class="px-2">
+                <v-list-item-avatar>
+                <v-img src="https://randomuser.me/api/portraits/men/85.jpg"></v-img>
+                </v-list-item-avatar>
+                <v-list-item-title>John Leider</v-list-item-title>
+            </v-list-item>
+            <v-divider></v-divider>
+            <v-list nav><!-- dense 추가시 margin 좁아짐-->
+                <v-list-item v-for="item in side_items" :key="item.title" link>
+                <v-list-item-icon>
+                    <v-icon size="25">{{ item.icon }}</v-icon>
+                </v-list-item-icon>
+                <v-list-item-content>
+                    <v-list-item-title style="font-weight: bold; font-size: 16px;">{{ item.title }}</v-list-item-title>
+                </v-list-item-content>
+                </v-list-item>
+            </v-list>
+        </v-list-item-group>
+
+        <v-list-item>
+                <v-list-item-icon>
+                    <v-icon>
+                        mdi-pencil
+                    </v-icon> 
+                </v-list-item-icon>
+                <v-list-item-content>
+                    <v-list-item class="write-btn" @click="$router.push({name: 'write'})" style="background-color: #2889f1;">
+                        <div style="display: flex; margin: auto;">
+                            <v-list-item-title style="font-size: 15px; color: white; font-weight: bold;">글 쓰기</v-list-item-title> 
+                        </div>    
+                    </v-list-item>
+            </v-list-item-content>     
+        </v-list-item>
+
+        <template v-slot:append>
+            <v-list>
+                <v-list-item>
+                    <v-list-item-icon>
+                        <v-icon size="25">logout</v-icon>
+                    </v-list-item-icon>
+                    <v-list-item-content>
+                        <v-btn block class="white--text grey darken-3"  >
+                            로그아웃
+                        </v-btn>
+                    </v-list-item-content>
+                </v-list-item>
+            </v-list>
+        </template>
+        
+        </v-navigation-drawer>
+
+        <!-- <v-navigation-drawer v-model="drawer" absolute temporary width="350px" style="position: fixed; z-index: 1001;">
             <v-list dense>
                 <v-list-item-group v-model="group">
                 <v-list-item class="px-4">
@@ -78,13 +139,14 @@
                 </v-btn>
                 </div>
             </template>
-        </v-navigation-drawer>
-        <!-- <v-top-sheet hide-overlay></v-top-sheet> -->  
+        </v-navigation-drawer> -->
+
     </v-app>
 </template>
 <script>
 export default {
     data: () => ({
+      mini: false,
       fav: true,
       menu: false,
       message: false,
@@ -93,10 +155,16 @@ export default {
       group: null,
       sheet: false,
       items: [
-          { icon: true, title: 'Jason Oner', avatar: 'https://cdn.vuetifyjs.com/images/lists/1.jpg' },
-          { title: 'Travis Howard', avatar: 'https://cdn.vuetifyjs.com/images/lists/2.jpg' },
-          { title: 'Ali Connors', avatar: 'https://cdn.vuetifyjs.com/images/lists/3.jpg' },
-          { title: 'Cindy Baker', avatar: 'https://cdn.vuetifyjs.com/images/lists/4.jpg' },
+          { icon: 'account_circle', title: '계정관리', avatar: 'https://cdn.vuetifyjs.com/images/lists/1.jpg' },
+          { icon: 'help', title: '고객센터', avatar: 'https://cdn.vuetifyjs.com/images/lists/2.jpg' },
+          { icon: 'settings', title: '설정', avatar: 'https://cdn.vuetifyjs.com/images/lists/3.jpg' },
+          { icon: 'logout', title: '로그아웃', avatar: 'https://cdn.vuetifyjs.com/images/lists/4.jpg' },
+      ],
+      side_items: [
+          { icon: 'home', title: '홈'},
+          { icon: 'mdi-clipboard-text', title: '공지사항'},
+          { icon: 'settings', title: '설정'},
+          { icon: 'logout', title: '로그아웃'},
       ],
      
     }),
@@ -112,10 +180,8 @@ export default {
     },   
 }
 </script>
+
 <style scoped> 
-    .drawer-icon:hover {
-        color: #1877F2;
-    }
     .nav-content:hover {
         cursor: pointer;
         color: #1877F2;
@@ -130,5 +196,11 @@ export default {
     v-text-field {
         width: 200px;
     }
+    /* 왼쪽 네비바 border 없애기 */
+    .v-navigation-drawer >>> .v-navigation-drawer__border {
+        display: none
+    }
 
 </style>
+<link href="https://fonts.googleapis.com/icon?family=Material+Icons"
+      rel="stylesheet">
