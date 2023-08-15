@@ -1,69 +1,22 @@
 <template>
     <v-app>
-        <div class="loading text-center" v-if="loading">
-            <v-progress-circular
-            indeterminate
-            color="primary"
-            ></v-progress-circular>
-        </div>
-        <v-card class="left-banner mx-auto rounded-0" width="300" flat style="position: fixed; top: 65px;">
-          <v-img src="https://cdn.vuetifyjs.com/images/lists/ali.png" height="300px" style="border-right:1px solid #eee;">
-          <v-row class="fill-height">
-            <v-card-title class="white--text pl-12 pt-12">
-              <!-- <div class="text-h4 pl-5 pt-15" style="margin:auto">
-                test
-              </div> -->
-            </v-card-title>
-          </v-row>
-        </v-img> 
-        <v-list>
-          <v-list-item class="write-btn ma-3 pa-2" @click="$router.push({name: 'write'})" style="background-color: #2889f1;">
-            <div style="display: flex; margin: auto;">
-              <v-icon left size="25" color="white">
-                mdi-pencil
-              </v-icon> 
-              <v-list-item-title style="font-size: 20px; color: white; font-weight: bold;">글 쓰기</v-list-item-title> 
-            </div>                 
-          </v-list-item>
-          <v-list-item>
-            <v-list-item-icon>
-              <v-icon>mdi-home</v-icon>
-            </v-list-item-icon>
-            <v-list-item-title>Home</v-list-item-title>
-          </v-list-item>
-          <v-list-group :value="true" prepend-icon="mdi-account-circle">
-            <template v-slot:activator>
-              <v-list-item-title>Users</v-list-item-title>
-            </template>
-          <v-list-group :value="true" no-action sub-group>
-            <template v-slot:activator>
-              <v-list-item-content>       
-                <v-list-item-title>Actions</v-list-item-title>
-              </v-list-item-content>
-            </template>
-            <v-list-item v-for="([title, icon], i) in cruds" :key="i" link>
-              <v-list-item-title>{{ title }}</v-list-item-title>
-                <v-list-item-icon>
-                  <v-icon >{{ icon }}</v-icon>
-                </v-list-item-icon>
-              </v-list-item>
-            </v-list-group>
-            <v-list-group :value="true" no-action sub-group>
-            <template v-slot:activator>
-              <v-list-item-content>
-                <v-list-item-title>Actions</v-list-item-title>
-              </v-list-item-content>
-            </template>
-            <v-list-item v-for="([title, icon], i) in cruds" :key="i" link>
-              <v-list-item-title>{{ title }}</v-list-item-title>
-                <v-list-item-icon>
-                  <v-icon>{{ icon }}</v-icon>
-                </v-list-item-icon>
-              </v-list-item>
-            </v-list-group>        
-          </v-list-group>
-          </v-list>
-        </v-card>
+        <!-- scroll to top 버튼 -->
+        <v-btn
+          v-scroll="onScroll"
+          v-show="fab"
+          elevation="0"
+          fab
+          tile
+          dark
+          fixed
+          bottom
+          right
+          color="white"
+          @click="toTop"
+          style="border: 2px solid #eee !important"
+        >
+          <v-icon color="grey" large>keyboard_arrow_up</v-icon>
+        </v-btn>
         <v-row justify="center">
             <v-col cols="6" md="5" offset="0" style="position: relative; top: 105px;">
                 <v-carousel
@@ -85,6 +38,10 @@
                 </v-carousel>
                 <v-card width="1050" class="mx-auto" flat>
                     <v-col cols="12" sm="12" md="12">
+                      <!-- 로딩바 -->
+                      <div class="loading text-center" v-if="loading">
+                        <v-progress-circular indeterminate color="primary"></v-progress-circular>
+                      </div>
                         <div class="board-detail-header">
                             <h4>
                                 <span>{{ board_category }}</span>
@@ -151,7 +108,7 @@
                     </v-col> 
                     <!-- 댓글 리스트 -->
                     <v-list three-line v-if="commentTotal !== ''">
-                        <v-card max-height="1000" flat style="margin-bottom: 200px;">
+                        <v-card max-height="1000" flat style="margin-bottom: 150px;">
                         <template v-for="(comment_list, index) in comment_list">            
                             <v-list-item v-if="comment_list" :key="comment_list.writer">
                             <v-list-item-avatar>
@@ -178,6 +135,37 @@
                                 </div>
                         </v-card>
                     </v-list>
+                    <!-- 하단 공지사항 리스트 -->
+                    <v-toolbar flat style="border-bottom: 2px solid #eee; top: 20px;">
+                      <v-toolbar-title style="font-weight: bold; font-size: 18px;">공지사항</v-toolbar-title>
+                      <v-spacer></v-spacer>
+                      <v-btn class="notice-btn" icon @click="$router.push({name: 'notice', query: { count: totalPage, page:1, category:'최신글순' }})">
+                        <v-icon>mdi-view-module</v-icon>
+                      </v-btn>
+                    </v-toolbar>
+                    <v-carousel class="notice_delimiter" height="400px" v-model="model" hide-delimiter-background :show-arrows="false" style="margin-bottom: 200px;">
+                      <v-carousel-item v-for="notice_list in 3" :key="notice_list">
+                          <v-row class="fill-height" align="center" justify="center">
+                            <v-col cols="12" md="12" offset="0">
+                              <v-list>
+                                <v-list-item v-for="file in files" :key="file.title">
+                                  <v-list-item-avatar>
+                                    <v-icon :class="file.color" dark>{{ file.icon }}</v-icon>
+                                  </v-list-item-avatar>
+                                  <v-list-item-content>
+                                    <v-list-item-title>{{ file.title }}</v-list-item-title>
+                                    <v-list-item-subtitle><span style="font-size: 14px; margin-right: 30px;">홍길동</span>{{ file.subtitle }}</v-list-item-subtitle>
+                                  </v-list-item-content>
+                                    <v-icon color="primary" style="margin-right: 20px;">mdi-thumb-up</v-icon>
+                                    <span style="position: relative; right: 35px; top: 20px; font-size: 13px; color: grey;">7</span>   
+                                    <v-icon color="grey lignten-2">mdi-message-text</v-icon>
+                                    <span style="position: relative; right: 15px; top: 20px; font-size: 13px; color: grey;">7</span>   
+                                </v-list-item>
+                              </v-list>
+                            </v-col>
+                          </v-row>
+                      </v-carousel-item>
+                    </v-carousel>
                 </v-card> 
             </v-col>
         </v-row>    
@@ -185,10 +173,43 @@
 </template>
 
 <script>
-import { selectNoticeBoardDetail } from "@/api/noticeBoard/noticeBoard";
+import { selectNoticeBoardDetail, selectNoticeBoardDetailList } from "@/api/noticeBoard/noticeBoard";
 export default {
     data () {
         return {
+            files: [
+              {
+                color: 'blue',
+                icon: 'mdi-clipboard-text',
+                subtitle: '2023.01.01 23:13',
+                title: 'Vacation itinerary',
+              },
+              {
+                color: 'amber',
+                icon: 'mdi-gesture-tap-button',
+                subtitle: '2023.01.01 23:13',
+                title: 'Kitchen remodel',
+              },
+              {
+                color: 'amber',
+                icon: 'mdi-gesture-tap-button',
+                subtitle: '2023.01.01 23:13',
+                title: 'Kitchen2 remodel',
+              },
+              {
+                color: 'amber',
+                icon: 'mdi-gesture-tap-button',
+                subtitle: '2023.01.01 23:13',
+                title: 'Kitchen3 remodel',
+              },
+              {
+                color: 'amber',
+                icon: 'mdi-gesture-tap-button',
+                subtitle: '2023.01.01 23:13',
+                title: 'Kitchen4 remodel',
+              },
+            ],
+            fab: false,
             loading: true,
             board_category : '',
             board_detail_list: {},
@@ -227,6 +248,10 @@ export default {
                 ['Update', 'mdi-update'],
                 ['Delete', 'mdi-delete'],
             ],
+            model: 0, // 하단 공지사항 리스트
+            notice_list: [
+              '1','2','3'
+            ]
         }
     },
     created() {
@@ -234,60 +259,98 @@ export default {
     },
     mounted() {
         this.select()
+        //this.noticeBoardList()
     },
 
     methods: {
-        changeLikeBtn() {
-            this.like_btn =  !this.like_btn;
-        },
-        select() {
-            const data = { id: this.$route.query.board, category: this.$route.query.notice_board }
-            selectNoticeBoardDetail(data)
-                .then((res) => {
-                   this.loading = false,
-                   this.board_category = '[공지사항]',
-                   this.board_detail_list = res.data.data[0]
-                    console.log(res.data.data[0])
-                })
-                .catch((error) => {
+      onScroll (e) {
+        if (typeof window === 'undefined') 
+          return
+        const top = window.pageYOffset || e.target.scrollTop || 0
+        this.fab = top > 20
+      },
+      toTop () {
+        this.$vuetify.goTo(0)
+      },
+      changeLikeBtn() {
+          this.like_btn =  !this.like_btn;
+      },
+      select() {
+          const data = { id: this.$route.query.board }
+          selectNoticeBoardDetail(data)
+              .then((res) => {
+                this.loading = false,
+                this.board_category = '[공지사항]',
+                this.board_detail_list = res.data.data[0]
+              })
+              .catch((error) => {
                 console.log(error)
-                })
-                .finally(() => {
+              })
+              .finally(() => {
 
-                })
-        }
+              })
+      },
+      noticeBoardList() {
+        const data = { id: this.$route.query.board }
+        selectNoticeBoardDetailList(data)
+              .then((res) => {
+                console.log(res.data);
+                  // this.loading = false,
+                  // this.board_category = '[공지사항]',
+                  // this.board_detail_list = res.data.data[0]
+                  // console.log(res.data.data[0])
+              })
+              .catch((error) => {
+                console.log(error)
+              })
+              .finally(() => {
+
+              })
+      }
     }
 }
 </script>
 
-<style scoped>
+<style>
     @media (max-width: 1200px) {
       .left-banner {display:none}
     } 
     .board-detail-header {
-        padding-top: 20px;
-        padding-bottom: 20px;
-        border-top: 1px solid #eee;
-        border-bottom: 1px solid #eee;
+      padding-top: 20px;
+      padding-bottom: 20px;
+      border-top: 1px solid #eee;
+      border-bottom: 1px solid #eee;
     }
     .board-detail-title {
-        font-weight: normal;
+      font-weight: normal;
     }
     .board-detail-content {
-        padding-top: 30px;
-        padding-bottom: 30px;
+      padding-top: 30px;
+      padding-bottom: 30px;
     }
     .comment-btn {
-        border-color: black !important;
+      border-color: black !important;
     }
     .v-progress-circular {
-        margin: 1rem;
+      margin: 1rem;
     }
     .loading {
-        z-index: 2;
-        position: fixed;
-        top: 50%;
-        left: 50%;
-        transform: translate(-50%, -50%);
+      z-index: 2;
+      position: fixed;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+    }
+    .notice-btn{
+      right: 10px;
+    }
+    .notice_delimiter .v-carousel__controls__item {
+      width: 15px;
+      height: 15px;
+      color: transparent !important;
+       background: #eee !important
+    }
+    .notice_delimiter .v-btn--active {
+      background-color: #2889f1 !important;
     }
 </style>

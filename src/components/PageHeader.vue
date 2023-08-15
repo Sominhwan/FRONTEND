@@ -1,20 +1,20 @@
 <template>
 <!-- class="ma-12 pa-12" toolbar: flat-->
     <v-app style="position: fixed;">
-        <v-app-bar dense elevation="0" height="65px" color="#F9F9F9" style="position: fixed; width: 100%; z-index: 1000;">
+        <v-app-bar dense elevation="0" height="65px" color="#363636" style="position: fixed; width: 100%; z-index: 1000;">
             <!-- <v-app-bar-nav-icon @click.stop="drawer = !drawer" class="drawer-icon"></v-app-bar-nav-icon> -->
-            <v-app-bar-nav-icon @click.stop="mini = !mini" class="drawer-icon"></v-app-bar-nav-icon>
-            <v-toolbar-title class="header-main-icon pa-1" @click="$router.push({name: 'home'})">메인</v-toolbar-title>
+            <v-app-bar-nav-icon @click.stop="mini = !mini" class="drawer-icon" color="white"></v-app-bar-nav-icon>
+            <v-toolbar-title class="header-main-icon pa-1" @click="$router.push({name: 'home'})" style="color:white;">메인</v-toolbar-title>
             <v-spacer/>
-              <v-text-field class="search-input shrink mx-3" flat hide-details solo label="검색" prepend-inner-icon="mdi-magnify"></v-text-field>    
+              <v-text-field class="search-input shrink mx-4" flat hide-details solo dense label="검색" prepend-inner-icon="mdi-magnify"></v-text-field>    
             <v-btn icon>
-                <v-icon>mdi-heart</v-icon>
+                <v-icon color="white">mdi-heart</v-icon>
             </v-btn>
             <!-- nav 우측 메뉴 -->
             <v-menu offset-y>
                 <template v-slot:activator="{ on, attrs }">
                     <v-btn icon v-bind="attrs" v-on="on">
-                        <v-icon>mdi-dots-vertical</v-icon>
+                        <v-icon color="white">mdi-dots-vertical</v-icon>
                     </v-btn> 
                 </template>
                 <v-card>
@@ -54,11 +54,11 @@
         </v-app-bar>
         <v-navigation-drawer
             v-model="drawer"
+            dark
             :mini-variant.sync="mini"
             permanent
             width="350px"
             style="margin-top: 65px;"
-            color="#F9F9F9"
             >
             <v-list-item-group
           v-model="selectedItem"
@@ -105,7 +105,7 @@
                         <v-icon size="25">logout</v-icon>
                     </v-list-item-icon>
                     <v-list-item-content>
-                        <v-btn block class="white--text grey darken-3"  >
+                        <v-btn block class="white--text darken-3"  >
                             로그아웃
                         </v-btn>
                     </v-list-item-content>
@@ -191,7 +191,7 @@ export default {
     }
     .search-input {
         border-radius: 5px;
-        border: 1px solid #eee;
+        /* border: 3px solid #eee; */
     }
     v-text-field {
         width: 200px;

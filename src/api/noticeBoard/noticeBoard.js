@@ -38,3 +38,14 @@ export function selectNoticeBoardDetail(data) { // 공지사항 상세페이지 
         headers: { 'Content-Type': 'application/json;charset=utf8' }
     })
 }
+
+export function selectNoticeBoardDetailList(data) { // 공지사항 상세페이지 공지사항 리스트 가져오기
+    return request({
+        url: `/api/v1/noticeboard/detail/list`,
+        method: 'GET',
+        params: data,
+        meta: { apiVersion: '1.0.0' },
+        headers: { 'Content-Type': 'application/json;charset=utf8' }
+    })
+}
+
