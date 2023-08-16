@@ -115,7 +115,25 @@
         </v-card>    
         <div class="text-center ma-5">
           <v-pagination v-model="page" :length="this.totalPage" @input="changePage()"></v-pagination>
-        </div>            
+        </div> 
+        <!-- 하단 페이징 번호  -->
+        <div class="paging-block">
+          <ul class="paging-ul">
+            <li @click="prevPaging()" style="position: relative; top: 5px;"><span>이전</span></li>
+            <div v-for="idx in 5" :key="idx">
+             <div v-if="Number(totalPage) < 5">
+              <div v-if="activePage==idx">
+                <li :class="activePageCSS" id="paging"><span>{{ idx + paging }}</span></li>
+              </div>
+              <div v-else>
+                <li id="paging" @click="changePaging(idx)"><span>{{ idx + paging }}</span></li>
+              </div> 
+             </div>   
+            </div>
+            <li @click="nextPaging()" style="position: relative; top: 5px;"><span>다음</span></li>
+          </ul>
+        </div>  
+
       </v-col>
     </v-row>
   </v-app>
@@ -127,9 +145,13 @@ export default {
   data () {
       return {
           loading: true,
+          paging: 0,
           page: this.$route.query.page,
           totalPage: this.$route.query.count,
           notice_board_list: [],
+          activePageCSS: 'on',
+          activePage: 1,
+          pageValue: 0,
           colors: [
             'green',
             'secondary',
@@ -166,6 +188,16 @@ export default {
     this.search(this.page, this.items_select) // 공지사항 페이지 시작시 데이터 불러옴
   },
   methods: {
+    prevPaging() {
+      if(this.paging >= 5)
+        this.paging += -5
+    },
+    nextPaging() {
+      this.paging += 5;
+    },
+    changePaging(value) {
+      this.activePage = value;
+    },
     search(curPage, category){    
       selectNoticeBoard(curPage, category)
         .then((res) => {
@@ -199,10 +231,40 @@ export default {
     text-decoration: underline;
   }
   .loading {
-      z-index: 2;
-      position: fixed;
-      top: 50%;
-      left: 50%;
-      transform: translate(-50%, -50%);
+    z-index: 2;
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+  }
+  .paging-block {
+    width: 500px;
+    height: 50px;
+    color: #eee;
+  }
+
+  .paging-ul li {
+    cursor: pointer;
+    text-align: center;
+    box-sizing: border-box;
+    display: block;
+    padding: 10px 15px; 
+    float: left;
+    list-style: none;
+  }
+  .paging-ul li span{
+    font-size: 14px;
+    color: black;
+  }
+  .paging-ul li.on {
+    outline: solid 1px #0073e6;
+    transition: outline-color 0.2s ease;
+    border-radius: 5px;
+  }
+  #paging {
+    margin: 5px;
+  }
+  #paging-ul li.on  {
+    color: #0073e6;
   }
 </style>
