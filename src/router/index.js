@@ -26,9 +26,9 @@ const routes = [
   },
   {
     path: '/notice/detail',
-    name: 'notice',
-
-    component: NoticeView
+    name: 'noticeDetail',
+    component: NoticeView,
+    props: route => ({ page: parseInt(route.query.page || 1) })
   },
   {
     path: '/board/write',

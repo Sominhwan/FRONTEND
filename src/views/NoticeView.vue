@@ -112,12 +112,33 @@
                 <span style="position: relative; right: 15px; top: 20px; font-size: 13px; color: grey;">{{ notice_board_list.commentCount }}</span>       
             </v-list-item>       
           </v-list>
-        </v-card>    
-        <div class="text-center ma-5">
-          <v-pagination v-model="page" :length="this.totalPage" @input="changePage()"></v-pagination>
-        </div> 
+        </v-card> 
+
+        <v-card class="" center>
+          <ul class="paging-ul">
+            <router-link class="prev-btn" :to="{ name: 'noticeDetail', query: { page: page - 1, count: totalPage, category: this.$route.query.category }}"
+              v-if="page > 1" style="position: relative; top: 7px;">
+              이전
+            </router-link>
+              <div v-for="idx in 5" :key="idx">
+                  <div v-if="activePage==idx">
+                    <li :class="activePageCSS" id="paging"><span>{{ idx + paging }}</span></li>
+                  </div>
+                  <div v-else>
+                    <li id="paging" @click="changePaging(idx)"><span>{{ idx + paging }}</span></li>
+                  </div>   
+              </div>
+            <router-link class="next-btn" :to="{ name: 'noticeDetail', query: { page: page + 1 , count: totalPage, category: this.$route.query.category }}"
+              v-if="page < this.totalPage" style="position: relative; top: 7px;">
+              다음
+            </router-link>
+          </ul>
+        </v-card>
+        <!-- <div class="text-center ma-5">
+          <v-pagination v-model="page" :length="this.totalPage" :total-visible="5" @input="changePage()"></v-pagination>
+        </div>  -->
         <!-- 하단 페이징 번호  -->
-        <div class="paging-block">
+        <!-- <div class="paging-block">
           <ul class="paging-ul">
             <li @click="prevPaging()" style="position: relative; top: 5px;"><span>이전</span></li>
             <div v-for="idx in 5" :key="idx">
@@ -132,7 +153,7 @@
             </div>
             <li @click="nextPaging()" style="position: relative; top: 5px;"><span>다음</span></li>
           </ul>
-        </div>  
+        </div>   -->
 
       </v-col>
     </v-row>
@@ -141,12 +162,14 @@
 
 <script>
 import { selectNoticeBoard } from "@/api/noticeBoard/noticeBoard";
+import { mapActions } from 'vuex';
 export default {
+  props: ['page'],
   data () {
       return {
           loading: true,
           paging: 0,
-          page: this.$route.query.page,
+          //page: this.$route.query.page,
           totalPage: this.$route.query.count,
           notice_board_list: [],
           activePageCSS: 'on',
@@ -184,9 +207,16 @@ export default {
       this.changePage()
     }
   },
-  mounted() {
+  created() {
     this.search(this.page, this.items_select) // 공지사항 페이지 시작시 데이터 불러옴
   },
+  mounted() {
+    //this.setPage(this.totalPage)
+   
+  },
+  // computed: {
+  //   ...mapState(['currentPage']),
+  // },
   methods: {
     prevPaging() {
       if(this.paging >= 5)
@@ -211,8 +241,11 @@ export default {
 
         })
     },
+    ...mapActions(['setPage']),
     changePage(){
-        this.$router.push({name: 'notice', query: { page: this.page, category: this.items_select, count: this.totalPage}}).catch(() => {})
+        this.setPage(this.page),
+        this.$router.push({name: 'noticeDetail', query: { page: this.page, category: this.items_select, count: this.totalPage}}).catch(() => {})
+
     }
   }
 }
@@ -237,19 +270,33 @@ export default {
     left: 50%;
     transform: translate(-50%, -50%);
   }
-  .paging-block {
-    width: 500px;
-    height: 50px;
-    color: #eee;
-  }
 
-  .paging-ul li {
-    cursor: pointer;
+
+  .prev-btn {
+    text-decoration: none;
+    font-size: 14px;
+    color: black;
     text-align: center;
-    box-sizing: border-box;
-    display: block;
     padding: 10px 15px; 
     float: left;
+  }
+  .next-btn {
+    text-decoration: none;
+    font-size: 14px;
+    color: black;
+    text-align: center;
+    padding: 10px 15px; 
+    float: left;
+  }
+  .paging-ul {
+
+  }
+  .paging-ul li {
+    cursor: pointer;
+    float: left;
+    display: inline-flex;
+    text-align: center;
+    padding: 10px 15px; 
     list-style: none;
   }
   .paging-ul li span{

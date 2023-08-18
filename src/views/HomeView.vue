@@ -107,7 +107,7 @@
                     </btn> -->
                   </li>
                 </ul>
-                <v-btn icon @click="$router.push({name: 'notice', query: { count: totalPage, page:1, category:'최신글순' }})">
+                <v-btn icon @click="$router.push({name: 'noticeDetail', query: { page:1, count: totalPage, category:'최신글순' }})">
                   <v-icon>mdi-view-module</v-icon>
                 </v-btn>
               </v-toolbar>
