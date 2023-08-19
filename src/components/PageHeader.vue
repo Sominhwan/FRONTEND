@@ -1,7 +1,7 @@
 <template>
 <!-- class="ma-12 pa-12" toolbar: flat-->
     <v-app style="position: fixed;">
-        <v-app-bar dense elevation="0" height="65px" color="#363636" style="position: fixed; width: 100%; z-index: 1000;">
+        <v-app-bar dense elevation="0" height="65px" color="#363636" style="position: fixed; ">
             <!-- <v-app-bar-nav-icon @click.stop="drawer = !drawer" class="drawer-icon"></v-app-bar-nav-icon> -->
             <v-app-bar-nav-icon @click.stop="mini = !mini" class="drawer-icon" color="white"></v-app-bar-nav-icon>
             <v-toolbar-title class="header-main-icon pa-1" @click="$router.push({name: 'home'})" style="color:white;">메인</v-toolbar-title>
@@ -60,10 +60,6 @@
             width="350px"
             style="margin-top: 65px;"
             >
-            <v-list-item-group
-          v-model="selectedItem"
-
-        >
             <v-list-item class="px-2">
                 <v-list-item-avatar>
                 <v-img src="https://randomuser.me/api/portraits/men/85.jpg"></v-img>
@@ -71,79 +67,59 @@
                 <v-list-item-title>John Leider</v-list-item-title>
             </v-list-item>
             <v-divider></v-divider>
-            <v-list nav><!-- dense 추가시 margin 좁아짐-->
-                <v-list-item v-for="item in side_items" :key="item.title" link>
-                <v-list-item-icon>
-                    <v-icon size="25">{{ item.icon }}</v-icon>
-                </v-list-item-icon>
-                <v-list-item-content>
-                    <v-list-item-title style="font-weight: bold; font-size: 16px;">{{ item.title }}</v-list-item-title>
-                </v-list-item-content>
-                </v-list-item>
-            </v-list>
-        </v-list-item-group>
 
-        <v-list-item>
-                <v-list-item-icon>
-                    <v-icon>
-                        mdi-pencil
-                    </v-icon> 
-                </v-list-item-icon>
-                <v-list-item-content>
-                    <v-list-item class="write-btn" @click="$router.push({name: 'write'})" style="background-color: #2889f1;">
-                        <div style="display: flex; margin: auto;">
-                            <v-list-item-title style="font-size: 15px; color: white; font-weight: bold;">글 쓰기</v-list-item-title> 
-                        </div>    
-                    </v-list-item>
-            </v-list-item-content>     
-        </v-list-item>
-
-        <template v-slot:append>
-            <v-list>
-                <v-list-item>
+            <v-list-item-group v-model="selectedItem">        
+                <v-list nav><!-- dense 추가시 margin 좁아짐-->
+                    <v-list-item v-for="item in side_items" :key="item.title" link>
                     <v-list-item-icon>
-                        <v-icon size="25">logout</v-icon>
+                        <v-icon size="25">{{ item.icon }}</v-icon>
                     </v-list-item-icon>
                     <v-list-item-content>
-                        <v-btn block class="white--text darken-3"  >
-                            로그아웃
-                        </v-btn>
+                        <v-list-item-title style="font-weight: bold; font-size: 16px;">{{ item.title }}</v-list-item-title>
                     </v-list-item-content>
-                </v-list-item>
-            </v-list>
-        </template>
-        
-        </v-navigation-drawer>
+                    </v-list-item>
+                </v-list>
+            </v-list-item-group>
+            <v-list-item>
+                <v-list-item-content>
+                    <LoginDialog style="position: absolute; top: 40%; left: 20%; "/>
+                </v-list-item-content>
+            </v-list-item>
+            <v-list-item>
+                    <v-list-item-icon>
+                        <v-icon>
+                            mdi-pencil
+                        </v-icon> 
+                    </v-list-item-icon>
+                    <v-list-item-content>
+                        <v-list-item class="write-btn" @click="$router.push({name: 'write'})" style="background-color: #2889f1;">
+                            <div style="display: flex; margin: auto;">
+                                <v-list-item-title style="font-size: 15px; color: white; font-weight: bold;">글 쓰기</v-list-item-title> 
+                            </div>    
+                        </v-list-item>
+                </v-list-item-content>     
+            </v-list-item>
 
-        <!-- <v-navigation-drawer v-model="drawer" absolute temporary width="350px" style="position: fixed; z-index: 1001;">
-            <v-list dense>
-                <v-list-item-group v-model="group">
-                <v-list-item class="px-4">
-                    <v-list-item-title>Foo</v-list-item-title>
-                </v-list-item>
-                <v-list-item class="px-4">
-                    <v-list-item-title>Bar</v-list-item-title>
-                </v-list-item>
-                <v-list-item class="px-4">
-                    <v-list-item-title>Fizz</v-list-item-title>
-                </v-list-item>
-                <v-list-item class="px-4" >
-                    <v-list-item-title>Buzz</v-list-item-title>
-                </v-list-item>
-                </v-list-item-group>
-            </v-list>
             <template v-slot:append>
-                <div class="pa-5">
-                <v-btn block class="white--text grey darken-3"  >
-                    Logout
-                </v-btn>
-                </div>
+                <v-list  style="position: fixed; bottom: 0; width: 100%;">
+                    <v-list-item>
+                        <v-list-item-icon>
+                            <v-icon size="25">logout</v-icon>
+                        </v-list-item-icon>
+                        <v-list-item-content>
+                            <v-btn block class="white--text darken-3" @click="openLoginDialog()" >
+                                로그아웃
+                            </v-btn>
+                        </v-list-item-content>
+                    </v-list-item>
+                </v-list>
             </template>
-        </v-navigation-drawer> -->
+        </v-navigation-drawer>
 
     </v-app>
 </template>
 <script>
+import LoginDialog from '@/components/LoginDialog';
 export default {
     data: () => ({
       mini: false,
@@ -154,6 +130,7 @@ export default {
       drawer: false,
       group: null,
       sheet: false,
+      //loginBtn: false,
       items: [
           { icon: 'account_circle', title: '계정관리', avatar: 'https://cdn.vuetifyjs.com/images/lists/1.jpg' },
           { icon: 'help', title: '고객센터', avatar: 'https://cdn.vuetifyjs.com/images/lists/2.jpg' },
@@ -168,9 +145,18 @@ export default {
       ],
      
     }),
+    comments: {
+        LoginDialog
+    },
+    components: { 
+        LoginDialog 
+    },
     methods: {
         menuBackground() {
             this.menu = true
+        },
+        openLoginDialog() {
+            this.loginBtn = true
         }
     },
     watch: {

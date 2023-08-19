@@ -77,7 +77,11 @@
 <script>
 import { selectNoticeBoard } from "@/api/noticeBoard/noticeBoard";
 export default {
-  props: ['page'],
+  props: { 
+    page: {
+      type: String
+    },
+},
   data () {
       return {
           pagingBtn: 0,
@@ -120,7 +124,11 @@ export default {
     }
   },
   created() {
-    this.search(this.page, this.items_select) // 공지사항 페이지 시작시 데이터 불러옴
+    if(this.items_select == '최신글순' || this.items_select == '많은댓글순' ==  this.items_select == '좋아요순') {
+      this.search(this.page, this.items_select) // 공지사항 페이지 시작시 데이터 불러옴
+    } else {
+      this.$router.push({name: 'error404'}).catch(() => {})
+    }
   },
   mounted() {
    
@@ -129,11 +137,11 @@ export default {
     search(curPage, category){    
       selectNoticeBoard(curPage, category)
         .then((res) => {
-          if(res.data.data == '' || this.items_select == '' || this.items_select == null ){ // url 값에 대한 error404 페이지 반환
+          if(res.data.data.noticeBoardList == '' ||  this.totalPage != res.data.data.totalPage || curPage == null || curPage == ''){ // url 값에 대한 error404 페이지 반환
             this.$router.push({name: 'error404'}).catch(() => {})
           }
           this.loading = false,
-          this.notice_board_list = res.data.data
+          this.notice_board_list = res.data.data.noticeBoardList
         })
         .catch((error) => {
           console.log(error);
@@ -168,7 +176,7 @@ export default {
   }
   .loading {
     z-index: 2;
-    position: fixed;
+    position: absolute;
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
