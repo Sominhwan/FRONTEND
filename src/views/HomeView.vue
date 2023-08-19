@@ -314,7 +314,6 @@ import { selectNoticePage } from "@/api/noticeBoard/noticeBoard";
         getBoard()
           .then((res) => {
             this.loading = false,
-            console.log(res.data.data);
             this.notice_board_list = res.data.data;
           })
           .catch((error) => {

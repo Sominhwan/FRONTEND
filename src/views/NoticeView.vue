@@ -1,63 +1,5 @@
 <template>
   <v-app>
-      <v-card class="left-banner mx-auto rounded-0" width="300" flat style="position: fixed; top: 65px;">
-        <v-img src="https://cdn.vuetifyjs.com/images/lists/ali.png" height="300px" style="border-right:1px solid #eee;">
-        <v-row class="fill-height">
-          <v-card-title class="white--text pl-12 pt-12">
-            <!-- <div class="text-h4 pl-5 pt-15" style="margin:auto">
-              test
-            </div> -->
-          </v-card-title>
-        </v-row>
-      </v-img> 
-      <v-list>
-        <v-list-item class="write-btn ma-3 pa-2" @click="$router.push({name: 'write'})" style="background-color: #2889f1;">
-          <div style="display: flex; margin: auto;">
-            <v-icon left size="25" color="white">
-              mdi-pencil
-            </v-icon> 
-            <v-list-item-title style="font-size: 20px; color: white; font-weight: bold;">글 쓰기</v-list-item-title> 
-          </div>                 
-        </v-list-item>
-        <v-list-item>
-          <v-list-item-icon>
-            <v-icon>mdi-home</v-icon>
-          </v-list-item-icon>
-          <v-list-item-title>Home</v-list-item-title>
-        </v-list-item>
-        <v-list-group :value="true" prepend-icon="mdi-account-circle">
-          <template v-slot:activator>
-            <v-list-item-title>Users</v-list-item-title>
-          </template>
-        <v-list-group :value="true" no-action sub-group>
-          <template v-slot:activator>
-            <v-list-item-content>       
-              <v-list-item-title>Actions</v-list-item-title>
-            </v-list-item-content>
-          </template>
-          <v-list-item v-for="([title, icon], i) in cruds" :key="i" link>
-            <v-list-item-title>{{ title }}</v-list-item-title>
-              <v-list-item-icon>
-                <v-icon >{{ icon }}</v-icon>
-              </v-list-item-icon>
-            </v-list-item>
-          </v-list-group>
-          <v-list-group :value="true" no-action sub-group>
-          <template v-slot:activator>
-            <v-list-item-content>
-              <v-list-item-title>Actions</v-list-item-title>
-            </v-list-item-content>
-          </template>
-          <v-list-item v-for="([title, icon], i) in cruds" :key="i" link>
-            <v-list-item-title>{{ title }}</v-list-item-title>
-              <v-list-item-icon>
-                <v-icon>{{ icon }}</v-icon>
-              </v-list-item-icon>
-            </v-list-item>
-          </v-list-group>        
-        </v-list-group>
-        </v-list>
-      </v-card>
     <v-row justify="center">
       <v-col cols="12" md="5" offset="0" style="position: relative; top: 105px;">
         <v-carousel
@@ -89,7 +31,7 @@
             </v-col>
           </v-card>
         <!-- 공지사항 목록 -->  
-        <v-card class="rounded-0" flat style="min-height:950px">
+        <v-card class="rounded-0" flat style="min-height:1000px">
           <v-list style="border-bottom: 1px solid #eee;">
             <!-- 로딩바 -->
             <div class="loading text-center" v-if="loading">
@@ -113,48 +55,20 @@
             </v-list-item>       
           </v-list>
         </v-card> 
-
-        <v-card class="" center>
+        <!-- 페이징처리 버튼 -->
+        <v-list style="margin-bottom: 200px;">
           <ul class="paging-ul">
-            <router-link class="prev-btn" :to="{ name: 'noticeDetail', query: { page: page - 1, count: totalPage, category: this.$route.query.category }}"
-              v-if="page > 1" style="position: relative; top: 7px;">
+            <router-link class="prev-btn" :id="page == 1 ? activeBtnCss : ''" :to="{ name: 'noticeDetail', query: { page: page - 1, count: totalPage, category: this.$route.query.category }}">
               이전
             </router-link>
-              <div v-for="idx in 5" :key="idx">
-                  <div v-if="activePage==idx">
-                    <li :class="activePageCSS" id="paging"><span>{{ idx + paging }}</span></li>
-                  </div>
-                  <div v-else>
-                    <li id="paging" @click="changePaging(idx)"><span>{{ idx + paging }}</span></li>
-                  </div>   
+              <div v-for="idx in parseInt(this.totalPage)" :key="idx">
+                <li :class="page == idx ? activePageCSS : ''" @click="changePage2(idx)"><span>{{ idx }}</span></li>
               </div>
-            <router-link class="next-btn" :to="{ name: 'noticeDetail', query: { page: page + 1 , count: totalPage, category: this.$route.query.category }}"
-              v-if="page < this.totalPage" style="position: relative; top: 7px;">
+            <router-link class="next-btn" :id="page == totalPage ? activeBtnCss : ''" :to="{ name: 'noticeDetail', query: { page: page + 1 , count: totalPage, category: this.$route.query.category }}">
               다음
             </router-link>
           </ul>
-        </v-card>
-        <!-- <div class="text-center ma-5">
-          <v-pagination v-model="page" :length="this.totalPage" :total-visible="5" @input="changePage()"></v-pagination>
-        </div>  -->
-        <!-- 하단 페이징 번호  -->
-        <!-- <div class="paging-block">
-          <ul class="paging-ul">
-            <li @click="prevPaging()" style="position: relative; top: 5px;"><span>이전</span></li>
-            <div v-for="idx in 5" :key="idx">
-             <div v-if="Number(totalPage) < 5">
-              <div v-if="activePage==idx">
-                <li :class="activePageCSS" id="paging"><span>{{ idx + paging }}</span></li>
-              </div>
-              <div v-else>
-                <li id="paging" @click="changePaging(idx)"><span>{{ idx + paging }}</span></li>
-              </div> 
-             </div>   
-            </div>
-            <li @click="nextPaging()" style="position: relative; top: 5px;"><span>다음</span></li>
-          </ul>
-        </div>   -->
-
+        </v-list>
       </v-col>
     </v-row>
   </v-app>
@@ -162,19 +76,17 @@
 
 <script>
 import { selectNoticeBoard } from "@/api/noticeBoard/noticeBoard";
-import { mapActions } from 'vuex';
 export default {
   props: ['page'],
   data () {
       return {
+          pagingBtn: 0,
           loading: true,
           paging: 0,
-          //page: this.$route.query.page,
           totalPage: this.$route.query.count,
           notice_board_list: [],
           activePageCSS: 'on',
-          activePage: 1,
-          pageValue: 0,
+          activeBtnCss: 'disabled-link',
           colors: [
             'green',
             'secondary',
@@ -211,26 +123,15 @@ export default {
     this.search(this.page, this.items_select) // 공지사항 페이지 시작시 데이터 불러옴
   },
   mounted() {
-    //this.setPage(this.totalPage)
    
   },
-  // computed: {
-  //   ...mapState(['currentPage']),
-  // },
   methods: {
-    prevPaging() {
-      if(this.paging >= 5)
-        this.paging += -5
-    },
-    nextPaging() {
-      this.paging += 5;
-    },
-    changePaging(value) {
-      this.activePage = value;
-    },
     search(curPage, category){    
       selectNoticeBoard(curPage, category)
         .then((res) => {
+          if(res.data.data == '' || this.items_select == '' || this.items_select == null ){ // url 값에 대한 error404 페이지 반환
+            this.$router.push({name: 'error404'}).catch(() => {})
+          }
           this.loading = false,
           this.notice_board_list = res.data.data
         })
@@ -241,11 +142,13 @@ export default {
 
         })
     },
-    ...mapActions(['setPage']),
+    // 카테고리에 대한 url 반환
     changePage(){
-        this.setPage(this.page),
-        this.$router.push({name: 'noticeDetail', query: { page: this.page, category: this.items_select, count: this.totalPage}}).catch(() => {})
-
+        this.$router.push({name: 'noticeDetail', query: { page: this.page, count: this.totalPage, category: this.items_select}}).catch(() => {})
+    },
+    // 페이징 버튼을 통한 url 반환
+    changePage2(page){
+        this.$router.push({name: 'noticeDetail', query: { page: page, count: this.totalPage, category: this.items_select}}).catch(() => {})
     }
   }
 }
@@ -270,33 +173,33 @@ export default {
     left: 50%;
     transform: translate(-50%, -50%);
   }
-
-
+  #disabled-link {
+    pointer-events: none; /* 클릭 이벤트 비활성화 */
+    cursor: not-allowed; /* 커서 모양 변경 */
+    opacity: 0.6; /* 링크 비활성화 시 투명도 적용 */
+  }
   .prev-btn {
+    position: relative;
     text-decoration: none;
     font-size: 14px;
     color: black;
-    text-align: center;
     padding: 10px 15px; 
-    float: left;
   }
   .next-btn {
+    position: relative;
     text-decoration: none;
     font-size: 14px;
     color: black;
-    text-align: center;
     padding: 10px 15px; 
-    float: left;
   }
   .paging-ul {
-
+    display: flex; 
+    justify-content: center; 
+    align-items: center;
   }
   .paging-ul li {
     cursor: pointer;
-    float: left;
-    display: inline-flex;
-    text-align: center;
-    padding: 10px 15px; 
+    padding: 10px 15px;   
     list-style: none;
   }
   .paging-ul li span{
