@@ -3,6 +3,7 @@ import BoardWriteView from '@/views/BoardWriteView.vue'
 import ErrorView from '@/views/ErrorView.vue'
 import HomeView from '@/views/HomeView.vue'
 import NoticeView from '@/views/NoticeView.vue'
+import SignUpView from '@/views/SignUpView.vue'
 import Vue from 'vue'
 import VueRouter from 'vue-router'
 
@@ -20,9 +21,9 @@ const routes = [
     component: HomeView
   },
   {
-    path: '/about',
-    name: 'about',
-    component: () => import(/* webpackChunkName: "about" */ '../views/AboutView.vue')
+    path: '/join',
+    name: 'join',
+    component: SignUpView
   },
   {
     path: '/notice/detail',
