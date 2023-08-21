@@ -7,18 +7,18 @@
                     로그인 버튼
                 </v-btn>
             </template>
-            <v-card elevation="0 flat" height="550">
+            <v-card elevation="0 flat" height="600">
                 <v-app-bar color="white" elevation="0">
                     <v-card-title class="text-center" style="position: relative; left: 50%; transform: translate(-50%, 0);">로그인</v-card-title>
                     <v-spacer></v-spacer>
-                    <v-btn icon @click="dialog = false">
+                    <v-btn icon @click="closeDialog()">
                         <v-icon>close</v-icon>
                     </v-btn>
                 </v-app-bar>
 
 
                 <v-form v-model="valid">
-                    <v-container style="transform: translate(0, 10%);">
+                    <v-container style="position: absolute; margin-top: 15%;">
                         <v-row justify="center">
                             <v-col cols="12" md="8">
                                 <v-text-field
@@ -79,7 +79,7 @@ export default {
         loader: null,
         loading: false,
         checkbox: false,
-        password: 'Password',
+        password: '',
         nameRules: [
             v => !!v || 'Name is required',
             v => v.length <= 10 || 'Name must be less than 10 characters',
@@ -93,6 +93,8 @@ export default {
     },   
     watch: {
       loader () {
+        this.email = ''
+        this.password = ''
         const l = this.loader
         this[l] = !this[l]
 
@@ -102,9 +104,14 @@ export default {
       },
     },  
     methods: {
-        join(){
+        join() {
             this.dialog = false;
             this.$router.push({name: 'join'}).catch(() => {})
+        },
+        closeDialog() {
+            this.email = ''
+            this.password = ''
+            this.dialog = false;
         }
     }   
 }

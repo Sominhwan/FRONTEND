@@ -81,8 +81,11 @@
                 </v-list>
             </v-list-item-group>
             <v-list-item>
+                <v-list-item-icon>
+                        <v-icon size="25">login</v-icon>
+                </v-list-item-icon>
                 <v-list-item-content>
-                    <LoginDialog style="position: absolute; top: 40%; left: 20%; "/>
+                    <LoginDialog style="position: absolute; top: 40%; left: 80px; "/>
                 </v-list-item-content>
             </v-list-item>
             <v-list-item>

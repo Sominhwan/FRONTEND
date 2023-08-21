@@ -1,5 +1,5 @@
 <template>
-  <v-app>
+  <div>
     <!-- scroll to top 버튼 -->
     <v-btn
       v-scroll="onScroll"
@@ -190,7 +190,7 @@
             </v-card>                
         </v-col>       
       </v-row>
-  </v-app>
+  </div>
 </template>
 
 <script>

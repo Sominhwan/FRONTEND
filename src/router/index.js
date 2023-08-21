@@ -3,7 +3,7 @@ import BoardWriteView from '@/views/BoardWriteView.vue'
 import ErrorView from '@/views/ErrorView.vue'
 import HomeView from '@/views/HomeView.vue'
 import NoticeView from '@/views/NoticeView.vue'
-import SignUpView from '@/views/SignUpView.vue'
+import SignUpView from '@/views/signUp/SignUpView.vue'
 import Vue from 'vue'
 import VueRouter from 'vue-router'
 
