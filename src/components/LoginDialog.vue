@@ -23,6 +23,7 @@
                             <v-col cols="12" md="8">
                                 <v-text-field
                                     class="rounded-0"
+                                    prepend-inner-icon="person"
                                     v-model="email"
                                     label="E-mail"
                                     single-line
@@ -33,6 +34,7 @@
                             <v-col cols="12" md="8" style="position: relative; bottom: 40px;">
                                 <v-text-field
                                     class="rounded-0"
+                                    prepend-inner-icon="lock"
                                     v-model="password"
                                     :append-icon="show1 ? 'mdi-eye' : 'mdi-eye-off'"
                                     :type="show1 ? 'text' : 'password'"

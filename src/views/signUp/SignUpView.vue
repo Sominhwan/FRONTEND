@@ -81,42 +81,90 @@
                                     ></v-select>
                                 </v-col>
                             </v-row>
-                                <div style="display: flex;;">
-                                <v-text-field
-                                    style="width: 300px; margin-right: 20px;"
-                                    ref="phonenum"
-                                    v-model="phonenum"
-                                    dense
-                                    label="휴대폰번호"
-                                    flat
-                                    outlined
-                                    prepend-inner-icon="phone_iphone"
-                                    :rules="[() => !!name || '* 휴대폰번호: 필수정보입니다.']"
-                                    required
-                                ></v-text-field>
-                                <v-select
-                                    style="width: 100px;"
-                                    :items="telecom"
-                                    label="통신사"
-                                    dense
-                                    outlined
-                                    flat
-                                    solo
-                                    prepend-inner-icon="cell_tower"
-                                ></v-select>
+                                <div style="display: flex;">
+                                    <v-text-field
+                                        style="width: 300px; margin-right: 20px;"
+                                        ref="phonenum"
+                                        v-model="phonenum"
+                                        dense
+                                        label="휴대폰번호"
+                                        flat
+                                        outlined
+                                        prepend-inner-icon="phone_iphone"
+                                        :rules="[() => !!name || '* 휴대폰번호: 필수정보입니다.']"
+                                        required
+                                    ></v-text-field>
+                                    <v-select
+                                        style="width: 100px;"
+                                        :items="telecom"
+                                        label="통신사"
+                                        dense
+                                        outlined
+                                        flat
+                                        solo
+                                        prepend-inner-icon="cell_tower"
+                                    ></v-select>
                                 </div>
+                                <v-treeview
+                                    v-model="selection"
+                                    selectable
+                                    selected-color="primary"
+                                    :items="items"
+                                >
+                                    <template v-slot:prepend="{ item }">
+                                    <span @click="dialogCheck(item)" style="cursor: pointer;">{{ item.id }}</span>
+                                    </template>                   
+                                </v-treeview>                            
                         </v-card-text>
                     </v-col>
-                    <!-- TODO Vuetify Treeview 네이버 약관동의 참고하여 추가하기 --> 
-                    <v-text-field
+                    <!-- TODO Vuetify Treeview 네이버 약관동의 참고하여 추가하기--> 
+                    <!-- <v-text-field
                         class="sign-loading"
                         color="primary"
                         loading
                         disabled
-                    ></v-text-field>
+                    ></v-text-field> -->
                 </v-card>
             </v-col>
         </v-row>
+        <v-dialog
+        v-model="dialog"
+        width="600px"
+        >
+        <template v-slot:activator="{ on, attrs }">
+            <v-btn
+            color="primary"
+            dark
+            v-bind="attrs"
+            v-on="on"
+            >
+            Open Dialog
+            </v-btn>
+        </template>
+        <v-card>
+            <v-card-title>
+            <span class="text-h5">Use Google's location service?</span>
+            </v-card-title>
+            <v-card-text>{{ dialogContent }}</v-card-text>
+            <v-card-actions>
+            <v-spacer></v-spacer>
+            <v-btn
+                color="green darken-1"
+                text
+                @click="dialog = false"
+            >
+                Disagree
+            </v-btn>
+            <v-btn
+                color="green darken-1"
+                text
+                @click="dialog = false"
+            >
+                Agree
+            </v-btn>
+            </v-card-actions>
+        </v-card>
+        </v-dialog>        
     </div>
 </template>
 
@@ -131,8 +179,33 @@ export default {
         gender: ['남자', '여자'],
         division: ['내국인', '외국인'],
         select: '내국인',
-        telecom: ['SKT', 'KT', 'LG U+']
+        telecom: ['SKT', 'KT', 'LG U+'],
+        selection: [],
+        items: [
+        {
+          id: '[필수] 약관동의',
+          name: '',
+          children: [
+            { id: '개인정보 이용', content: '개인정보 이용 동의 약관 페이지 입니다.',  action: 'openDialog' },
+            { id: '고유식별정보 처리', content: '고유식별저보 처리 관련 페이지입니다.',  action: 'openDialog' },
+            { id: '통신사 이용약관', content: '통신사 이용약관 관련 페이지입니다.',  action: 'openDialog' },
+          ],
+        },
+      ],  
+      dialogContent: '',
+      dialog: false,      
     }),
+    methods: {
+        dialogCheck(item) {
+            if (item.action) {
+                this[item.action](item);
+            }       
+        },
+        openDialog(item) {
+            this.dialogContent = item.content;
+            this.dialog = true;
+        },       
+    }
 }
 </script>
 
