@@ -29,6 +29,7 @@
                                 v-model="password"
                                 dense
                                 label="비밀번호"
+                                solo
                                 flat
                                 password
                                 outlined
@@ -41,6 +42,7 @@
                                 ref="name"
                                 v-model="name"
                                 dense
+                                solo
                                 label="이름"
                                 flat
                                 outlined
@@ -52,6 +54,7 @@
                                 ref="name"
                                 v-model="birthdate"
                                 dense
+                                solo
                                 label="생년월일"
                                 flat
                                 outlined
@@ -87,6 +90,7 @@
                                         ref="phonenum"
                                         v-model="phonenum"
                                         dense
+                                        solo
                                         label="휴대폰번호"
                                         flat
                                         outlined
@@ -105,16 +109,23 @@
                                         prepend-inner-icon="cell_tower"
                                     ></v-select>
                                 </div>
-                                <v-treeview
-                                    v-model="selection"
-                                    selectable
-                                    selected-color="primary"
-                                    :items="items"
-                                >
-                                    <template v-slot:prepend="{ item }">
-                                    <span @click="dialogCheck(item)" style="cursor: pointer;">{{ item.id }}</span>
-                                    </template>                   
-                                </v-treeview>                            
+                                <v-row>
+                                    <v-treeview
+                                        v-model="selection"
+                                        selectable
+                                        selected-color="primary"
+                                        :items="items"
+                                    >
+                                        <template v-slot:prepend="{ item }">
+                                            <div v-if="item.idx == 1 || item.idx == 2 || item.idx == 3">
+                                                <span class="terms-service" @click="dialogCheck(item)" style="cursor: pointer;">{{ item.id }}<v-icon style="margin-bottom: 3px;">arrow_right</v-icon></span>
+                                            </div>
+                                            <div v-else>
+                                                <span>{{ item.id }}</span>
+                                            </div>
+                                        </template>                   
+                                    </v-treeview>   
+                                </v-row>                       
                         </v-card-text>
                     </v-col>
                     <!-- TODO Vuetify Treeview 네이버 약관동의 참고하여 추가하기--> 
@@ -127,41 +138,17 @@
                 </v-card>
             </v-col>
         </v-row>
-        <v-dialog
-        v-model="dialog"
-        width="600px"
-        >
-        <template v-slot:activator="{ on, attrs }">
-            <v-btn
-            color="primary"
-            dark
-            v-bind="attrs"
-            v-on="on"
-            >
-            Open Dialog
-            </v-btn>
-        </template>
-        <v-card>
-            <v-card-title>
-            <span class="text-h5">Use Google's location service?</span>
+        <v-dialog v-model="dialog" persistent width="550" style="position: fixed; z-index: 1002;">
+        <v-card style="position: relative;">
+            <v-card-title class="terms-service-title">
+                <span class="text-h5">{{ dialogTitle }}</span>
             </v-card-title>
-            <v-card-text>{{ dialogContent }}</v-card-text>
+            <div class="terms-service-content">
+                <v-card-text>{{ dialogContent }}</v-card-text>
+            </div>
             <v-card-actions>
             <v-spacer></v-spacer>
-            <v-btn
-                color="green darken-1"
-                text
-                @click="dialog = false"
-            >
-                Disagree
-            </v-btn>
-            <v-btn
-                color="green darken-1"
-                text
-                @click="dialog = false"
-            >
-                Agree
-            </v-btn>
+            <v-btn class="terms-service-btn" depressed color="darken-1"  @click="dialog = false">확인</v-btn>
             </v-card-actions>
         </v-card>
         </v-dialog>        
@@ -186,15 +173,20 @@ export default {
           id: '[필수] 약관동의',
           name: '',
           children: [
-            { id: '개인정보 이용', content: '개인정보 이용 동의 약관 페이지 입니다.',  action: 'openDialog' },
-            { id: '고유식별정보 처리', content: '고유식별저보 처리 관련 페이지입니다.',  action: 'openDialog' },
-            { id: '통신사 이용약관', content: '통신사 이용약관 관련 페이지입니다.',  action: 'openDialog' },
+            { id: '개인정보 이용', idx: 1, title: '개인정보 이용 동의서', content: '',  action: 'openDialog' 
+            },
+            { id: '고유식별정보 처리', idx: 2, title: '고유식별정보 동의서', content: '고유식별정보 처리 관련 페이지입니다.',  action: 'openDialog' },
+            { id: '통신사 이용약관', idx:3, title: '통신사 이용약관 동의서', content: '통신사 이용약관 관련 페이지입니다.',  action: 'openDialog' },
           ],
         },
       ],  
+      dialogTitle: '',
       dialogContent: '',
       dialog: false,      
     }),
+    mounted() {
+        this.loadAgreementContent();
+    },
     methods: {
         dialogCheck(item) {
             if (item.action) {
@@ -202,9 +194,18 @@ export default {
             }       
         },
         openDialog(item) {
+            this.dialogTitle = item.title;
             this.dialogContent = item.content;
             this.dialog = true;
-        },       
+        },  
+        async loadAgreementContent() {
+            try {
+                const response = await fetch('agreementContent/privateAgreement.txt'); // 파일 경로는 프로젝트에 맞게 수정
+                this.items[0].children[0].content = await response.text();
+            } catch (error) {
+                console.error('Error loading agreement content:', error);
+            }
+        },     
     }
 }
 </script>
@@ -214,5 +215,25 @@ export default {
         position: absolute; 
         width: 100%;
         bottom: 0px;
+    }
+    .terms-service:hover{
+        text-decoration: underline;
+    }
+    .terms-service-title {
+        position: relative;
+        top: 10px;
+        margin-bottom: 25px;
+    }
+    .terms-service-content {
+        background-color: #eee;
+        margin-left: 20px;
+        margin-right: 20px;
+        overflow-y: auto;
+        height: 600px;
+    }
+    .terms-service-btn {
+        margin-top: 10px;
+        margin-right: 4px;
+        margin-bottom: 10px;
     }
 </style>
