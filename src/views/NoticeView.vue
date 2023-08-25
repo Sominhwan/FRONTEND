@@ -1,5 +1,22 @@
 <template>
   <v-app>
+    <!-- scroll to top 버튼 -->
+    <v-btn
+      v-scroll="onScroll"
+      v-show="fab"
+      elevation="0"
+      fab
+      tile
+      dark
+      fixed
+      bottom
+      right
+      color="white"
+      @click="toTop"
+      style="border: 2px solid #eee !important"
+    >
+      <v-icon color="grey" large>keyboard_arrow_up</v-icon>
+    </v-btn>    
     <v-row justify="center">
       <v-col cols="12" md="5" offset="0" style="position: relative; top: 105px;">
         <v-carousel
@@ -84,6 +101,7 @@ export default {
 },
   data () {
       return {
+          fab: false, // 상단 스크롤 이동
           pagingBtn: 0,
           loading: true,
           paging: 0,
@@ -124,21 +142,32 @@ export default {
     }
   },
   created() {
-    if(this.items_select == '최신글순' || this.items_select == '많은댓글순' ==  this.items_select == '좋아요순') {
+    if(this.items_select == '최신글순' || this.items_select == '많은댓글순' || this.items_select == '좋아요순') {
       this.search(this.page, this.items_select) // 공지사항 페이지 시작시 데이터 불러옴
     } else {
-      this.$router.push({name: 'error404'}).catch(() => {})
+      this.$router.push({name: 'error404'})
     }
   },
   mounted() {
-   
+   console.log(this.totalPage)
+   console.log(this.page)
+   console.log(this.items_select)
   },
   methods: {
+    onScroll (e) {
+      if (typeof window === 'undefined') 
+        return
+      const top = window.pageYOffset || e.target.scrollTop || 0
+      this.fab = top > 20
+    },
+    toTop () {
+      this.$vuetify.goTo(0)
+    },
     search(curPage, category){    
       selectNoticeBoard(curPage, category)
         .then((res) => {
           if(res.data.data.noticeBoardList == '' ||  this.totalPage != res.data.data.totalPage || curPage == null || curPage == ''){ // url 값에 대한 error404 페이지 반환
-            this.$router.push({name: 'error404'}).catch(() => {})
+            this.$router.push({name: 'error404'})
           }
           this.loading = false,
           this.notice_board_list = res.data.data.noticeBoardList
@@ -152,7 +181,7 @@ export default {
     },
     // 카테고리에 대한 url 반환
     changePage(){
-        this.$router.push({name: 'noticeDetail', query: { page: this.page, count: this.totalPage, category: this.items_select}}).catch(() => {})
+        this.$router.push({name: 'noticeDetail', query: { page: this.page, count: this.totalPage, category: this.items_select}})
     },
     // 페이징 버튼을 통한 url 반환
     changePage2(page){

@@ -199,7 +199,7 @@ import { selectNoticePage } from "@/api/noticeBoard/noticeBoard";
   export default {
     data () {
       return {
-        fab: false,
+        fab: false, // 상단 스크롤 이동
         drawer: false,
         group: null,
         sheet: false,

@@ -1,5 +1,22 @@
 <template>
     <div>
+        <!-- scroll to top 버튼 -->
+        <v-btn
+            v-scroll="onScroll"
+            v-show="fab"
+            elevation="0"
+            fab
+            tile
+            dark
+            fixed
+            bottom
+            right
+            color="white"
+            @click="toTop"
+            style="border: 2px solid #eee !important"
+        >
+            <v-icon color="grey" large>keyboard_arrow_up</v-icon>
+        </v-btn>
         <v-row justify="center" align="center" style="margin: 200px 0 250px;">
             <v-col cols="6" md="4" offset="0">
                 <v-card class="pa-0 mx-auto" elevation="0" height="600">
@@ -143,12 +160,12 @@
             <v-card-title class="terms-service-title">
                 <span class="text-h5">{{ dialogTitle }}</span>
             </v-card-title>
-            <div class="terms-service-content">
-                <v-card-text>{{ dialogContent }}</v-card-text>
+            <div class="terms-service-content" ref="scrollableContent">
+                <span v-html="dialogContent"></span>
             </div>
             <v-card-actions>
             <v-spacer></v-spacer>
-            <v-btn class="terms-service-btn" depressed color="darken-1"  @click="dialog = false">확인</v-btn>
+            <v-btn class="terms-service-btn" depressed color="darken-1"  @click="closeDialog">확인</v-btn>
             </v-card-actions>
         </v-card>
         </v-dialog>        
@@ -158,6 +175,7 @@
 <script>
 export default {
     data: () => ({
+        fab: false, // 상단 스크롤 이동
         name: null,
         email: null,
         password: null,
@@ -173,10 +191,9 @@ export default {
           id: '[필수] 약관동의',
           name: '',
           children: [
-            { id: '개인정보 이용', idx: 1, title: '개인정보 이용 동의서', content: '',  action: 'openDialog' 
-            },
-            { id: '고유식별정보 처리', idx: 2, title: '고유식별정보 동의서', content: '고유식별정보 처리 관련 페이지입니다.',  action: 'openDialog' },
-            { id: '통신사 이용약관', idx:3, title: '통신사 이용약관 동의서', content: '통신사 이용약관 관련 페이지입니다.',  action: 'openDialog' },
+            { id: '개인정보 이용', idx: 1, title: '개인정보 이용 동의서', content: '',  action: 'openDialog' },
+            { id: '고유식별정보 처리', idx: 2, title: '고유식별정보 동의서', content: '',  action: 'openDialog' },
+            { id: '통신사 이용약관', idx:3, title: '통신사 이용약관 동의서', content: '',  action: 'openDialog' },
           ],
         },
       ],  
@@ -185,9 +202,20 @@ export default {
       dialog: false,      
     }),
     mounted() {
-        this.loadAgreementContent();
+        this.loadAgreementContent()
+        this.loadAgreementContent2()
+        this.loadAgreementContent3()
     },
     methods: {
+        onScroll (e) {
+            if (typeof window === 'undefined') 
+            return
+            const top = window.pageYOffset || e.target.scrollTop || 0
+            this.fab = top > 20
+        },
+        toTop () {
+            this.$vuetify.goTo(0)
+        },
         dialogCheck(item) {
             if (item.action) {
                 this[item.action](item);
@@ -195,17 +223,37 @@ export default {
         },
         openDialog(item) {
             this.dialogTitle = item.title;
-            this.dialogContent = item.content;
+            this.dialogContent = item.content.replace(/\n/g, '<br>');
             this.dialog = true;
         },  
+        closeDialog() {
+            this.dialog = false;
+            this.$refs.scrollableContent.scrollTop = 0;
+        },
         async loadAgreementContent() {
             try {
-                const response = await fetch('agreementContent/privateAgreement.txt'); // 파일 경로는 프로젝트에 맞게 수정
+                const response = await fetch('agreementContent/privateAgreement.txt'); 
                 this.items[0].children[0].content = await response.text();
             } catch (error) {
                 console.error('Error loading agreement content:', error);
             }
-        },     
+        },  
+        async loadAgreementContent2() {
+            try {
+                const response = await fetch('agreementContent/uniqueIdentificationNumber.txt'); 
+                this.items[0].children[1].content = await response.text();
+            } catch (error) {
+                console.error('Error loading agreement content:', error);
+            }
+        },   
+        async loadAgreementContent3() {
+            try {
+                const response = await fetch('agreementContent/carrierTermsOfUse.txt'); 
+                this.items[0].children[2].content = await response.text();
+            } catch (error) {
+                console.error('Error loading agreement content:', error);
+            }
+        },          
     }
 }
 </script>
@@ -228,6 +276,7 @@ export default {
         background-color: #eee;
         margin-left: 20px;
         margin-right: 20px;
+        padding: 10px;
         overflow-y: auto;
         height: 600px;
     }
