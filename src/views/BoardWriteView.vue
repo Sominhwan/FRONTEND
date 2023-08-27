@@ -95,7 +95,7 @@ export default {
     },
     methods: {
       write(){      
-        const data = { title: this.title, writer: "민환", content: this.content}
+        const data = { title: this.title, writer: "민환", content: this.content }
         if(this.items_select === "자유게시판") {
           insertNoticeBoard(data)
             .then((res) => {

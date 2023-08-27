@@ -98,43 +98,43 @@ export default {
     page: {
       type: String
     },
-},
+  },
   data () {
-      return {
-          fab: false, // 상단 스크롤 이동
-          pagingBtn: 0,
-          loading: true,
-          paging: 0,
-          totalPage: this.$route.query.count,
-          notice_board_list: [],
-          activePageCSS: 'on',
-          activeBtnCss: 'disabled-link',
-          colors: [
-            'green',
-            'secondary',
-            'yellow darken-4',
-            'red lighten-2',
-            'orange darken-1',
-          ],
-          cycle: false,
-          slides: [
-            'First',
-            'Second',
-            'Third',
-            'Fourth',
-            'Fifth',
-          ],
-          items_select : this.$route.query.category,
-          items: ['최신글순', '많은댓글순', '좋아요순'],
-          search_items: ['제목', '글 작성자'],
-          search_items_select: '제목',
-          cruds: [
-              ['Create', 'mdi-plus-outline'],
-              ['Read', 'mdi-file-outline'],
-              ['Update', 'mdi-update'],
-              ['Delete', 'mdi-delete'],
-          ],
-      }
+    return {
+      fab: false, // 상단 스크롤 이동
+      pagingBtn: 0,
+      loading: true,
+      paging: 0,
+      totalPage: this.$route.query.count,
+      notice_board_list: [],
+      activePageCSS: 'on',
+      activeBtnCss: 'disabled-link',
+      colors: [
+        'green',
+        'secondary',
+        'yellow darken-4',
+        'red lighten-2',
+        'orange darken-1',
+      ],
+      cycle: false,
+      slides: [
+        'First',
+        'Second',
+        'Third',
+        'Fourth',
+        'Fifth',
+      ],
+      items_select : this.$route.query.category,
+      items: ['최신글순', '많은댓글순', '좋아요순'],
+      search_items: ['제목', '글 작성자'],
+      search_items_select: '제목',
+      cruds: [
+          ['Create', 'mdi-plus-outline'],
+          ['Read', 'mdi-file-outline'],
+          ['Update', 'mdi-update'],
+          ['Delete', 'mdi-delete'],
+      ],
+    }
   },
   watch: {
     items_select: function() {

@@ -85,6 +85,7 @@
                                         :items="gender"
                                         dense
                                         label="성별"
+                                        v-model="genderSelect"
                                         outlined
                                         flat
                                         solo
@@ -93,7 +94,7 @@
                                 <v-col>
                                     <v-select
                                         :items="division"
-                                        v-model="select"
+                                        v-model="foreignerSelect"
                                         dense
                                         outlined
                                         flat
@@ -119,6 +120,7 @@
                                         style="width: 100px;"
                                         :items="telecom"
                                         label="통신사"
+                                        v-model="telecomSelect"
                                         dense
                                         outlined
                                         flat
@@ -132,6 +134,7 @@
                                         selectable
                                         selected-color="primary"
                                         :items="items"
+                                        return-object
                                     >
                                         <template v-slot:prepend="{ item }">
                                             <div v-if="item.idx == 1 || item.idx == 2 || item.idx == 3">
@@ -142,7 +145,12 @@
                                             </div>
                                         </template>                   
                                     </v-treeview>   
-                                </v-row>                       
+                                </v-row>   
+                                <v-col style="margin-top: 30px;">
+                                    <v-row>
+                                        <v-btn dark block @click="join()">가입하기</v-btn>
+                                    </v-row>
+                                </v-col>                    
                         </v-card-text>
                     </v-col>
                     <!-- TODO Vuetify Treeview 네이버 약관동의 참고하여 추가하기--> 
@@ -173,19 +181,29 @@
 </template>
 
 <script>
+import { signUp } from "@/api/auth/auth";
 export default {
     data: () => ({
         fab: false, // 상단 스크롤 이동
         name: null,
+        koreaName: null,
+        foreignerName: null,
         email: null,
         password: null,
         birthdate: null,
         phonenum: null,
         gender: ['남자', '여자'],
+        genderItem: null, 
+        genderSelect: null,
         division: ['내국인', '외국인'],
-        select: '내국인',
+        foreignerStatus: 'N', 
+        foreignerSelect: '내국인',
         telecom: ['SKT', 'KT', 'LG U+'],
+        telecomSelect: null,
         selection: [],
+        privateInfoTerms: 'N',
+        uniqueIdentifyTerms: 'N',
+        mobileCarrierTerms: 'N',
         items: [
         {
           id: '[필수] 약관동의',
@@ -253,7 +271,51 @@ export default {
             } catch (error) {
                 console.error('Error loading agreement content:', error);
             }
-        },          
+        },     
+        // 회원가입
+        join() {
+            for(let i=0; i<3; i++) {
+                if(this.selection[i] == undefined) {
+                    alert(this.selection[i] + '동의하세요');
+                    return;
+                } 
+            }
+            if(this.foreignerSelect == "내국인") {
+                this.koreaName = this.name;
+                
+            } else {
+                this.foreignerName = this.name;
+                this.foreignerStatus = 'Y'
+            }
+            if(this.gender == "남자") {
+                this.genderItem = 'M';
+            } else {
+                this.genderItem = 'F';
+            }
+            const data = { email: this.email + '@naver.com', password: this.password, koreaName: this.koreaName, foreignerName: this.foreignerName, foreignerStatus: this.foreignerStatus, birthDate: this.birthdate, gender: this.genderItem, phoneNum: this.phonenum, mobileCarrier: this.telecomSelect, privateInfoTerms: 'Y', uniqueIdentifyTerms: 'Y', mobileCarrierTerms: 'Y' }
+            signUp(data)
+                .then((res) => {
+                    console.log(res.data);
+                })
+                .catch((error) => {
+                    console.log(error);
+                })
+                .finally(() => {
+
+                })
+
+
+            // console.log(this.email);
+            // console.log(this.password);
+            // console.log(this.name);
+            // console.log(this.birthdate);
+            // console.log(this.genderSelect);
+            // console.log(this.foreignerSelect);
+            // console.log(this.phonenum);
+            // console.log(this.telecomSelect);
+            // TODO 약관동의 추가
+
+        }  
     }
 }
 </script>
