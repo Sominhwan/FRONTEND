@@ -48,7 +48,7 @@
                                 label="비밀번호"
                                 solo
                                 flat
-                                password
+                                type="password"
                                 outlined
                                 prepend-inner-icon="lock"
                                 counter="25"
@@ -281,8 +281,7 @@ export default {
                 } 
             }
             if(this.foreignerSelect == "내국인") {
-                this.koreaName = this.name;
-                
+                this.koreaName = this.name;      
             } else {
                 this.foreignerName = this.name;
                 this.foreignerStatus = 'Y'
@@ -295,7 +294,13 @@ export default {
             const data = { email: this.email + '@naver.com', password: this.password, koreaName: this.koreaName, foreignerName: this.foreignerName, foreignerStatus: this.foreignerStatus, birthDate: this.birthdate, gender: this.genderItem, phoneNum: this.phonenum, mobileCarrier: this.telecomSelect, privateInfoTerms: 'Y', uniqueIdentifyTerms: 'Y', mobileCarrierTerms: 'Y' }
             signUp(data)
                 .then((res) => {
-                    console.log(res.data);
+                    console.log(res.data)
+                    this.email = "",
+                    this.password = "",
+                    this.name = "",
+                    this.birthdate = "",
+                    this.phonenum = ""
+                    // TODO 약관동의 체크 해제하기
                 })
                 .catch((error) => {
                     console.log(error);
@@ -303,18 +308,6 @@ export default {
                 .finally(() => {
 
                 })
-
-
-            // console.log(this.email);
-            // console.log(this.password);
-            // console.log(this.name);
-            // console.log(this.birthdate);
-            // console.log(this.genderSelect);
-            // console.log(this.foreignerSelect);
-            // console.log(this.phonenum);
-            // console.log(this.telecomSelect);
-            // TODO 약관동의 추가
-
         }  
     }
 }

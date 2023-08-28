@@ -56,7 +56,8 @@
                                 </div>
                             </v-col>
                             <v-col cols="12" md="8" style="position: relative; bottom: 130px;">
-                                <v-btn class="text-h6 rounded-0 flat" :loading="loading" :disabled="loading" color="secondary" @click="loader = 'loading'" block height="55">로그인</v-btn>
+                                <!-- <v-btn class="text-h6 rounded-0 flat" :loading="loading" :disabled="loading" color="secondary" @click="loader = 'loading'" block height="55">로그인</v-btn> -->
+                                <v-btn class="text-h6 rounded-0 flat" :loading="loading" :disabled="loading" color="secondary" @click="login()" block height="55">로그인</v-btn>
                             </v-col>
                             <v-col class="text-right" cols="12" md="8" style="position: relative; bottom: 140px;">
                                 <span class="join-btn" @click="join()">회원가입</span>
@@ -72,6 +73,7 @@
 </template>
 
 <script>
+import { signIn } from "@/api/auth/auth";
 export default {
     data () {
       return {
@@ -113,6 +115,19 @@ export default {
             this.email = ''
             this.password = ''
             this.dialog = false;
+        },
+        login() {
+          const data = { email: this.email, password: this.password }
+          signIn(data)
+                .then((res) => {
+                    console.log(res.data)
+                })
+                .catch((error) => {
+                    console.log(error);
+                })
+                .finally(() => {
+
+                })
         }
     }   
 }

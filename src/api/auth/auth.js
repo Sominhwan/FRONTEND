@@ -9,3 +9,12 @@ export function signUp(data) { // 회원가입
         headers: { 'Content-Type': 'application/json;charset=utf8' }
     })
 }
+export function signIn(data) { // 로그인
+    return request({
+        url: `/api/v1/auth/login`,
+        method: 'POST',
+        data: data,
+        meta: { apiVersion: '1.0.0' },
+        headers: { 'Content-Type': 'application/json;charset=utf8' }
+    })
+}
