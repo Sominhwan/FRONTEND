@@ -194,7 +194,7 @@
 </template>
 
 <script>
-import { getBoard } from "@/api/main/main";
+import { getBoard, getWeather } from "@/api/main/main";
 import { selectNoticePage } from "@/api/noticeBoard/noticeBoard";
   export default {
     data () {
@@ -296,6 +296,7 @@ import { selectNoticePage } from "@/api/noticeBoard/noticeBoard";
     mounted() {
       this.search();
       this.pageCount();
+      this.weather();
     },
     methods: {
       onScroll (e) {
@@ -335,6 +336,18 @@ import { selectNoticePage } from "@/api/noticeBoard/noticeBoard";
 
           })
       },
+      weather() {
+        getWeather()
+          .then((res) => {
+            console.log(res.data.data.main);
+          })
+          .catch((error) => {
+            console.log(error);
+          })
+          .finally(() => {
+
+          })
+      }
     }
   }
 </script>

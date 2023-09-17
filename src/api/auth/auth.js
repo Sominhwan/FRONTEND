@@ -18,3 +18,15 @@ export function signIn(data) { // 로그인
         headers: { 'Content-Type': 'application/json;charset=utf8' }
     })
 }
+export function userInfo() { // 유저 인증정보
+    return request({
+        url: `/api/v1/auth//user`,
+        method: 'GET',
+        meta: { apiVersion: '1.0.0' },
+        headers: { 
+            'Content-Type': 'application/json;charset=utf8',
+            Authorization: localStorage.getItem("access-token"),
+        },
+        withCredentials: true
+    })
+}

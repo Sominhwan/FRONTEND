@@ -9,4 +9,12 @@ export function getBoard() {
     })
 }
 
-// export { allProductList }
+export function getWeather() {
+    return request({
+        url: `/api/v1/weather/get`,
+        method: 'GET',
+        meta: { apiVersion: '1.0.0' },
+        headers: { 'Content-Type': 'application/json;charset=utf8' }
+    })
+}
+

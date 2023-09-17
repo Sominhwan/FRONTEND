@@ -111,7 +111,7 @@
                         </v-list-item-icon>
                         <v-list-item-content>
                             <v-btn block class="white--text darken-3" @click="openLoginDialog()" >
-                                로그아웃
+                                인증테스트
                             </v-btn>
                         </v-list-item-content>
                     </v-list-item>
@@ -122,6 +122,7 @@
     </v-app>
 </template>
 <script>
+import { userInfo } from "@/api/auth/auth";
 import LoginDialog from '@/components/LoginDialog';
 export default {
     data: () => ({
@@ -159,8 +160,19 @@ export default {
             this.menu = true
         },
         openLoginDialog() {
-            this.loginBtn = true
-        }
+            userInfo()
+                .then((res) => {
+                    if(res.headers.authorization != null)
+                        localStorage.setItem("access-token", res.headers.authorization)
+                    console.log(res.data)
+                })
+                .catch((error) => {
+                    console.log(error);
+                })
+                .finally(() => {
+
+                })
+        },
     },
     watch: {
       group () {

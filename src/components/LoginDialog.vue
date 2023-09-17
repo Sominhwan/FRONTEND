@@ -73,7 +73,6 @@
 </template>
 
 <script>
-import { signIn } from "@/api/auth/auth";
 export default {
     data () {
       return {
@@ -117,17 +116,11 @@ export default {
             this.dialog = false;
         },
         login() {
-          const data = { email: this.email, password: this.password }
-          signIn(data)
-                .then((res) => {
-                    console.log(res.data)
-                })
-                .catch((error) => {
-                    console.log(error);
-                })
-                .finally(() => {
-
-                })
+          this.$store.dispatch('login', {
+            email: this.email,
+            password: this.password,
+            autoLogin: this.checkbox
+          }).then(() => { this.$router.push({ name: 'home' }) })
         }
     }   
 }
