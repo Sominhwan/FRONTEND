@@ -3,7 +3,7 @@ import 'vuetify/dist/vuetify.min.css'
 import App from './App.vue'
 import vuetify from './plugins/vuetify'
 import router from './router'
-import store from './store'
+import store from './store/vuex'
 
 
 Vue.config.productionTip = false

@@ -122,7 +122,6 @@
     </v-app>
 </template>
 <script>
-import { userInfo } from "@/api/auth/auth";
 import LoginDialog from '@/components/LoginDialog';
 export default {
     data: () => ({
@@ -160,18 +159,7 @@ export default {
             this.menu = true
         },
         openLoginDialog() {
-            userInfo()
-                .then((res) => {
-                    if(res.headers.authorization != null)
-                        localStorage.setItem("access-token", res.headers.authorization)
-                    console.log(res.data)
-                })
-                .catch((error) => {
-                    console.log(error);
-                })
-                .finally(() => {
-
-                })
+            this.$store.dispatch('userInfo').then(() => { console.log('데이터 가져오기 성공')})
         },
     },
     watch: {
