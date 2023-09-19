@@ -70,14 +70,16 @@
 
             <v-list-item-group v-model="selectedItem">        
                 <v-list nav><!-- dense 추가시 margin 좁아짐-->
-                    <v-list-item v-for="item in side_items" :key="item.title" link>
-                    <v-list-item-icon>
-                        <v-icon size="25">{{ item.icon }}</v-icon>
-                    </v-list-item-icon>
-                    <v-list-item-content>
-                        <v-list-item-title style="font-weight: bold; font-size: 16px;">{{ item.title }}</v-list-item-title>
-                    </v-list-item-content>
-                    </v-list-item>
+                    <router-link :to="{ name: 'home'}" style="text-decoration: none;" v-for="item in side_items" :key="item.title" >
+                        <v-list-item >
+                            <v-list-item-icon class="item-icon">
+                                <v-icon size="25">{{ item.icon }}</v-icon>
+                            </v-list-item-icon>
+                            <v-list-item-content class="item-content">
+                                <v-list-item-title style="font-weight: bold; font-size: 16px;">{{ item.title }}</v-list-item-title>
+                            </v-list-item-content>
+                        </v-list-item>
+                    </router-link>
                 </v-list>
             </v-list-item-group>
             <v-list-item>
@@ -141,7 +143,7 @@ export default {
           { icon: 'logout', title: '로그아웃', avatar: 'https://cdn.vuetifyjs.com/images/lists/4.jpg' },
       ],
       side_items: [
-          { icon: 'home', title: '홈'},
+          { icon: 'home', title: '홈', link: 'home'},
           { icon: 'mdi-clipboard-text', title: '공지사항'},
           { icon: 'settings', title: '설정'},
           { icon: 'logout', title: '로그아웃'},
@@ -190,4 +192,7 @@ export default {
         display: none
     }
 
+    .router-link-active {
+        color: inherit;
+    }
 </style>

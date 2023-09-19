@@ -7,33 +7,32 @@ Vue.use(Vuex)
 export default new Vuex.Store({
   state: {
     userInfoData: null, // 사용자 정보를 저장할 상태
+    loginMessage: null, // 로그인 실패시 메시지
     //currentPage: 1,
   },
   getters: {
     getUserInfoData: state => state.userInfoData
   },
   mutations: {
-    // setCurrentPage(state, page) {
-    //   state.currentPage = page;
-    // },
     setUserInfoData(state, userInfoData) {
-      state.userInfoData = userInfoData;
+      state.userInfoData = userInfoData
     },
+    setLoginMessage(state, loginMessage) {
+      state.loginMessage = loginMessage
+    }
   },
   actions: {
-    // setPage({ commit }, page) {
-    //   commit('setCurrentPage', page);
-    // },
     login (dispatch, data) {
       signIn(data)
         .then((res) => {
             if(res.headers.authorization != null)
                 localStorage.setItem("access-token", res.headers.authorization)
             console.log(res.data)
+            this.commit('setLoginMessage', null)
             this.dispatch('userInfo') // userInfo 호출
         })
-        .catch((error) => {
-            console.log(error);
+        .catch(() => {
+          this.commit('setLoginMessage', '아이디 또는 비밀번호를 잘못 입력했습니다.')
         })
         .finally(() => {
 
@@ -46,7 +45,7 @@ export default new Vuex.Store({
           if(res.headers.authorization != null)
               localStorage.setItem("access-token", res.headers.authorization)
           console.log(res.data)
-          commit('setUserInfoData', res.data);
+          commit('setUserInfoData', res.data)
       })
       .catch((error) => {
           console.log(error);

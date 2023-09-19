@@ -7,7 +7,7 @@
                     로그인 버튼
                 </v-btn>
             </template>
-            <v-card elevation="0 flat" height="600">
+            <v-card elevation="0 flat" height="650">
                 <v-app-bar color="white" elevation="0">
                     <v-card-title class="text-center" style="position: relative; left: 50%; transform: translate(-50%, 0);">로그인</v-card-title>
                     <v-spacer></v-spacer>
@@ -45,6 +45,7 @@
                                 ></v-text-field>   
                             </v-col>
                             <v-col cols="12" md="8" style="position: relative; bottom: 100px;">
+
                                 <div style="width: 160px;">
                                     <v-checkbox v-model="checkbox" @click.native.stop>
                                         <template v-slot:label>
@@ -54,6 +55,7 @@
                                         </template>
                                     </v-checkbox>
                                 </div>
+                                <div class="login-message">{{ loginMessage }}</div>
                             </v-col>
                             <v-col cols="12" md="8" style="position: relative; bottom: 130px;">
                                 <!-- <v-btn class="text-h6 rounded-0 flat" :loading="loading" :disabled="loading" color="secondary" @click="loader = 'loading'" block height="55">로그인</v-btn> -->
@@ -73,6 +75,7 @@
 </template>
 
 <script>
+import { mapState } from "vuex";
 export default {
     data () {
       return {
@@ -105,6 +108,9 @@ export default {
         this.loader = null
       },
     },  
+    computed: {
+      ...mapState(['loginMessage'])
+    },
     methods: {
         join() {
             this.dialog = false;
@@ -113,14 +119,25 @@ export default {
         closeDialog() {
             this.email = ''
             this.password = ''
-            this.dialog = false;
+            this.$store.commit('setLoginMessage', null);
+            this.dialog = false
+
         },
         login() {
           this.$store.dispatch('login', {
             email: this.email,
             password: this.password,
             autoLogin: this.checkbox
-          }).then(() => { this.$router.push({ name: 'home' }) })
+          }).then(() => { 
+            this.dialog = false
+            const currentRoute = this.$router.currentRoute;
+            if (currentRoute.name === 'home') {
+              // 같은 페이지에서 통신 성공 시 처리
+              // 예: 알림 메시지 표시
+            } else {
+              this.$router.push({ name: 'home' });
+            }
+          })
         }
     }   
 }
@@ -171,5 +188,11 @@ export default {
   .join-btn:hover {
     color: #1877F2;
     text-decoration: underline;
+  }
+  .login-message {
+    position: relative; 
+    bottom: 15px;
+    font-size: 14px;
+    color: #FF003E;
   }
 </style>
