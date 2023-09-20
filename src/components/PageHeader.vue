@@ -67,19 +67,16 @@
                 <v-list-item-title>John Leider</v-list-item-title>
             </v-list-item>
             <v-divider></v-divider>
-
-            <v-list-item-group v-model="selectedItem">        
+            <v-list-item-group v-model="selectedItem" mandatory>        
                 <v-list nav><!-- dense 추가시 margin 좁아짐-->
-                    <router-link :to="{ name: 'home'}" style="text-decoration: none;" v-for="item in side_items" :key="item.title" >
-                        <v-list-item >
-                            <v-list-item-icon class="item-icon">
-                                <v-icon size="25">{{ item.icon }}</v-icon>
-                            </v-list-item-icon>
-                            <v-list-item-content class="item-content">
-                                <v-list-item-title style="font-weight: bold; font-size: 16px;">{{ item.title }}</v-list-item-title>
-                            </v-list-item-content>
-                        </v-list-item>
-                    </router-link>
+                    <v-list-item :value="item.title" @click="$router.push({name: item.link, query: { page: item.page, count: item.count, category: item.category }})" v-for="item in side_items" :key="item.title" :class="{ 'selected': selectedItem === item.title }">
+                        <v-list-item-icon class="item-icon">
+                            <v-icon size="25">{{ item.icon }}</v-icon>
+                        </v-list-item-icon>
+                        <v-list-item-content class="item-content">
+                            <v-list-item-title style="font-weight: bold; font-size: 16px;">{{ item.title }}</v-list-item-title>
+                        </v-list-item-content>
+                    </v-list-item>
                 </v-list>
             </v-list-item-group>
             <v-list-item>
@@ -127,6 +124,7 @@
 import LoginDialog from '@/components/LoginDialog';
 export default {
     data: () => ({
+      selectedItem: '홈', // 초기에 선택된 아이템은 없음
       mini: false,
       fav: true,
       menu: false,
@@ -135,6 +133,7 @@ export default {
       drawer: false,
       group: null,
       sheet: false,
+      //totalPage: this.$route.query.count,
       //loginBtn: false,
       items: [
           { icon: 'account_circle', title: '계정관리', avatar: 'https://cdn.vuetifyjs.com/images/lists/1.jpg' },
@@ -144,11 +143,10 @@ export default {
       ],
       side_items: [
           { icon: 'home', title: '홈', link: 'home'},
-          { icon: 'mdi-clipboard-text', title: '공지사항'},
+          { icon: 'mdi-clipboard-text', title: '공지사항', link: 'noticeDetail', page: 1, count: 2, category: '최신글순'},
           { icon: 'settings', title: '설정'},
           { icon: 'logout', title: '로그아웃'},
       ],
-     
     }),
     comments: {
         LoginDialog
