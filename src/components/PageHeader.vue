@@ -69,7 +69,7 @@
             <v-divider></v-divider>
             <v-list-item-group v-model="selectedItem" mandatory>        
                 <v-list nav><!-- dense 추가시 margin 좁아짐-->
-                    <v-list-item :value="item.title" @click="$router.push({name: item.link, query: { page: item.page, count: item.count, category: item.category }})" v-for="item in side_items" :key="item.title" :class="{ 'selected': selectedItem === item.title }">
+                    <v-list-item :value="item.title" @click="selectItem(item.title, item.link, item.page, item.count, item.category)" v-for="item in side_items" :key="item.title" :class="{ 'selected': selectedItem === item.title }">
                         <v-list-item-icon class="item-icon">
                             <v-icon size="25">{{ item.icon }}</v-icon>
                         </v-list-item-icon>
@@ -124,7 +124,7 @@
 import LoginDialog from '@/components/LoginDialog';
 export default {
     data: () => ({
-      selectedItem: '홈', // 초기에 선택된 아이템은 없음
+      selectedItem: '', // 초기에 선택된 아이템은 없음
       mini: false,
       fav: true,
       menu: false,
@@ -154,12 +154,28 @@ export default {
     components: { 
         LoginDialog 
     },
+    mounted() {
+        const currentPath = this.$route.path;
+        const pathSegments = currentPath.split('/');
+        const item = pathSegments[1];
+        if(item == 'home') {
+            this.selectedItem = '홈'
+        } else if(item == 'notice' || item == 'board_view') {
+            this.selectedItem = '공지사항'
+        }
+    },
     methods: {
         menuBackground() {
             this.menu = true
         },
         openLoginDialog() {
             this.$store.dispatch('userInfo').then(() => { console.log('데이터 가져오기 성공')})
+        },
+        selectItem(title, link, page ,count, category) {
+            this.$router.push({
+                name: link, 
+                query: { page: page, count: count, category: category }
+            }, () => {});
         },
     },
     watch: {
@@ -189,7 +205,6 @@ export default {
     .v-navigation-drawer >>> .v-navigation-drawer__border {
         display: none
     }
-
     .router-link-active {
         color: inherit;
     }
