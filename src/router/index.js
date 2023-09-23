@@ -4,16 +4,19 @@ import ErrorView from '@/views/ErrorView.vue'
 import HomeView from '@/views/HomeView.vue'
 import NoticeView from '@/views/NoticeView.vue'
 import SignUpView from '@/views/signUp/SignUpView.vue'
+import NProgress from "nprogress"
+import "nprogress/nprogress.css"; // css까지 import 해주어야 한다.
 import Vue from 'vue'
 import VueRouter from 'vue-router'
-
 Vue.use(VueRouter)
+
 
 const routes = [
   {
     path: '/',
     name: 'home',
     redirect: '/home/main'
+    
   },
   {
     path: '/home/main',
@@ -58,4 +61,19 @@ const router = new VueRouter({
   routes
 })
 
-export default router
+router.beforeEach((to, from, next) => {
+  if(to.path) {
+    NProgress.configure({ showSpinner: false });
+    NProgress.start(); // 라우팅 시작 시 NProgress 시작
+  }
+  // 이전 코드에서 NProgress.done()를 제거하고, next()를 호출하여 다음 단계로 진행합니다.
+  next();
+})
+
+router.afterEach(() => {
+  NProgress.done(); // 라우팅 완료 시 NProgress 종료
+})
+
+
+export default router 
+
