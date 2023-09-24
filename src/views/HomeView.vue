@@ -30,7 +30,7 @@
             </v-carousel>
             <v-card class="rounded-0" flat>
               <v-toolbar flat style="border-bottom: 3px solid #eee;">
-                <v-toolbar-title style="font-weight: bold; font-size: 18px;">주요소식<span>{{ userInfoData }}</span></v-toolbar-title>
+                <v-toolbar-title style="font-weight: bold; font-size: 18px;">주요소식</v-toolbar-title>
                 <v-spacer></v-spacer>
                 <ul style="list-style-type: none; position: absolute; width: 120px; bottom: 20px; left:88%; transform: translate(-50%, 0%);">
                   <li>

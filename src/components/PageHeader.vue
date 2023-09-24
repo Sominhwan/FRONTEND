@@ -24,7 +24,7 @@
                             <img src="https://cdn.vuetifyjs.com/images/john.jpg" alt="John">
                             </v-list-item-avatar>
                             <v-list-item-content>
-                                <v-list-item-title>SMH</v-list-item-title>
+                                <v-list-item-title>{{ userInfoData.username }}</v-list-item-title>
                                 <v-list-item-subtitle>Founder of Vuetify</v-list-item-subtitle>
                             </v-list-item-content>
                             <v-list-item-action>
@@ -64,12 +64,12 @@
                 <v-list-item-avatar>
                 <v-img src="https://randomuser.me/api/portraits/men/85.jpg"></v-img>
                 </v-list-item-avatar>
-                <v-list-item-title>John Leider</v-list-item-title>
+                <v-list-item-title>{{ userInfoData.username }}</v-list-item-title>
             </v-list-item>
             <v-divider></v-divider>
             <v-list-item-group v-model="selectedItem" mandatory>        
                 <v-list nav><!-- dense 추가시 margin 좁아짐-->
-                    <v-list-item :value="item.title" @click="selectItem(item.title, item.link, item.page, item.count, item.category)" v-for="item in side_items" :key="item.title" :class="{ 'selected': selectedItem === item.title }">
+                    <v-list-item :value="item.title" @click="selectItem(item.title, item.link, item.page, item.count, item.category)" v-for="item in side_items"  :key="item.title" :class="{ 'selected': selectedItem === item.title }">
                         <v-list-item-icon class="item-icon">
                             <v-icon size="25">{{ item.icon }}</v-icon>
                         </v-list-item-icon>
@@ -122,6 +122,7 @@
 </template>
 <script>
 import LoginDialog from '@/components/LoginDialog';
+import { mapState } from "vuex";
 export default {
     data: () => ({
       selectedItem: '', // 초기에 선택된 아이템은 없음
@@ -154,6 +155,10 @@ export default {
     components: { 
         LoginDialog 
     },
+    computed: {
+        // 회원정보 가져오기
+        ...mapState(['userInfoData'])
+    },
     mounted() {
         const currentPath = this.$route.path;
         const pathSegments = currentPath.split('/');
@@ -162,7 +167,11 @@ export default {
             this.selectedItem = '홈'
         } else if(item == 'notice' || item == 'board_view') {
             this.selectedItem = '공지사항'
+        } else {
+            this.selectedItem = '';
         }
+        // 회원정보 가져오기
+        this.$store.dispatch('userInfo');
     },
     methods: {
         menuBackground() {
@@ -177,6 +186,7 @@ export default {
                 query: { page: page, count: count, category: category }
             }, () => {});
         },
+
     },
     watch: {
       group () {

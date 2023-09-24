@@ -42,18 +42,18 @@ import { VueEditor } from "vue2-editor";
 export default {
     data() {
         return {
-            items_select : '자유게시판',
-            items: ['자유게시판', '공지사항', '주요소식'],
-            brackets: ['진행 이벤트', '업데이트', '공지사항'],
-            brackets_select: '진행 이벤트',
-            cruds: [
-                ['Create', 'mdi-plus-outline'],
-                ['Read', 'mdi-file-outline'],
-                ['Update', 'mdi-update'],
-                ['Delete', 'mdi-delete'],
-            ],
-            title: "",
-            content: "",              
+          items_select : '자유게시판',
+          items: ['자유게시판', '공지사항', '주요소식'],
+          brackets: ['진행 이벤트', '업데이트', '공지사항'],
+          brackets_select: '진행 이벤트',
+          cruds: [
+              ['Create', 'mdi-plus-outline'],
+              ['Read', 'mdi-file-outline'],
+              ['Update', 'mdi-update'],
+              ['Delete', 'mdi-delete'],
+          ],
+          title: "",
+          content: "",              
         }
     },
     components: {
@@ -113,8 +113,7 @@ export default {
         } else if(this.items_select === "주요소식") {
           alert("주요소식")
         }
-
-      }
+      },
     }
 }
 </script>

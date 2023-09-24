@@ -276,7 +276,7 @@ export default {
         join() {
             for(let i=0; i<3; i++) {
                 if(this.selection[i] == undefined) {
-                    alert(this.selection[i] + '동의하세요');
+                    alert('필수약관을 모두 동의하세요');
                     return;
                 } 
             }

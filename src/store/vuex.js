@@ -22,7 +22,8 @@ export default new Vuex.Store({
     }
   },
   actions: {
-    login (dispatch, data) {
+    /* 로그인 */
+    async login (dispatch, data) {
       signIn(data)
         .then((res) => {
             if(res.headers.authorization != null)
@@ -38,17 +39,22 @@ export default new Vuex.Store({
 
         })
    },
-   userInfo({ commit }) {
+  /* 회원정보 */
+   async userInfo({ commit }) {
     const token = localStorage.getItem("access-token")
     userInfo(token)
       .then((res) => {
-          if(res.headers.authorization != null)
+          if(res.headers.authorization != null){
+              localStorage.removeItem("access-token")
               localStorage.setItem("access-token", res.headers.authorization)
+          }
           console.log(res.data)
           commit('setUserInfoData', res.data)
       })
       .catch((error) => {
           console.log(error);
+          const userData = {'username' : '없음'};
+          commit('setUserInfoData', userData)
       })
       .finally(() => {
 

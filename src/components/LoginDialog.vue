@@ -123,20 +123,22 @@ export default {
             this.dialog = false
 
         },
-        login() {
+        async login() {
           this.$store.dispatch('login', {
             email: this.email,
             password: this.password,
             autoLogin: this.checkbox
-          }).then(() => { 
-            this.dialog = false
+          }).then((res) => { 
+            console.log(res)
             const currentRoute = this.$router.currentRoute;
             if (currentRoute.name === 'home') {
               // 같은 페이지에서 통신 성공 시 처리
               // 예: 알림 메시지 표시
             } else {
+              this.dialog = false
               this.$router.push({ name: 'home' });
             }
+
           })
         }
     }   
