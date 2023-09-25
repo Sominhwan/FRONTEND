@@ -170,8 +170,8 @@ export default {
         } else {
             this.selectedItem = '';
         }
-        // 회원정보 가져오기
-        this.$store.dispatch('userInfo');
+        // // 회원정보 가져오기
+        // this.$store.dispatch('userInfo');
     },
     methods: {
         menuBackground() {
