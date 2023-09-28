@@ -138,7 +138,6 @@ export default {
               this.dialog = false
               this.$router.push({ name: 'home' });
             }
-
           })
         }
     }   

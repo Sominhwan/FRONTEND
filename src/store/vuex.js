@@ -1,4 +1,4 @@
-import { signIn, userInfo } from "@/api/auth/auth";
+import { logout, signIn, userInfo } from "@/api/auth/auth";
 import Vue from 'vue';
 import Vuex from 'vuex';
 
@@ -59,7 +59,24 @@ export default new Vuex.Store({
       .finally(() => {
 
       })
-   }
+   },
+  /* 로그아웃 */ 
+  async logout () {
+    const token = localStorage.getItem("access-token")
+    logout(token)
+      .then((res) => {
+          console.log(res.data)
+          localStorage.removeItem("access-token")
+          location.href = '/home/main'
+          alert('로그아웃 되었습니다.');  
+      })
+      .catch(() => {
+
+      })
+      .finally(() => {
+
+      })
+ },
   },
   modules: {
   }

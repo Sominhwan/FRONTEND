@@ -64,24 +64,28 @@ const router = new VueRouter({
 
 router.beforeEach((to, from, next) => {
   const token = localStorage.getItem("access-token")
-  userInfo(token)
-  .then((res) => {
-      if(res.headers.authorization != null){
+  if(token != null) {
+    userInfo(token)
+    .then((res) => {
+        if(res.headers.authorization != null){
+            localStorage.removeItem("access-token")
+            localStorage.setItem("access-token", res.headers.authorization)
+        }
+        console.log('인증완료')
+        store.commit('setUserInfoData', res.data)
+    })
+    .catch((error) => {
+        console.log(error);
+        if(localStorage.getItem("access-token")){
           localStorage.removeItem("access-token")
-          localStorage.setItem("access-token", res.headers.authorization)
-      }
-      console.log('인증완료')
-      store.commit('setUserInfoData', res.data)
-  })
-  .catch((error) => {
-      console.log(error);
-      if(localStorage.getItem("access-token")){
-        alert('로그아웃 되었습니다.');
-      } 
-  })
-  .finally(() => {
+          location.href = '/home/main'
+          alert('로그아웃 되었습니다.');
+        } 
+    })
+    .finally(() => {
 
-  })
+    })
+  }
   if(to.path) {
     NProgress.configure({ showSpinner: false });
     NProgress.start(); // 라우팅 시작 시 NProgress 시작
@@ -93,7 +97,6 @@ router.beforeEach((to, from, next) => {
 router.afterEach(() => {
   NProgress.done(); // 라우팅 완료 시 NProgress 종료
 })
-
 
 export default router 
 

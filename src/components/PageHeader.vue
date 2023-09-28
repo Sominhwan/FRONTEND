@@ -109,8 +109,8 @@
                             <v-icon size="25">logout</v-icon>
                         </v-list-item-icon>
                         <v-list-item-content>
-                            <v-btn block class="white--text darken-3" @click="openLoginDialog()" >
-                                인증테스트
+                            <v-btn block class="white--text darken-3" @click="logout()" >
+                                로그아웃
                             </v-btn>
                         </v-list-item-content>
                     </v-list-item>
@@ -171,14 +171,14 @@ export default {
             this.selectedItem = '';
         }
         // // 회원정보 가져오기
-        // this.$store.dispatch('userInfo');
+        this.$store.dispatch('userInfo');
     },
     methods: {
         menuBackground() {
             this.menu = true
         },
-        openLoginDialog() {
-            this.$store.dispatch('userInfo').then(() => { console.log('데이터 가져오기 성공')})
+        logout() {
+            this.$store.dispatch('logout').then(() => { console.log('데이터 가져오기 성공')})
         },
         selectItem(title, link, page ,count, category) {
             this.$router.push({
