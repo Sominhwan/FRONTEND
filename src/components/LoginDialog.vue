@@ -23,17 +23,20 @@
                                 <v-text-field
                                     class="rounded-0"
                                     prepend-inner-icon="person"
+                                    ref="email"
                                     v-model="email"
                                     label="E-mail"
                                     single-line
                                     outlined
                                     required
+                                    @keyup.enter="login()"
                                 ></v-text-field>
                             </v-col>
                             <v-col cols="12" md="8" style="position: relative; bottom: 40px;">
                                 <v-text-field
                                     class="rounded-0"
                                     prepend-inner-icon="lock"
+                                    ref="password"
                                     v-model="password"
                                     :append-icon="show1 ? 'mdi-eye' : 'mdi-eye-off'"
                                     :type="show1 ? 'text' : 'password'"
@@ -42,18 +45,32 @@
                                     outlined
                                     required
                                     @click:append="show1 = !show1"
+                                    @keyup.enter="login()"
                                 ></v-text-field>   
                             </v-col>
                             <v-col cols="12" md="8" style="position: relative; bottom: 100px;">
-
-                                <div style="width: 160px;">
-                                    <v-checkbox v-model="checkbox" @click.native.stop>
-                                        <template v-slot:label>
-                                            <div>
-                                                로그인 상태 유지
-                                            </div>
-                                        </template>
-                                    </v-checkbox>
+                              <div style="display: inline-flex;">
+                                <div style="margin-right: 0px;">
+                                  <v-checkbox v-model="checkbox" @click.native.stop>
+                                    <template v-slot:label>
+                                        <div>
+                                            로그인 상태 유지
+                                        </div>
+                                    </template>
+                                  </v-checkbox>
+                                </div>
+                                  <div style="margin-top: 13px;">
+                                    <v-tooltip right>
+                                      <template v-slot:activator="{ on, attrs }">
+                                        <v-btn icon v-bind="attrs" v-on="on">
+                                          <v-icon size="20" class="">
+                                            error
+                                          </v-icon>
+                                        </v-btn>
+                                      </template>
+                                      <span>보안에 취약할 수 있습니다.</span>
+                                    </v-tooltip>
+                                  </div>
                                 </div>
                                 <div class="login-message">{{ loginMessage }}</div>
                             </v-col>
@@ -111,6 +128,9 @@ export default {
     computed: {
       ...mapState(['loginMessage'])
     },
+    mounted() {
+      this.$refs.email.focus()
+    },
     methods: {
         join() {
             this.dialog = false;
@@ -124,20 +144,25 @@ export default {
 
         },
         async login() {
+          if(this.email != '' && this.password == '') {
+            this.$store.commit('setLoginMessage', '비밀번호를 입력하세요.')
+            this.$refs.password.focus()
+            return;
+          }
+          if(this.email == '' && this.password != '') {
+            this.$store.commit('setLoginMessage', '이메일을 입력하세요.')
+            this.$refs.email.focus()
+            return;
+          }
+          if(this.email == '' && this.password == '') {
+            this.$store.commit('setLoginMessage', '이메일 또는 비밀번호가 입력되지 않았습니다.')
+            this.$refs.email.focus()
+            return;
+          }
           this.$store.dispatch('login', {
             email: this.email,
             password: this.password,
             autoLogin: this.checkbox
-          }).then((res) => { 
-            console.log(res)
-            const currentRoute = this.$router.currentRoute;
-            if (currentRoute.name === 'home') {
-              // 같은 페이지에서 통신 성공 시 처리
-              // 예: 알림 메시지 표시
-            } else {
-              this.dialog = false
-              this.$router.push({ name: 'home' });
-            }
           })
         }
     }   

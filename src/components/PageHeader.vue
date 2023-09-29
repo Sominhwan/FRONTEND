@@ -13,7 +13,7 @@
             <!-- nav 우측 메뉴 -->
             <v-menu offset-y>
                 <template v-slot:activator="{ on, attrs }">
-                    <v-btn icon v-bind="attrs" v-on="on">
+                    <v-btn v-if="authState" icon v-bind="attrs" v-on="on">
                         <v-icon color="white">mdi-dots-vertical</v-icon>
                     </v-btn> 
                 </template>
@@ -43,10 +43,6 @@
                             <v-list-item-content>
                             <v-list-item-title>{{ item.title }}</v-list-item-title>
                             </v-list-item-content>
-
-                            <v-list-item-avatar>
-                            <!-- <v-img :src="item.avatar"></v-img> -->
-                            </v-list-item-avatar>
                         </v-list-item>
                     </v-list>
                 </v-card>
@@ -69,17 +65,42 @@
             <v-divider></v-divider>
             <v-list-item-group v-model="selectedItem" mandatory>        
                 <v-list nav><!-- dense 추가시 margin 좁아짐-->
-                    <v-list-item :value="item.title" @click="selectItem(item.title, item.link, item.page, item.count, item.category)" v-for="item in side_items"  :key="item.title" :class="{ 'selected': selectedItem === item.title }">
+                    <!-- <v-list-item :value="item.title" @click="selectItem(item.title, item.link, item.page, item.count, item.category)" 
+                        v-for="item in side_items" :key="item.title" :class="{ 'selected': selectedItem === item.title }">
                         <v-list-item-icon class="item-icon">
                             <v-icon size="25">{{ item.icon }}</v-icon>
                         </v-list-item-icon>
                         <v-list-item-content class="item-content">
                             <v-list-item-title style="font-weight: bold; font-size: 16px;">{{ item.title }}</v-list-item-title>
                         </v-list-item-content>
+                    </v-list-item> -->
+                    <v-list-item :value="'홈'" @click="selectItem('홈', 'home')" :key="'홈'" :class="{ 'selected': selectedItem === '홈' }">
+                        <v-list-item-icon class="item-icon">
+                            <v-icon size="25">home</v-icon>
+                        </v-list-item-icon>
+                        <v-list-item-content class="item-content">
+                            <v-list-item-title style="font-weight: bold; font-size: 16px;">홈</v-list-item-title>
+                        </v-list-item-content>
+                    </v-list-item>
+                    <v-list-item :value="'공지사항'" @click="selectItem('공지사항', 'noticeDetail', 1, 2, '최신글순')" :key="'공지사항'" :class="{ 'selected': selectedItem === '공지사항' }">
+                        <v-list-item-icon class="item-icon">
+                            <v-icon size="25">mdi-clipboard-text</v-icon>
+                        </v-list-item-icon>
+                        <v-list-item-content class="item-content">
+                            <v-list-item-title style="font-weight: bold; font-size: 16px;">공지사항</v-list-item-title>
+                        </v-list-item-content>
+                    </v-list-item>
+                    <v-list-item v-if="authState" :value="'설정'" @click="selectItem('설정')" :key="'설정'" :class="{ 'selected': selectedItem === '설정' }">
+                        <v-list-item-icon class="item-icon">
+                            <v-icon size="25">settings</v-icon>
+                        </v-list-item-icon>
+                        <v-list-item-content class="item-content">
+                            <v-list-item-title style="font-weight: bold; font-size: 16px;">설정</v-list-item-title>
+                        </v-list-item-content>
                     </v-list-item>
                 </v-list>
             </v-list-item-group>
-            <v-list-item>
+            <v-list-item v-if="!authState">
                 <v-list-item-icon>
                         <v-icon size="25">login</v-icon>
                 </v-list-item-icon>
@@ -87,7 +108,7 @@
                     <LoginDialog style="position: absolute; top: 40%; left: 80px; "/>
                 </v-list-item-content>
             </v-list-item>
-            <v-list-item>
+            <v-list-item v-if="authState">
                     <v-list-item-icon>
                         <v-icon>
                             mdi-pencil
@@ -102,7 +123,7 @@
                 </v-list-item-content>     
             </v-list-item>
 
-            <template v-slot:append>
+            <template v-slot:append v-if="authState">
                 <v-list  style="position: fixed; bottom: 0; width: 100%;">
                     <v-list-item>
                         <v-list-item-icon>
@@ -157,7 +178,7 @@ export default {
     },
     computed: {
         // 회원정보 가져오기
-        ...mapState(['userInfoData'])
+        ...mapState(['userInfoData', 'authState']),
     },
     mounted() {
         const currentPath = this.$route.path;

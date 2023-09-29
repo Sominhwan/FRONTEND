@@ -64,27 +64,40 @@ const router = new VueRouter({
 
 router.beforeEach((to, from, next) => {
   const token = localStorage.getItem("access-token")
+  const currentName = to.name;
+  //alert(currentPath)
+  //const pathSegments = currentPath.split('/');
+  //const item = pathSegments[1];
+
   if(token != null) {
     userInfo(token)
-    .then((res) => {
-        if(res.headers.authorization != null){
-            localStorage.removeItem("access-token")
-            localStorage.setItem("access-token", res.headers.authorization)
-        }
-        console.log('인증완료')
-        store.commit('setUserInfoData', res.data)
-    })
-    .catch((error) => {
-        console.log(error);
-        if(localStorage.getItem("access-token")){
-          localStorage.removeItem("access-token")
-          location.href = '/home/main'
-          alert('로그아웃 되었습니다.');
-        } 
-    })
-    .finally(() => {
+      .then((res) => {
+          if(res.headers.authorization != null){
+              localStorage.removeItem("access-token")
+              localStorage.setItem("access-token", res.headers.authorization)
+          }
+          console.log('인증완료')
+          store.commit('setAuthState', true)
+          store.commit('setUserInfoData', res.data)
+      })
+      .catch((error) => {
+          console.log(error);
+          if(localStorage.getItem("access-token")){
+            this.$store.dispatch('logout');
+            // localStorage.removeItem("access-token")
+            // location.href = '/home/main'
+            // alert('로그인 기간이 만료되었습니다.');
+          } 
+      })
+      .finally(() => {
 
-    })
+      })
+  } else if(currentName == 'write'){
+      const authState = store.state.authState
+      if(!authState) {
+        location.href = '/home/main'
+        alert('접근되지 않은 권한입니다.');
+      }
   }
   if(to.path) {
     NProgress.configure({ showSpinner: false });
