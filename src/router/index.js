@@ -65,9 +65,6 @@ const router = new VueRouter({
 router.beforeEach((to, from, next) => {
   const token = localStorage.getItem("access-token")
   const currentName = to.name;
-  //alert(currentPath)
-  //const pathSegments = currentPath.split('/');
-  //const item = pathSegments[1];
 
   if(token != null) {
     userInfo(token)
@@ -76,17 +73,12 @@ router.beforeEach((to, from, next) => {
               localStorage.removeItem("access-token")
               localStorage.setItem("access-token", res.headers.authorization)
           }
-          console.log('인증완료')
           store.commit('setAuthState', true)
           store.commit('setUserInfoData', res.data)
       })
-      .catch((error) => {
-          console.log(error);
+      .catch(() => {
           if(localStorage.getItem("access-token")){
             this.$store.dispatch('logout');
-            // localStorage.removeItem("access-token")
-            // location.href = '/home/main'
-            // alert('로그인 기간이 만료되었습니다.');
           } 
       })
       .finally(() => {

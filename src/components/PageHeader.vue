@@ -24,7 +24,7 @@
                             <img src="https://cdn.vuetifyjs.com/images/john.jpg" alt="John">
                             </v-list-item-avatar>
                             <v-list-item-content>
-                                <v-list-item-title>{{ userInfoData.username }}</v-list-item-title>
+                                <v-list-item-title>{{ userInfoData.nickname }}</v-list-item-title>
                                 <v-list-item-subtitle>Founder of Vuetify</v-list-item-subtitle>
                             </v-list-item-content>
                             <v-list-item-action>
@@ -60,7 +60,7 @@
                 <v-list-item-avatar>
                 <v-img src="https://randomuser.me/api/portraits/men/85.jpg"></v-img>
                 </v-list-item-avatar>
-                <v-list-item-title>{{ userInfoData.username }}</v-list-item-title>
+                <v-list-item-title>{{ userInfoData.nickname }}</v-list-item-title>
             </v-list-item>
             <v-divider></v-divider>
             <v-list-item-group v-model="selectedItem" mandatory>        
@@ -170,14 +170,14 @@ export default {
           { icon: 'logout', title: '로그아웃'},
       ],
     }),
-    comments: {
-        LoginDialog
-    },
+    // comments: {
+    //     LoginDialog
+    // },
     components: { 
         LoginDialog 
     },
     computed: {
-        // 회원정보 가져오기
+        // 회원정보, 권한 가져오기
         ...mapState(['userInfoData', 'authState']),
     },
     mounted() {
@@ -191,15 +191,15 @@ export default {
         } else {
             this.selectedItem = '';
         }
-        // // 회원정보 가져오기
-        this.$store.dispatch('userInfo');
+        // 회원정보 가져오기
+        this.$store.dispatch('userInfo')
     },
     methods: {
         menuBackground() {
             this.menu = true
         },
         logout() {
-            this.$store.dispatch('logout').then(() => { console.log('데이터 가져오기 성공')})
+            this.$store.dispatch('logout')
         },
         selectItem(title, link, page ,count, category) {
             this.$router.push({
@@ -207,7 +207,6 @@ export default {
                 query: { page: page, count: count, category: category }
             }, () => {});
         },
-
     },
     watch: {
       group () {

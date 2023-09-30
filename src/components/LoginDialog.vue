@@ -1,9 +1,9 @@
 <template>
     <v-app>
         <v-row justify="center" style="position: fixed; z-index: 1002 !important;">
-            <v-dialog  v-model="dialog" persistent max-width="600">
+            <v-dialog v-model="dialog" persistent max-width="600">
             <template v-slot:activator="{ on, attrs }">
-                <v-btn color="primary" dark v-bind="attrs" v-on="on" style="width: 260px;">
+                <v-btn color="primary" dark v-bind="attrs" v-on="on" style="width: 260px;" @click="openDialog()">
                     로그인 버튼
                 </v-btn>
             </template>
@@ -133,17 +133,21 @@ export default {
     },
     methods: {
         join() {
-            this.dialog = false;
-            this.$router.push({name: 'join'}).catch(() => {})
+          this.dialog = false;
+          this.$router.push({name: 'join'}).catch(() => {})
+        },
+        openDialog() {
+          document.documentElement.style.overflow = 'hidden'
         },
         closeDialog() {
-            this.email = ''
-            this.password = ''
-            this.$store.commit('setLoginMessage', null);
-            this.dialog = false
-
+          document.documentElement.style.overflow = 'auto'
+          this.email = ''
+          this.password = ''
+          this.$store.commit('setLoginMessage', null);
+          this.dialog = false
         },
         async login() {
+          // 유효성 검사
           if(this.email != '' && this.password == '') {
             this.$store.commit('setLoginMessage', '비밀번호를 입력하세요.')
             this.$refs.password.focus()

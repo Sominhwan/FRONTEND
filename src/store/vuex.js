@@ -30,11 +30,10 @@ export default new Vuex.Store({
     async login (dispatch, data) {
       signIn(data)
         .then((res) => {
-            if(res.headers.authorization != null)
+            if(res.headers.authorization != null) {
                 localStorage.setItem("access-token", res.headers.authorization)
-           // this.dispatch('userInfo') // userInfo 호출
-            location.href = '/home/main'
-            //this.commit('setAuthState', true)
+            }
+            location.reload()
             this.commit('setLoginMessage', null)
         })
         .catch(() => {
@@ -56,7 +55,7 @@ export default new Vuex.Store({
       })
       .catch((error) => {
           console.log(error);
-          const userData = {'username' : '없음'};
+          const userData = {'nickname' : '없음'};
           commit('setUserInfoData', userData)
       })
       .finally(() => {
@@ -70,13 +69,12 @@ export default new Vuex.Store({
       .then(() => {
           location.href = '/home/main' 
           localStorage.removeItem("access-token")
-          this.commit('setAuthState', false)
       })
       .catch(() => {
 
       })
       .finally(() => {
-
+        this.commit('setAuthState', false)
       })
  },
   },

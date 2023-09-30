@@ -49,12 +49,26 @@
           </v-card>
         <!-- 공지사항 목록 -->  
         <v-card class="rounded-0" flat style="min-height:1000px">
-          <v-list style="border-bottom: 1px solid #eee;">
+          <div v-for="index in 15" :key="index">
+          <v-skeleton-loader class="loader" type="list-item-avatar" v-if="loading" style="margin-top: 15px;"></v-skeleton-loader>
+          </div>
+          <v-list class="notice-list" style="border-bottom: 1px solid #eee;"  v-for="(notice_board_list, idx) in notice_board_list" :key="idx" >
             <!-- 로딩바 -->
-            <div class="loading text-center" v-if="loading">
+            <!-- <div class="loading text-center" v-if="loading">
               <v-progress-circular indeterminate color="primary"></v-progress-circular>
-            </div>
-            <v-list-item v-for="(notice_board_list, idx) in notice_board_list" :key="idx">
+            </div> -->
+            <!-- <v-list-item v-if="loading">
+              <v-list-item-avatar>
+                <v-skeleton-loader class="loader" type="list-item-avatar"></v-skeleton-loader>
+              </v-list-item-avatar>
+              <v-list-item-content>
+                <v-list-item-title>
+                  <v-skeleton-loader type="text"></v-skeleton-loader>
+                </v-list-item-title>
+              </v-list-item-content>
+            </v-list-item> -->
+
+            <v-list-item>
               <v-list-item-avatar>
                 <v-icon class="grey lighten-1" dark>
                   mdi-folder
@@ -202,6 +216,9 @@ export default {
   }
   .notice-title:hover {
     text-decoration: underline;
+  }
+  .notice-list {
+    padding: 0px;
   }
   .loading {
     z-index: 2;
