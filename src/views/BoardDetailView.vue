@@ -102,44 +102,10 @@
                                 background-color="#F9F9F9"
                             >
                             </v-textarea>
-                          <template>
-                              <v-dialog
-                                v-model="dialog"
-                                persistent
-                                max-width="290"
-                              >
-                                <template v-slot:activator="{ on, attrs }">
-                                  <v-btn class="comment-btn rounded-0" @click="saveComment()" text color="black" outlined style="height: 130px; left: 1px;" v-bind="attrs" v-on="on">
-                                    등록
-                                  </v-btn>
-                                </template>
-                                <v-card>
-                                  <v-card-title class="text-h5">
-                                    Use Google's location service?
-                                  </v-card-title>
-                                  <v-card-text>Let Google help apps determine location. This means sending anonymous location data to Google, even when no apps are running.</v-card-text>
-                                  <v-card-actions>
-                                    <v-spacer></v-spacer>
-                                    <v-btn
-                                      color="green darken-1"
-                                      text
-                                      @click="closeDialog()"
-                                    >
-                                      취소
-                                    </v-btn>
-                                    <v-btn
-                                      color="green darken-1"
-                                      text
-                                      @click="dialog = false"
-                                    >
-                                      Agree
-                                    </v-btn>
-                                  </v-card-actions>
-                                </v-card>
-                              </v-dialog>
-
-                          </template>
-
+                            <v-btn class="comment-btn rounded-0" @click="saveComment()" text color="black" outlined style="height: 130px; left: 1px;" v-bind="attrs" v-on="on">
+                              등록
+                            </v-btn>
+                            <AuthDialog v-model="authDialog" v-if="authDialog"></AuthDialog>
                         </v-row>
                     </v-col> 
                     <!-- 댓글 리스트 -->
@@ -210,11 +176,12 @@
 
 <script>
 import { selectNoticeBoardDetail, selectNoticeBoardDetailList } from "@/api/noticeBoard/noticeBoard";
+import AuthDialog from '@/components/AuthDialog';
 import { mapState } from "vuex";
 export default {
     data () {
         return {
-          dialog: false,
+          authDialog: false,
           files: [
             {
               color: 'blue',
@@ -292,6 +259,9 @@ export default {
           ]
         }
     },
+    components: {
+      AuthDialog
+    },
     computed: {
       ...mapState(['userInfoData', 'authState']),
     },
@@ -350,15 +320,12 @@ export default {
       saveComment() {
         if(!this.authState) { // 비로그인 상태시
           document.documentElement.style.overflow = 'hidden'
-          this.dialog = true
+          this.authDialog = true
         } else { // 로그인 상태시
           alert('로그인중')
         }
       },
-      closeDialog() {
-        document.documentElement.style.overflow = 'auto'
-        this.dialog = false
-      }
+
     }
 }
 </script>

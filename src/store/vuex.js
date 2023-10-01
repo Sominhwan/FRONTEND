@@ -29,7 +29,7 @@ export default new Vuex.Store({
     /* 로그인 */
     async login (dispatch, data) {
       signIn(data)
-        .then((res) => {
+        .then((res) => {  
             if(res.headers.authorization != null) {
                 localStorage.setItem("access-token", res.headers.authorization)
             }

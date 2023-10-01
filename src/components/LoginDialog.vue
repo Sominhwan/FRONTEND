@@ -1,5 +1,5 @@
 <template>
-    <v-app>
+    <div>
         <v-row justify="center" style="position: fixed; z-index: 1002 !important;">
             <v-dialog v-model="dialog" persistent max-width="600">
             <template v-slot:activator="{ on, attrs }">
@@ -88,7 +88,7 @@
             </v-card>
             </v-dialog>
         </v-row>
-    </v-app>
+    </div>
 </template>
 
 <script>
@@ -140,7 +140,7 @@ export default {
           document.documentElement.style.overflow = 'hidden'
         },
         closeDialog() {
-          document.documentElement.style.overflow = 'auto'
+          document.documentElement.style.overflowY = 'auto'
           this.email = ''
           this.password = ''
           this.$store.commit('setLoginMessage', null);

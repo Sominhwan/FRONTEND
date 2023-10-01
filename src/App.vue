@@ -1,7 +1,7 @@
 <template>
   <v-app>
     <!-- <PageHeader style="z-index: 1000;" :key="$route.fullPath"/> -->
-    <PageHeader style="z-index: 1000"/>
+    <PageHeader style="z-index: 1000" v-if="$route.name !== 'join' && $route.name !== 'login'"/>
     <router-view :key="$route.fullPath"/>
     <PageFooter v-if="$route.name !== 'notice' && $route.name !== 'error404'"/>
   </v-app>

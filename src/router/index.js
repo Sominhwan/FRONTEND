@@ -4,6 +4,7 @@ import BoardView from '@/views/BoardDetailView.vue'
 import BoardWriteView from '@/views/BoardWriteView.vue'
 import ErrorView from '@/views/ErrorView.vue'
 import HomeView from '@/views/HomeView.vue'
+import LoginView from '@/views/login/loginView.vue'
 import NoticeView from '@/views/NoticeView.vue'
 import SignUpView from '@/views/signUp/SignUpView.vue'
 import NProgress from "nprogress"
@@ -23,6 +24,11 @@ const routes = [
     path: '/home/main',
     name: 'home',
     component: HomeView
+  },
+  {
+    path: '/login',
+    name: 'login',
+    component: LoginView
   },
   {
     path: '/join',
@@ -66,7 +72,7 @@ router.beforeEach((to, from, next) => {
   const token = localStorage.getItem("access-token")
   const currentName = to.name;
 
-  if(token != null) {
+  if(token !== null) {
     userInfo(token)
       .then((res) => {
           if(res.headers.authorization != null){
@@ -84,12 +90,23 @@ router.beforeEach((to, from, next) => {
       .finally(() => {
 
       })
-  } else if(currentName == 'write'){
+  } 
+  if(token === null) {
+    if(currentName === 'write') {
       const authState = store.state.authState
       if(!authState) {
         location.href = '/home/main'
         alert('접근되지 않은 권한입니다.');
       }
+    }
+  } else {
+    if(currentName === 'login') {
+      const authState = store.state.authState
+      if(authState) {
+        location.href = '/home/main'
+        alert('접근되지 않은 권한입니다.');
+      }
+    }
   }
   if(to.path) {
     NProgress.configure({ showSpinner: false });

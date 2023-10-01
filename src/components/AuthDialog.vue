@@ -1,56 +1,52 @@
 <template>
-    <v-row justify="center">
-        <v-dialog
-        v-model="dialog"
-        persistent
-        max-width="290"
-        >
-        <template v-slot:activator="{ on, attrs }">
-            <v-btn
-            color="primary"
-            dark
-            v-bind="attrs"
-            v-on="on"
-            >
-            Open Dialog
-            </v-btn>
-        </template>
-        <v-card>
-            <v-card-title class="text-h5">
-            Use Google's location service?
-            </v-card-title>
-            <v-card-text>Let Google help apps determine location. This means sending anonymous location data to Google, even when no apps are running.</v-card-text>
-            <v-card-actions>
-            <v-spacer></v-spacer>
-            <v-btn
-                color="green darken-1"
-                text
-                @click="dialog = false"
-            >
-                Disagree
-            </v-btn>
-            <v-btn
-                color="green darken-1"
-                text
-                @click="dialog = false"
-            >
-                Agree
-            </v-btn>
-            </v-card-actions>
-        </v-card>
-        </v-dialog>
-    </v-row>
+  <v-dialog v-model="authDialog" persistent max-width="290">
+    <v-card>
+      <!-- <v-card-title></v-card-title> -->
+      <v-card-text class="pa-6" style="font-size: 16px;">댓글을 달기위해서 로그인이 필요합니다.</v-card-text>
+      <v-card-actions>
+        <v-spacer></v-spacer>
+        <v-btn class="rounded-0" text outlined @click="closeAuthDialog()">
+          취소
+        </v-btn>
+        <v-btn class="rounded-0" text outlined @click="openLoginDialog()">
+          확인
+        </v-btn>
+      </v-card-actions>
+    </v-card>
+  </v-dialog>
 </template>
 <script>
 export default {
     data() {
-        return {
-
-        }
+      return {
+        //authDialog: true
+        loginDialog2: false,
+      }
     },
     props: {
-        showAuthDialog: Boolean
+      value: {
+          type: Boolean,
+          required: true,
+        },
+    },
+    computed: {
+      authDialog: {
+        get() {
+          return this.value;
+        },
+        set(value) {
+          this.$emit('input', value);
+        },
+      },
+    },
+    methods: {
+      closeAuthDialog() {
+        document.documentElement.style.overflowY = 'auto'
+        this.authDialog = false
+      },
+      openLoginDialog() {
+        this.authDialog2 = true
+      }
     }
-
 }
 </script>

@@ -2,7 +2,6 @@
 <!-- class="ma-12 pa-12" toolbar: flat-->
     <v-app style="position: fixed;">
         <v-app-bar dense elevation="0" height="65px" color="#363636" style="position: fixed; ">
-            <!-- <v-app-bar-nav-icon @click.stop="drawer = !drawer" class="drawer-icon"></v-app-bar-nav-icon> -->
             <v-app-bar-nav-icon @click.stop="mini = !mini" class="drawer-icon" color="white"></v-app-bar-nav-icon>
             <v-toolbar-title class="header-main-icon pa-1" @click="$router.push({name: 'home'})" style="color:white;">메인</v-toolbar-title>
             <v-spacer/>
@@ -10,6 +9,7 @@
             <v-btn icon>
                 <v-icon color="white">mdi-heart</v-icon>
             </v-btn>
+            <span v-if="!authState" class="header-login" @click="$router.push({name: 'login'})">로그인</span>
             <!-- nav 우측 메뉴 -->
             <v-menu offset-y>
                 <template v-slot:activator="{ on, attrs }">
@@ -65,15 +65,6 @@
             <v-divider></v-divider>
             <v-list-item-group v-model="selectedItem" mandatory>        
                 <v-list nav><!-- dense 추가시 margin 좁아짐-->
-                    <!-- <v-list-item :value="item.title" @click="selectItem(item.title, item.link, item.page, item.count, item.category)" 
-                        v-for="item in side_items" :key="item.title" :class="{ 'selected': selectedItem === item.title }">
-                        <v-list-item-icon class="item-icon">
-                            <v-icon size="25">{{ item.icon }}</v-icon>
-                        </v-list-item-icon>
-                        <v-list-item-content class="item-content">
-                            <v-list-item-title style="font-weight: bold; font-size: 16px;">{{ item.title }}</v-list-item-title>
-                        </v-list-item-content>
-                    </v-list-item> -->
                     <v-list-item :value="'홈'" @click="selectItem('홈', 'home')" :key="'홈'" :class="{ 'selected': selectedItem === '홈' }">
                         <v-list-item-icon class="item-icon">
                             <v-icon size="25">home</v-icon>
@@ -227,6 +218,10 @@ export default {
     .search-input {
         border-radius: 5px;
         /* border: 3px solid #eee; */
+    }
+    .header-login {
+        color: #fff;
+        cursor: pointer;
     }
     v-text-field {
         width: 200px;
