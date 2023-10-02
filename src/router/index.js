@@ -4,8 +4,10 @@ import BoardView from '@/views/BoardDetailView.vue'
 import BoardWriteView from '@/views/BoardWriteView.vue'
 import ErrorView from '@/views/ErrorView.vue'
 import HomeView from '@/views/HomeView.vue'
-import LoginView from '@/views/login/loginView.vue'
 import NoticeView from '@/views/NoticeView.vue'
+import findIdView from '@/views/accountRecovery/findIdView.vue'
+import findPasswordView from '@/views/accountRecovery/findPasswordView.vue'
+import LoginView from '@/views/login/loginView.vue'
 import SignUpView from '@/views/signUp/SignUpView.vue'
 import NProgress from "nprogress"
 import "nprogress/nprogress.css"; // css까지 import 해주어야 한다.
@@ -29,6 +31,16 @@ const routes = [
     path: '/login',
     name: 'login',
     component: LoginView
+  },
+  {
+    path: '/findid',
+    name: 'findId',
+    component: findIdView
+  },
+  {
+    path: '/findpwd',
+    name: 'findPwd',
+    component: findPasswordView
   },
   {
     path: '/join',
@@ -65,7 +77,16 @@ const routes = [
 const router = new VueRouter({
   mode: 'history', // history 모드를 사용시 # 이 붙여서 url 중복이 허용되지 않음, hash 모드일 경우 # 이 붙여서 중복 허용가능
   base: process.env.BASE_URL,
-  routes
+  routes,
+  scrollBehavior(to, from, savedPosition) {
+    if (savedPosition || to.name === 'home' || to.name === 'noticeDetail') {
+      // 이전 스크롤 위치가 저장되어 있다면 해당 위치로 이동
+      return savedPosition;
+    } else {
+      // 이전 스크롤 위치가 없다면 페이지의 맨 위로 이동
+      return { x: 0, y: 0 };
+    }
+  },
 })
 
 router.beforeEach((to, from, next) => {

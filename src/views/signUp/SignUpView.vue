@@ -1,5 +1,5 @@
 <template>
-    <div>
+    <v-container fluid fill-height>
         <!-- scroll to top 버튼 -->
         <v-btn
             v-scroll="onScroll"
@@ -177,7 +177,7 @@
             </v-card-actions>
         </v-card>
         </v-dialog>        
-    </div>
+    </v-container>
 </template>
 
 <script>

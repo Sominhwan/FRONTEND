@@ -26,7 +26,7 @@ export default new Vuex.Store({
     }
   },
   actions: {
-    /* 로그인 */
+    /* 다이얼로그 로그인 */
     async login (dispatch, data) {
       signIn(data)
         .then((res) => {  
@@ -43,6 +43,23 @@ export default new Vuex.Store({
 
         })
    },
+       /* 로그인 */
+      async login2 (dispatch, data) {
+      signIn(data)
+        .then((res) => {  
+            if(res.headers.authorization != null) {
+                localStorage.setItem("access-token", res.headers.authorization)
+            }
+            window.history.back()
+            this.commit('setLoginMessage', null)
+        })
+        .catch(() => {
+          this.commit('setLoginMessage', '이메일 또는 비밀번호가 잘못됐습니다.')
+        })
+        .finally(() => {
+
+        })
+     },
   /* 회원정보 */
    async userInfo({ commit }) {
     const token = localStorage.getItem("access-token")
