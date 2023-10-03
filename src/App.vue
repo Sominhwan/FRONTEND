@@ -1,9 +1,9 @@
 <template>
   <v-app>
     <!-- <PageHeader style="z-index: 1000;" :key="$route.fullPath"/> -->
-    <PageHeader style="z-index: 1000" v-if="$route.name !== 'join' && $route.name !== 'login'"/>
+    <PageHeader style="z-index: 1000" v-if="$route.name !== 'join' && $route.name !== 'login' && $route.name !== 'findId' && $route.name !== 'findPwd'"/>
     <router-view :key="$route.fullPath"/>
-    <PageFooter v-if="$route.name !== 'notice' && $route.name !== 'error404'"/>
+    <PageFooter v-if="$route.name !== 'notice' && $route.name !== 'error404' && $route.name !== 'findId' && $route.name !== 'findPwd'"/>
   </v-app>
 </template>
 

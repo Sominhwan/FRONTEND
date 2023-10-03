@@ -53,9 +53,9 @@
                 <div class="login-message">{{ loginMessage }}</div>
                 <v-btn class="login-btn text-h6 rounded-0 flat" color="secondary" @click="login()" block height="55">로그인</v-btn>
                 <div class="account-options-container">
-                  <div class="join-btn" @click="$router.push({name: 'findPwd'})">비밀번호 찾기</div>
+                  <div class="join-btn" @click="openPwdPopUp()">비밀번호 찾기</div>
                   <div class="vertical-line"></div>
-                  <div class="join-btn" @click="$router.push({name: 'findId'})">아이디 찾기</div>
+                  <div class="join-btn" @click="openIdpopUp()">아이디 찾기</div>
                   <div class="vertical-line"></div>
                   <div class="join-btn" @click="join()">회원가입</div>
                 </div>
@@ -108,17 +108,17 @@ export default {
         },
         async login() {
           // 유효성 검사
-          if(this.email != '' && this.password == '') {
+          if(this.email !== '' && this.password === '') {
             this.$store.commit('setLoginMessage', '비밀번호를 입력하세요.')
             this.$refs.password.focus()
             return;
           }
-          if(this.email == '' && this.password != '') {
+          if(this.email === '' && this.password !== '') {
             this.$store.commit('setLoginMessage', '이메일을 입력하세요.')
             this.$refs.email.focus()
             return;
           }
-          if(this.email == '' && this.password == '') {
+          if(this.email === '' && this.password === '') {
             this.$store.commit('setLoginMessage', '이메일 또는 비밀번호가 입력되지 않았습니다.')
             this.$refs.email.focus()
             return;
@@ -128,6 +128,26 @@ export default {
             password: this.password,
             autoLogin: this.checkbox
           })
+        },
+        openIdpopUp() {
+          const screenWidth = window.innerWidth || document.documentElement.clientWidth || document.body.clientWidth;
+          const screenHeight = window.innerHeight || document.documentElement.clientHeight || document.body.clientHeight;
+          const popupWidth = 650;
+          const popupHeight = 800;
+          const left = (screenWidth - popupWidth) / 2;
+          const top = (screenHeight - popupHeight) / 2;
+          const popUpAttribute = `top=${top}, left=${left}, width=${popupWidth}, height=${popupHeight}, resizable=no, status=no, scrollbars=no`
+          window.open("/findId",'',popUpAttribute)
+        },
+        openPwdPopUp() {
+          const screenWidth = window.innerWidth || document.documentElement.clientWidth || document.body.clientWidth;
+          const screenHeight = window.innerHeight || document.documentElement.clientHeight || document.body.clientHeight;
+          const popupWidth = 650;
+          const popupHeight = 800;
+          const left = (screenWidth - popupWidth) / 2;
+          const top = (screenHeight - popupHeight) / 2;
+          const popUpAttribute = `top=${top}, left=${left}, width=${popupWidth}, height=${popupHeight}, resizable=no, status=no, scrollbars=no`
+          window.open("/findpwd",'',popUpAttribute)
         }
     }         
 }

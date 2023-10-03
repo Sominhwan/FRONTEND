@@ -13,8 +13,8 @@ import NProgress from "nprogress"
 import "nprogress/nprogress.css"; // css까지 import 해주어야 한다.
 import Vue from 'vue'
 import VueRouter from 'vue-router'
-Vue.use(VueRouter)
 
+Vue.use(VueRouter)
 
 const routes = [
   {
@@ -129,7 +129,7 @@ router.beforeEach((to, from, next) => {
       }
     }
   }
-  if(to.path) {
+  if(to.name !== 'login' && to.name !== 'findId' && to.name !== 'findPwd' && to.name !== 'join') {
     NProgress.configure({ showSpinner: false });
     NProgress.start(); // 라우팅 시작 시 NProgress 시작
   }
