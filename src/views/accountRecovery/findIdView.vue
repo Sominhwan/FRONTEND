@@ -1,52 +1,59 @@
 <template>
-    <v-card-title>
-        <v-breadcrumbs :items="accountTabTitle" large>
-            <template v-slot:item="{ item }">
-                <v-breadcrumbs-item :disabled="item.disabled">
-                    <span class="account-title" :style="`color: ${item.color}`" @click="$router.push({name: 'findPwd'})"> {{ item.text }}</span>
-                </v-breadcrumbs-item>
-            </template>
-        </v-breadcrumbs>
-        <div class="additional-text">아이디를 찾이 위한 본인확인 방법을 선택하세요.</div>
-        <v-container>
-            <v-col cols="12">
-                <v-card id="test"  class="identification-container rounded-0" elevation="0" color="#F5F5F5">
-                <div class="d-flex">
-                    <v-avatar class="ma-5" size="100" tile>
-                        <v-img src="https://cdn.vuetifyjs.com/images/cards/foster.jpg"></v-img>
-                    </v-avatar>
-                    <v-card-title class="text-h6 ma-5">
-                        <div class="identification-title">휴대폰 인증</div>
-                        <div class="identification-content">고객님 명의의 휴대폰으로 인증</div>
-                    </v-card-title>
-                    <v-card-actions>
-                        <v-btn class="identification-btn rounded-0" text>
-                            인증하기
-                        </v-btn>
-                    </v-card-actions>
-                    </div>
-                </v-card>
-            </v-col>
-            <v-col cols="12">
-                <v-card id="test"  class="identification-container rounded-0" elevation="0" color="#F5F5F5">
-                <div class="d-flex">
-                    <v-avatar class="ma-5" size="100" tile>
-                        <v-img src="https://cdn.vuetifyjs.com/images/cards/foster.jpg"></v-img>
-                    </v-avatar>
-                    <v-card-title class="text-h6 ma-5">
-                        <div class="identification-title">휴대폰 인증</div>
-                        <div class="identification-content">고객님 명의의 휴대폰으로 인증</div>
-                    </v-card-title>
-                    <v-card-actions>
-                        <v-btn class="identification-btn rounded-0" text>
-                            인증하기
-                        </v-btn>
-                    </v-card-actions>
-                    </div>
-                </v-card>
-            </v-col>
-        </v-container>
-    </v-card-title>
+    <div>
+        <v-card-title style="padding-bottom: 0px;">
+            <v-breadcrumbs :items="accountTabTitle" large>
+                <template v-slot:item="{ item }">
+                    <v-breadcrumbs-item :disabled="item.disabled">
+                        <router-link class="account-title" :style="`color: ${item.color}`" :to="{ name: 'findPwd'}">
+                            {{ item.text }}
+                        </router-link>
+                    </v-breadcrumbs-item>
+                </template>
+            </v-breadcrumbs>
+        </v-card-title>
+        <v-card-text>
+            <div class="additional-text">아이디를 찾기 위한 본인확인 방법을 선택하세요.</div>
+            <v-container>
+                <v-col cols="12">
+                    <v-card id="test"  class="identification-container rounded-0" elevation="0" color="#F5F5F5">
+                    <div class="d-flex">
+                        <v-avatar class="ma-5" size="100" tile>
+                            <v-icon size="75">phone_iphone</v-icon>
+                        </v-avatar>
+                        <v-card-title class="text-h6 ma-5">
+                            <div class="identification-title">휴대폰 인증</div>
+                            <div class="identification-content">고객님 명의의 휴대폰으로 인증</div>
+                        </v-card-title>
+                        <v-card-actions>
+                            <v-btn class="identification-btn rounded-0" text @click="$router.push({name: ''})">
+                                인증하기
+                            </v-btn>
+                        </v-card-actions>
+                        </div>
+                    </v-card>
+                </v-col>
+                <v-col cols="12">
+                    <v-card id="test"  class="identification-container rounded-0" elevation="0" color="#F5F5F5">
+                    <div class="d-flex">
+                        <v-avatar class="ma-5" size="100" tile>
+                            <v-icon size="75">mail</v-icon>
+                        </v-avatar>
+                        <v-card-title class="text-h6 ma-5">
+                            <div class="identification-title">이메일 인증</div>
+                            <div class="identification-content">고객님 명의의 휴대폰으로 인증</div>
+                        </v-card-title>
+                        <v-card-actions>
+                            <v-btn class="identification-btn rounded-0" text @click="$router.push({name: ''})">
+                                인증하기
+                            </v-btn>
+                        </v-card-actions>
+                        </div>
+                    </v-card>
+                </v-col>
+                <v-footer class="identification-footer">Copyright © 2023 smh.co.Ltd. All rights reserved.</v-footer>
+            </v-container>
+        </v-card-text>
+    </div>
 </template>
 <script>
 export default {
@@ -68,18 +75,19 @@ export default {
 <style scoped>
  .account-title{
     cursor: pointer;
+    text-decoration: none;
  }
  .additional-text {
-    display: inline-block; /* 텍스트를 가리지 않도록 인라인 블록으로 설정 */
     margin-left: 20px; /* 원하는 여백 설정 */
-    font-size: 18px;
+    font-size: 16px;
     font-weight: bold;
  }
  .identification-container {
-    border: 1px solid #303030 !important;
+    border: 1px solid #e0e0e0 !important;
     cursor: pointer;
  }
  .identification-title {
+    font-size: 18px;
     font-weight: bold;
  }
  .identification-content {
@@ -92,5 +100,13 @@ export default {
     color: #fff;
     display: inline-block;
     background-color: #6E81DF;
+ }
+ .identification-footer {
+    position: absolute; 
+    bottom: 0px;
+    font-size: 12px;
+    color: #afafaf;
+    font-weight: normal;
+    background-color: transparent;
  }
 </style>
