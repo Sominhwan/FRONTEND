@@ -21,33 +21,44 @@
                     <v-stepper-step step="3"></v-stepper-step>
                 </v-stepper-header>
             </v-stepper>
-            <div class="additional-text">비밀번호를 찾기를 위한 아이디를 입력해주세요.</div>
+            <div class="additional-text">본인확인 방법을 선택해주세요.</div>
             <v-container>
                 <v-col cols="12">
                     <v-card class="identification-container rounded-0" elevation="0" color="#F5F5F5">
-                            <v-card-title class="text-h6 ma-5">
-                                <v-row>
-                                    <v-card-subtitle class="identification-title">아이디</v-card-subtitle>
-                                    <v-text-field
-                                        class="id-text-field rounded-0 mr-5"
-                                        ref="email"
-                                        v-model="email"
-                                        label="E-mail"
-                                        single-line
-                                        outlined
-                                        background-color="white"
-                                        @keyup.enter="checkEmail()"
-                                    ></v-text-field>
-                                </v-row>
-                            </v-card-title>
-                        <div class="error-message">{{ errorMessage }}</div>
+                    <div class="d-flex">
+                        <v-avatar class="ma-5" size="100" tile>
+                            <v-icon size="75">phone_iphone</v-icon>
+                        </v-avatar>
+                        <v-card-title class="text-h6 ma-5">
+                            <div class="identification-title">휴대폰 인증</div>
+                            <div class="identification-content">고객님 명의의 휴대폰으로 인증</div>
+                        </v-card-title>
+                        <v-card-actions>
+                            <v-btn class="identification-btn rounded-0" text @click="$router.push({name: 'findId'})">
+                                인증하기
+                            </v-btn>
+                        </v-card-actions>
+                        </div>
                     </v-card>
                 </v-col>
-                <v-card-actions class="d-flex justify-center">
-                    <v-btn class="identification-btn rounded-0" text @click="checkEmail()">
-                        다음
-                    </v-btn>
-                </v-card-actions>
+                <v-col cols="12">
+                    <v-card class="identification-container rounded-0" elevation="0" color="#F5F5F5">
+                    <div class="d-flex">
+                        <v-avatar class="ma-5" size="100" tile>
+                            <v-icon size="75">mail</v-icon>
+                        </v-avatar>
+                        <v-card-title class="text-h6 ma-5">
+                            <div class="identification-title">이메일 인증</div>
+                            <div class="identification-content">고객님 명의의 휴대폰으로 인증</div>
+                        </v-card-title>
+                        <v-card-actions>
+                            <v-btn class="identification-btn rounded-0" text @click="$router.push({name: 'findId'})">
+                                인증하기
+                            </v-btn>
+                        </v-card-actions>
+                        </div>
+                    </v-card>
+                </v-col>
                 <v-footer class="identification-footer">Copyright © 2023 smh.co.Ltd. All rights reserved.</v-footer>
             </v-container>
         </v-card-text>
@@ -55,10 +66,11 @@
 </template>
 <script>
 import { checkId } from "@/api/auth/auth";
+import { mapState } from "vuex";
 export default {
     data () {
       return { 
-        e1: 1,
+        e1: 2,
         accountTab: null,
         errorMessage: null,
         email: '',
@@ -68,8 +80,15 @@ export default {
         ],
       }
     },   
+    computed: {
+      ...mapState(['findPwdState'])
+    }, 
     mounted() {
         document.documentElement.style.overflow = 'hidden'
+        if(!this.findPwdState) {
+            alert('접근되지 않은 권한입니다.')
+            this.$router.push({name: 'findPwd'})
+        }
     },
     methods: {
         checkEmail() {
@@ -82,8 +101,6 @@ export default {
             checkId(data)
                 .then((res) => {
                     if(res.data.data) {
-                        this.$store.commit('setFindPwdState', res.data.data)
-                        this.$router.push({name: 'findPwd2'})
                         this.email = ''
                         this.errorMessage = ''
                     } else {
@@ -118,27 +135,21 @@ export default {
  }
  .identification-container {
     border: 1px solid #e0e0e0 !important;
-    height: 110px;
+    cursor: pointer;
  }
  .identification-title {
     font-size: 18px;
+    font-weight: bold;
+ }
+ .identification-content {
+    font-size: 15px;
     font-weight: normal;
  }
- .v-text-field--outlined >>> fieldset {
-  border-color: #e0e0e0;
-}
-.error-message {
-    position: relative;
-    bottom: 50px;
-    left: 111px;
-    font-size: 12px;
-    color: #FF003E;
- }  
  .identification-btn {
     font-size: 14px;
+    margin: 5px;
     color: #fff;
     display: inline-block;
-    width: 80px;
     background-color: #6E81DF;
  }
  .identification-footer {

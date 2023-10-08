@@ -42,3 +42,12 @@ export function userInfo(data) { // 유저 인증정보
         withCredentials: true
     })
 }
+export function checkId(data) { // 비밀번호 찾기(아이디 인증)
+    return request({
+        url: `/api/v1/auth/id`,
+        method: 'POST',
+        data: data,
+        meta: { apiVersion: '1.0.0' },
+        headers: { 'Content-Type': 'application/json;charset=utf8' }
+    })
+}

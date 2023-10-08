@@ -190,5 +190,4 @@ export default {
       font-size: 14px;
       color: #FF003E;
     }   
-
 </style>

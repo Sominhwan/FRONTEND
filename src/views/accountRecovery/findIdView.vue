@@ -15,7 +15,7 @@
             <div class="additional-text">아이디를 찾기 위한 본인확인 방법을 선택하세요.</div>
             <v-container>
                 <v-col cols="12">
-                    <v-card id="test"  class="identification-container rounded-0" elevation="0" color="#F5F5F5">
+                    <v-card class="identification-container rounded-0" elevation="0" color="#F5F5F5">
                     <div class="d-flex">
                         <v-avatar class="ma-5" size="100" tile>
                             <v-icon size="75">phone_iphone</v-icon>
@@ -33,7 +33,7 @@
                     </v-card>
                 </v-col>
                 <v-col cols="12">
-                    <v-card id="test"  class="identification-container rounded-0" elevation="0" color="#F5F5F5">
+                    <v-card class="identification-container rounded-0" elevation="0" color="#F5F5F5">
                     <div class="d-flex">
                         <v-avatar class="ma-5" size="100" tile>
                             <v-icon size="75">mail</v-icon>
@@ -61,10 +61,9 @@ export default {
       return { 
         accountTab: null,
         accountTabTitle: [
-            { text: '아이디 찾기', disabled: true, href: '/findid', color: '#2889f1'}, 
-            { text: '비밀번호 찾기', disabled: false, href: '/findpwd', color: 'grey'}
+            { text: '아이디 찾기', disabled: true, color: '#2889f1'}, 
+            { text: '비밀번호 찾기', disabled: false, color: 'grey'}
         ],
-        text: 'Lor',
       }
     },   
     mounted() {

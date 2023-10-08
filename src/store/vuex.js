@@ -9,6 +9,7 @@ export default new Vuex.Store({
     userInfoData: null, // 사용자 정보를 저장할 상태
     authState: false, // 로그인 인증 상태
     loginMessage: null, // 로그인 실패시 메시지
+    findPwdState: false, // 비밀번호 찾기(아이디 인증 상태)
     //currentPage: 1,
   },
   getters: {
@@ -23,6 +24,9 @@ export default new Vuex.Store({
     },
     setLoginMessage(state, loginMessage) {
       state.loginMessage = loginMessage
+    },
+    setFindPwdState(state, findPwdState) {
+      state.findPwdState = findPwdState
     }
   },
   actions: {
