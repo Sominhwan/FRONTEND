@@ -1,5 +1,6 @@
 import 'nprogress/nprogress.css'
 import Vue from 'vue'
+import LoadScript from 'vue-plugin-load-script'
 import 'vuetify/dist/vuetify.min.css'
 import nprogress from '../src/assets/css/nprogress.css'
 import App from './App.vue'
@@ -14,6 +15,7 @@ new Vue({
   store,
   vuetify,
   nprogress,
+  LoadScript,
   render: h => h(App)
 }).$mount('#app')
 

@@ -18,7 +18,9 @@
                     <v-divider></v-divider>
                     <v-stepper-step :complete="e1 > 2" step="2"></v-stepper-step>
                     <v-divider></v-divider>
-                    <v-stepper-step step="3"></v-stepper-step>
+                    <v-stepper-step :complete="e1 > 2" step="3"></v-stepper-step>
+                    <v-divider></v-divider>
+                    <v-stepper-step step="4"></v-stepper-step>
                 </v-stepper-header>
             </v-stepper>
             <div class="additional-text">비밀번호를 찾기를 위한 아이디를 입력해주세요.</div>
@@ -83,7 +85,7 @@ export default {
                 .then((res) => {
                     if(res.data.data) {
                         this.$store.commit('setFindPwdState', res.data.data)
-                        this.$router.push({name: 'findPwd2'})
+                        this.$router.push({name: 'findPwd2', params: { email: this.email}})
                         this.email = ''
                         this.errorMessage = ''
                     } else {

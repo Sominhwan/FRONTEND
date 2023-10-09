@@ -18,7 +18,9 @@
                     <v-divider></v-divider>
                     <v-stepper-step :complete="e1 > 2" step="2"></v-stepper-step>
                     <v-divider></v-divider>
-                    <v-stepper-step step="3"></v-stepper-step>
+                    <v-stepper-step :complete="e1 > 2" step="3"></v-stepper-step>
+                    <v-divider></v-divider>
+                    <v-stepper-step step="4"></v-stepper-step>
                 </v-stepper-header>
             </v-stepper>
             <div class="additional-text">본인확인 방법을 선택해주세요.</div>
@@ -34,7 +36,7 @@
                             <div class="identification-content">고객님 명의의 휴대폰으로 인증</div>
                         </v-card-title>
                         <v-card-actions>
-                            <v-btn class="identification-btn rounded-0" text @click="$router.push({name: 'findId'})">
+                            <v-btn class="identification-btn rounded-0" text @click="$router.push({name: 'phoneVerification', params: { email: email}})">                   
                                 인증하기
                             </v-btn>
                         </v-card-actions>
@@ -49,7 +51,7 @@
                         </v-avatar>
                         <v-card-title class="text-h6 ma-5">
                             <div class="identification-title">이메일 인증</div>
-                            <div class="identification-content">고객님 명의의 휴대폰으로 인증</div>
+                            <div class="identification-content">고객님 명의의 이메일로 인증</div>
                         </v-card-title>
                         <v-card-actions>
                             <v-btn class="identification-btn rounded-0" text @click="$router.push({name: 'findId'})">
@@ -65,15 +67,14 @@
     </div>
 </template>
 <script>
-import { checkId } from "@/api/auth/auth";
 import { mapState } from "vuex";
 export default {
     data () {
       return { 
         e1: 2,
         accountTab: null,
-        errorMessage: null,
         email: '',
+        errorMessage: null,
         accountTabTitle: [
             { text: '아이디 찾기', disabled: false, href: '/findid', color: 'grey'}, 
             { text: '비밀번호 찾기', disabled: true, href: '/findpwd', color: '#2889f1'}
@@ -85,38 +86,14 @@ export default {
     }, 
     mounted() {
         document.documentElement.style.overflow = 'hidden'
-        if(!this.findPwdState) {
+        this.email = this.$route.params.email
+        if(!this.findPwdState && this.email === '') {
             alert('접근되지 않은 권한입니다.')
             this.$router.push({name: 'findPwd'})
         }
     },
     methods: {
-        checkEmail() {
-            if(this.email === '') {
-                this.errorMessage = '아이디를 입력해주세요.'
-                this.$refs.email.focus()
-                return;
-            }
-            const data  = { email : this.email }
-            checkId(data)
-                .then((res) => {
-                    if(res.data.data) {
-                        this.email = ''
-                        this.errorMessage = ''
-                    } else {
-                        this.errorMessage = '존재하지 않은 아이디입니다.'
-                        this.$refs.email.focus()
-                        return;
-                    }
 
-                })
-                .catch(() => {
-                    alert('서버와의 연결이 좋지 않습니다.')
-                })
-                .finally(() => {
-
-                })
-        }
     }     
 }
 </script>
