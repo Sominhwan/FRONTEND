@@ -33,8 +33,8 @@
                         <v-text-field 
                             hide-details
                             class="id-text-field rounded-0 mr-3"
-                            ref="email"
-                            v-model="email"
+                            ref="name"
+                            v-model="name"
                             label="이름"
                             single-line
                             outlined
@@ -51,26 +51,8 @@
                         <v-text-field
                             hide-details
                             class="id-text-field rounded-0 mr-3"
-                            ref="email"
-                            v-model="email"
-                            label="'-' 없이 숫자만 입력"
-                            single-line
-                            outlined
-                            background-color="#F5F5F5"
-                            @keyup.enter="checkEmail()"
-                        ></v-text-field>
-                    </v-col>
-                </v-row>
-                <v-row>
-                    <v-col cols="3">
-                        <v-subheader class="vertification-title">인증번호</v-subheader>
-                    </v-col>
-                    <v-col cols="9">
-                        <v-text-field
-                            hide-details
-                            class="id-text-field rounded-0 mr-3"
-                            ref="email"
-                            v-model="email"
+                            ref="phonenum"
+                            v-model="phonenum"
                             label="'-' 없이 숫자만 입력"
                             single-line
                             outlined
@@ -98,6 +80,8 @@ export default {
         accountTab: null,
         errorMessage: null,
         email: '',
+        name: '',
+        phonenum: '',
         token: null,
         accountTabTitle: [
             { text: '아이디 찾기', disabled: false, href: '/findid', color: 'grey'}, 
@@ -115,16 +99,26 @@ export default {
             alert('접근되지 않은 권한입니다.')
             this.$router.push({name: 'findPwd'})
         } else {
-            const script = document.createElement('script');
-            script.src = 'https://www.google.com/recaptcha/enterprise.js?render=6LdJJYsoAAAAAHpqWx0_Af8X-wURNKo9sKZoyiXd'; // CDN 스크립트 URL
-            script.async = true;
-            script.onload = () => {
-                this.reCaptcha()
-            };
-            document.head.appendChild(script);
+            this.loadRecaptchaScript()
+                .then(() => {
+                    this.reCaptcha();
+                })
+                .catch((error) => {
+                    console.error('스크립트 로드 중 오류 발생: ', error);
+                });
         }
     },
     methods: {
+        loadRecaptchaScript() {
+            return new Promise((resolve, reject) => {
+                const script = document.createElement('script');
+                script.src = 'https://www.google.com/recaptcha/enterprise.js?render=6LdJJYsoAAAAAHpqWx0_Af8X-wURNKo9sKZoyiXd';
+                script.async = true;
+                script.onload = resolve;
+                script.onerror = reject;
+                document.head.appendChild(script);
+            });
+        },
         reCaptcha() {
             grecaptcha.enterprise.ready(async () => {
                 const token = await grecaptcha.enterprise.execute('6LdJJYsoAAAAAHpqWx0_Af8X-wURNKo9sKZoyiXd', {action: 'LOGIN'});
@@ -132,12 +126,33 @@ export default {
             });
         },
         phoneVerification() {
-            if(this.token == null ) return false
-            console.log(this.token)
+            const phoneNumberPattern = /^[0-9-]+$/;
+            // TODO 추후에 정규식 패턴 수정 
+            if(this.name === '') {
+                alert('이름을 입력해주세요')
+                this.$refs.name.focus()
+                return;
+            } else if(this.phonenum === ''){
+                alert('휴대폰 번호를 입력해주세요')
+                this.$refs.phonenum.focus()
+                return;
+            } else if(!phoneNumberPattern.test(this.phonenum)) {
+                alert('올바른 휴대폰 번호를 입력해주세요')
+                this.phonenum = ''
+                this.$refs.phonenum.focus()
+                return;
+            }
+            if(this.token === null ) return false
             const data = { secret: this.token }
             reCAPTCHA(data)
                 .then((res) => {
-
+                    if(res.data.data.success) {
+                        // TODO 휴대폰 번호 전송 
+                    } else {
+                        alert('정상적인 동작이 아닙니다')
+                        this.findPwdState = false
+                        window.close()
+                    }
                 })
                 .catch(() => {
                     alert('서버와의 연결이 좋지 않습니다.')
