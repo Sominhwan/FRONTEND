@@ -51,8 +51,8 @@
                         <v-text-field
                             hide-details
                             class="id-text-field rounded-0 mr-3"
-                            ref="phonenum"
-                            v-model="phonenum"
+                            ref="phoneNum"
+                            v-model="phoneNum"
                             label="'-' 없이 숫자만 입력"
                             single-line
                             outlined
@@ -71,7 +71,7 @@
 </template>
 <script src="https://www.google.com/recaptcha/enterprise.js?render=6LeVyIkoAAAAAKMvziugsAX40vRPkceyjmhjgY4v"></script>
 <script>
-import { checkId, reCAPTCHA } from "@/api/auth/auth";
+import { checkPhoneNum, reCAPTCHA } from "@/api/auth/auth";
 import { mapState } from "vuex";
 export default {
     data () {
@@ -81,7 +81,7 @@ export default {
         errorMessage: null,
         email: '',
         name: '',
-        phonenum: '',
+        phoneNum: '',
         token: null,
         accountTabTitle: [
             { text: '아이디 찾기', disabled: false, href: '/findid', color: 'grey'}, 
@@ -132,22 +132,34 @@ export default {
                 alert('이름을 입력해주세요')
                 this.$refs.name.focus()
                 return;
-            } else if(this.phonenum === ''){
+            } else if(this.phoneNum === ''){
                 alert('휴대폰 번호를 입력해주세요')
-                this.$refs.phonenum.focus()
+                this.$refs.phoneNum.focus()
                 return;
-            } else if(!phoneNumberPattern.test(this.phonenum)) {
+            } else if(!phoneNumberPattern.test(this.phoneNum)) {
                 alert('올바른 휴대폰 번호를 입력해주세요')
-                this.phonenum = ''
-                this.$refs.phonenum.focus()
+                this.phoneNum = ''
+                this.$refs.phoneNum.focus()
                 return;
             }
             if(this.token === null ) return false
             const data = { secret: this.token }
             reCAPTCHA(data)
                 .then((res) => {
-                    if(res.data.data.success) {
+                    if(res.data.data == "true") {
                         // TODO 휴대폰 번호 전송 
+                        const data = { email : this.email, koreaName: this.name, phoneNum: this.phoneNum}
+                        //checkPhoneNum(data)
+                        checkPhoneNum(data)
+                            .then((res) => {
+                                console.log(res.data)
+                            })
+                            .catch(() => {
+                                alert('서버와의 연결이 좋지 않습니다.')
+                            })
+                            .finally(() => {
+
+                            })                        
                     } else {
                         alert('정상적인 동작이 아닙니다')
                         this.findPwdState = false
@@ -160,7 +172,7 @@ export default {
                 .finally(() => {
 
                 })
-        }
+        },
     }     
 }
 </script>
