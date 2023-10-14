@@ -11,18 +11,7 @@
                 </template>
             </v-breadcrumbs>
         </v-card-title>
-        <v-card-text>
-            <v-stepper class="password-stepper" v-model="e1" flat>
-                <v-stepper-header>
-                    <v-stepper-step :complete="e1 > 1" step="1"></v-stepper-step>
-                    <v-divider></v-divider>
-                    <v-stepper-step :complete="e1 > 2" step="2"></v-stepper-step>
-                    <v-divider></v-divider>
-                    <v-stepper-step :complete="e1 > 2" step="3"></v-stepper-step>
-                    <v-divider></v-divider>
-                    <v-stepper-step step="4"></v-stepper-step>
-                </v-stepper-header>
-            </v-stepper>
+        <v-card-text class="mt-5">
             <div class="additional-text">비밀번호를 찾기를 위한 아이디를 입력해주세요.</div>
             <v-container>
                 <v-col cols="12">
@@ -38,6 +27,7 @@
                                         single-line
                                         outlined
                                         background-color="white"
+                                        clearable
                                         @keyup.enter="checkEmail()"
                                     ></v-text-field>
                                 </v-row>
@@ -60,7 +50,6 @@ import { checkId } from "@/api/auth/auth";
 export default {
     data () {
       return { 
-        e1: 1,
         accountTab: null,
         errorMessage: null,
         email: '',

@@ -14,49 +14,36 @@
         <v-card-text class="mt-5">
             <div class="additional-text">휴대폰 본인인증</div>
             <v-container>
-                <v-row class="mt-3">
-                    <v-col cols="3">
-                        <v-subheader class="vertification-title">이름</v-subheader>
-                    </v-col>
-                    <v-col cols="9">
+                <v-row class="ma-0 mt-3">
+                    <v-col cols="12" style="display: inline-flex;">
                         <v-text-field 
-                            hide-details
-                            class="id-text-field rounded-0"
-                            ref="name"
-                            v-model="name"
-                            label="이름"
-                            single-line
-                            outlined
-                            background-color="#F5F5F5"
-                            @keyup.enter="checkEmail()"
-                        ></v-text-field>
-                    </v-col>
-                </v-row>
-                <v-row>
-                    <v-col cols="3">
-                        <v-subheader class="vertification-title">휴대폰 번호</v-subheader>
-                    </v-col>
-                    <v-col cols="9">
-                        <v-text-field
                             hide-details
                             class="id-text-field rounded-0"
                             ref="phoneNum"
                             v-model="phoneNum"
-                            label="'-' 없이 숫자만 입력"
                             single-line
+                            readonly
                             outlined
                             background-color="#F5F5F5"
-                            @keyup.enter="checkEmail()"
                         ></v-text-field>
+                        <v-text class="re-send-btn ma-0">
+                            재전송
+                        </v-text>
                     </v-col>
                 </v-row>
-                <v-row>
-                    <v-col cols="3">
-                    </v-col>
-                    <v-col cols="9">
-                    <v-btn class="identification-btn rounded-0" x-large text block @click="phoneVerification()">
-                        인증번호 발송
-                    </v-btn>
+                <v-row class="ma-0">
+                    <v-col cols="12">
+                        <v-text-field
+                            hide-details
+                            class="id-text-field rounded-0"
+                            ref="checkCertificationNumber"
+                            v-model="checkCertificationNumber"
+                            label="인증번호 6자리 입력"
+                            single-line
+                            outlined
+                            @keyup.enter="checkEmail()"
+                        ></v-text-field>
+                        <div class="time-text">{{ certificationTime }}</div>
                     </v-col>
                 </v-row>
                 <v-footer class="identification-footer">Copyright © 2023 smh.co.Ltd. All rights reserved.</v-footer>
@@ -64,7 +51,6 @@
         </v-card-text>
     </div>
 </template>
-<script src="https://www.google.com/recaptcha/enterprise.js?render=6LeVyIkoAAAAAKMvziugsAX40vRPkceyjmhjgY4v"></script>
 <script>
 import { checkPhoneNum, reCAPTCHA } from "@/api/auth/auth";
 import { mapState } from "vuex";
@@ -76,6 +62,10 @@ export default {
         email: '',
         name: '',
         phoneNum: '',
+        certificationNumber: null,
+        checkCertificationNumber: null,
+        certificationTime: '03:00',
+        koreaName: '',
         token: null,
         accountTabTitle: [
             { text: '아이디 찾기', disabled: false, href: '/findid', color: 'grey'}, 
@@ -89,42 +79,46 @@ export default {
     mounted() {
         document.documentElement.style.overflow = 'hidden'
         this.email = this.$route.params.email
-        if(!this.findPwdState && this.email === '') {
+        this.certificationNumber = this.$route.params.certificationNumber
+        this.koreaName = this.$route.params.koreaName
+        this.phoneNum = this.$route.params.phoneNum
+        if(!this.findPwdState && this.email === '' && this.certificationNumber === null && this.koreaName === '' && this.phoneNum === '') {
             alert('접근되지 않은 권한입니다.')
             this.$router.push({name: 'findPwd'})
         } else {
-            this.loadRecaptchaScript()
-                .then(() => {
-                    this.reCaptcha();
-                })
-                .catch((error) => {
-                    console.error('스크립트 로드 중 오류 발생: ', error);
-                });
+            console.log(this.$route.params.email)
+            console.log(this.$route.params.certificationNumber)
+            console.log(this.$route.params.koreaName)
+            console.log(this.$route.params.phoneNum) 
+            this.decrementTime()
+            // 5초 뒤 인증번호 초기화
+            // setTimeout(() => {
+            //     this.certificationNumber = null;
+            //     alert(this.certificationNumber)
+            // }, 5000); 
         }
-    },
-    beforeRouteLeave(to, from, next) {
-        const recaptchaElement = document.querySelector(".grecaptcha-badge");
-        if (recaptchaElement) {
-            recaptchaElement.remove();
-        }
-        next();
     },
     methods: {
-        loadRecaptchaScript() {
-            return new Promise((resolve, reject) => {
-                const script = document.createElement('script');
-                script.src = 'https://www.google.com/recaptcha/enterprise.js?render=6LdJJYsoAAAAAHpqWx0_Af8X-wURNKo9sKZoyiXd';
-                script.async = true;
-                script.onload = resolve;
-                script.onerror = reject;
-                document.head.appendChild(script);
-            });
-        },
-        reCaptcha() {
-            grecaptcha.enterprise.ready(async () => {
-                const token = await grecaptcha.enterprise.execute('6LdJJYsoAAAAAHpqWx0_Af8X-wURNKo9sKZoyiXd', {action: 'LOGIN'});
-                this.token = token
-            });
+        decrementTime() {
+            setInterval(() => {
+                const [minutes, seconds] = this.certificationTime.split(":").map(Number);
+                if (this.certificationTime.indexOf(":") === 1) {
+                    this.certificationTime = "0" + this.certificationTime;
+                }
+                if (minutes === 0 && seconds === 0) {
+                    // 시간이 00:00이 되면 동작을 멈춥니다.
+                    this.certificationNumber = null;
+                    //clearInterval(this.timer);
+                } else {
+                    if (seconds === 0) {
+                        this.certificationTime = `0${minutes - 1}:59`;
+                    } else if(seconds > 10) {
+                        this.certificationTime = `0${minutes}:${seconds - 1}`;
+                    } else {
+                        this.certificationTime = `0${minutes}:0${seconds - 1}`;
+                    }
+                }
+            }, 1000); // 1초마다 실행
         },
         phoneVerification() {
             const phoneNumberPattern = /^[0-9-]+$/;
@@ -153,8 +147,8 @@ export default {
                         checkPhoneNum(data)
                             .then((res) => {
                                 console.log(res.data)
-                                if(res.data.code === 1) {
-                                    this.$router.push({name: 'checkPhoneVerification', params: { certificationNumber: res.data.data, email : this.email, koreaName: this.name, phoneNum: this.phoneNum }})
+                                if(res.data.code === "0") {
+                                    this.$router.push({name: 'phoneVerification', params: { certificationNumber: res.data.data, email : this.email, koreaName: this.name, phoneNum: this.phoneNum }})
                                 } else {
                                     alert(res.data.data)
                                     this.findPwdState = false
@@ -189,25 +183,32 @@ export default {
     cursor: pointer;
     text-decoration: none;
  }
- .password-stepper {
-    margin-bottom: 20px;
- }
  .additional-text {
     margin-left: 20px; /* 원하는 여백 설정 */
     font-size: 16px;
     font-weight: bold;
  }
- .vertification-title {
-    font-size: 15px;
-    color: #000;
- }
  .v-text-field--outlined >>> fieldset {
     border-color: #e0e0e0;
 }
- .identification-btn {
-    font-size: 14px;
-    color: #fff;
+ .re-send-btn {
+    font-size: 16px;
+    padding-left: 60px;
+    padding-right: 60px;
+    display: flex;
+    align-items: center;
+    color: #fff;  
     background-color: #6E81DF;
+    cursor: pointer;
+ }
+ .time-text {
+    position: absolute;
+    top: 260px;
+    left: 85%;
+    display: inline;
+    text-align: center;
+    font-size: 16px;
+    color:#FF003E;
  }
  .identification-footer {
     position: absolute; 

@@ -11,7 +11,7 @@
                 </template>
             </v-breadcrumbs>
         </v-card-title>
-        <v-card-text>
+        <v-card-text class="mt-5">
             <div class="additional-text">아이디를 찾기 위한 본인확인 방법을 선택하세요.</div>
             <v-container>
                 <v-col cols="12">
