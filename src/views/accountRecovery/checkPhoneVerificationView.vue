@@ -26,7 +26,7 @@
                             outlined
                             background-color="#F5F5F5"
                         ></v-text-field>
-                        <v-text class="re-send-btn ma-0">
+                        <v-text class="re-send-btn ma-0" @click="reSendCertificationNumber()">
                             재전송
                         </v-text>
                     </v-col>
@@ -40,10 +40,23 @@
                             v-model="checkCertificationNumber"
                             label="인증번호 6자리 입력"
                             single-line
+                            maxlength="20"
                             outlined
-                            @keyup.enter="checkEmail()"
                         ></v-text-field>
                         <div class="time-text">{{ certificationTime }}</div>
+                    </v-col>
+                </v-row>
+                <v-row class="ma-0 ml-3">
+                    <div class="certification-text">⦁ 3분 이내로 인증번호(6자리)를 입력해 주세요.</div>
+                </v-row>
+                <v-row class="ma-0 ml-3">
+                    <div class="certification-text">⦁ 인증번호가 전송되지 않은경우 "재전송" 버튼을 눌러주세요.</div>
+                </v-row>
+                <v-row class="ma-0">
+                    <v-col cols="12">
+                        <v-btn class="identification-btn rounded-0" x-large text block @click="certification()">
+                            인증하기
+                        </v-btn>
                     </v-col>
                 </v-row>
                 <v-footer class="identification-footer">Copyright © 2023 smh.co.Ltd. All rights reserved.</v-footer>
@@ -52,7 +65,7 @@
     </div>
 </template>
 <script>
-import { checkPhoneNum, reCAPTCHA } from "@/api/auth/auth";
+import { checkPhoneNum } from "@/api/auth/auth";
 import { mapState } from "vuex";
 export default {
     data () {
@@ -65,6 +78,7 @@ export default {
         certificationNumber: null,
         checkCertificationNumber: null,
         certificationTime: '03:00',
+        timer: null,
         koreaName: '',
         token: null,
         accountTabTitle: [
@@ -86,29 +100,22 @@ export default {
             alert('접근되지 않은 권한입니다.')
             this.$router.push({name: 'findPwd'})
         } else {
-            console.log(this.$route.params.email)
-            console.log(this.$route.params.certificationNumber)
-            console.log(this.$route.params.koreaName)
-            console.log(this.$route.params.phoneNum) 
-            this.decrementTime()
-            // 5초 뒤 인증번호 초기화
-            // setTimeout(() => {
-            //     this.certificationNumber = null;
-            //     alert(this.certificationNumber)
-            // }, 5000); 
+            this.decrementTime(false)
         }
     },
     methods: {
-        decrementTime() {
-            setInterval(() => {
+        decrementTime(e) {
+            if(e) {
+                clearInterval(this.timer);
+            } 
+            this.timer = setInterval(() => {
                 const [minutes, seconds] = this.certificationTime.split(":").map(Number);
                 if (this.certificationTime.indexOf(":") === 1) {
                     this.certificationTime = "0" + this.certificationTime;
                 }
                 if (minutes === 0 && seconds === 0) {
-                    // 시간이 00:00이 되면 동작을 멈춥니다.
                     this.certificationNumber = null;
-                    //clearInterval(this.timer);
+                    clearInterval(this.timer);
                 } else {
                     if (seconds === 0) {
                         this.certificationTime = `0${minutes - 1}:59`;
@@ -120,52 +127,18 @@ export default {
                 }
             }, 1000); // 1초마다 실행
         },
-        phoneVerification() {
-            const phoneNumberPattern = /^[0-9-]+$/;
-            // TODO 추후에 정규식 패턴 수정 
-            if(this.name === '') {
-                alert('이름을 입력해주세요')
-                this.$refs.name.focus()
-                return;
-            } else if(this.phoneNum === ''){
-                alert('휴대폰 번호를 입력해주세요')
-                this.$refs.phoneNum.focus()
-                return;
-            } else if(!phoneNumberPattern.test(this.phoneNum)) {
-                alert('올바른 휴대폰 번호를 입력해주세요')
-                this.phoneNum = ''
-                this.$refs.phoneNum.focus()
-                return;
-            }
-            if(this.token === null ) return false
-            const data = { secret: this.token }
-            reCAPTCHA(data)
+        reSendCertificationNumber() {
+            const data = { email : this.email, koreaName: this.koreaName, phoneNum: this.phoneNum}
+            checkPhoneNum(data)
                 .then((res) => {
-                    if(res.data.data == "true") {
-                        // TODO 휴대폰 번호 전송 
-                        const data = { email : this.email, koreaName: this.name, phoneNum: this.phoneNum}
-                        checkPhoneNum(data)
-                            .then((res) => {
-                                console.log(res.data)
-                                if(res.data.code === "0") {
-                                    this.$router.push({name: 'phoneVerification', params: { certificationNumber: res.data.data, email : this.email, koreaName: this.name, phoneNum: this.phoneNum }})
-                                } else {
-                                    alert(res.data.data)
-                                    this.findPwdState = false
-                                    this.email = ''
-                                    this.$router.go(0)
-                                }
-                            })
-                            .catch(() => {
-                                alert('서버와의 연결이 좋지 않습니다.')
-                            })
-                            .finally(() => {
-
-                            })                        
+                    console.log(res.data)
+                    if(res.data.code === 0) {
+                        this.checkCertificationNumber = null
+                        this.certificationNumber = res.data.data
+                        this.certificationTime = '03:00'
+                        this.decrementTime(true)
                     } else {
-                        alert('정상적인 동작이 아닙니다')
-                        this.findPwdState = false
-                        window.close()
+                        alert(res.data.data)
                     }
                 })
                 .catch(() => {
@@ -173,8 +146,16 @@ export default {
                 })
                 .finally(() => {
 
-                })
+                })  
         },
+        certification() {
+            if(this.certificationNumber === this.checkCertificationNumber) {
+                alert('휴대폰 인증에 성공하였습니다.')
+                this.$router.push({name: 'changePassword', params: { email : this.email }})
+            } else {
+                alert('휴대폰 인증번호가 틀립니다.')
+            }
+        }
     }     
 }
 </script>
@@ -209,6 +190,14 @@ export default {
     text-align: center;
     font-size: 16px;
     color:#FF003E;
+ }
+ .certification-text {
+    color: #afafaf;
+ }
+ .identification-btn {
+    font-size: 16px;
+    color: #fff;
+    background-color: #6E81DF;
  }
  .identification-footer {
     position: absolute; 

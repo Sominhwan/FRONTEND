@@ -153,7 +153,7 @@ export default {
                         checkPhoneNum(data)
                             .then((res) => {
                                 console.log(res.data)
-                                if(res.data.code === 1) {
+                                if(res.data.code === 0) {
                                     this.$router.push({name: 'checkPhoneVerification', params: { certificationNumber: res.data.data, email : this.email, koreaName: this.name, phoneNum: this.phoneNum }})
                                 } else {
                                     alert(res.data.data)

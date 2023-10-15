@@ -54,7 +54,7 @@ export default new Vuex.Store({
             if(res.headers.authorization != null) {
                 localStorage.setItem("access-token", res.headers.authorization)
             }
-            window.history.back()
+            location.href = '/home/main'
             this.commit('setLoginMessage', null)
         })
         .catch(() => {
