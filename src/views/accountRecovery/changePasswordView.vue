@@ -60,6 +60,7 @@
     </div>
 </template>
 <script>
+import { changePassword } from "@/api/auth/auth";
 import { mapState } from "vuex";
 export default {
     data () {
@@ -99,8 +100,17 @@ export default {
             }
 
             if(this.newPassword === this.checkPassword) {
-                // TODO 20231015 비밀번호 서버 연결 추가 
-                alert('변경완료')
+                const data = { 'email': this.email, 'password': this.newPassword }
+                changePassword(data)
+                    .then((res) => {
+                        console.log(res.data)
+                    })
+                    .catch(() => {
+                        alert('알 수 없는 오류가 발생하였습니다.')
+                    })
+                    .finally(() => {
+
+                    }) 
             } else {
                 alert('비밀번호가 일치하지 않습니다.')
             }

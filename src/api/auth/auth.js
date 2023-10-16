@@ -69,3 +69,12 @@ export function reCAPTCHA(data) { // reCAPTCHA 인증
         headers: { 'Content-Type': 'application/json;charset=utf8' }
     })
 }
+export function changePassword(data) { // 비밀번호 변경
+    return request({
+        url: `/api/v1/auth/password`,
+        method: 'POST',
+        data: data,
+        meta: { apiVersion: '1.0.0' },
+        headers: { 'Content-Type': 'application/json;charset=utf8' }
+    })
+}
