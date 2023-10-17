@@ -103,7 +103,11 @@ export default {
                 const data = { 'email': this.email, 'password': this.newPassword }
                 changePassword(data)
                     .then((res) => {
-                        console.log(res.data)
+                        if(res.data.code === 0) {
+                            this.$router.push({name: 'changePasswordComplete'})
+                        } else {
+                            alert(res.data.data)
+                        }
                     })
                     .catch(() => {
                         alert('알 수 없는 오류가 발생하였습니다.')

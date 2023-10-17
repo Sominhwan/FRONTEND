@@ -5,6 +5,7 @@ import BoardWriteView from '@/views/BoardWriteView.vue'
 import ErrorView from '@/views/ErrorView.vue'
 import HomeView from '@/views/HomeView.vue'
 import NoticeView from '@/views/NoticeView.vue'
+import changePasswordCompleteView from '@/views/accountRecovery/changePasswordCompleteView'
 import changePasswordView from '@/views/accountRecovery/changePasswordView'
 import checkPhoneVerificationView from '@/views/accountRecovery/checkPhoneVerificationView'
 import findIdView from '@/views/accountRecovery/findIdView.vue'
@@ -24,7 +25,6 @@ const routes = [
   {
     path: '/',
     redirect: '/home/main'
-    
   },
   {
     path: '/home/main',
@@ -65,6 +65,11 @@ const routes = [
     path: '/findpwd',
     name: 'changePassword',
     component: changePasswordView
+  },
+  {
+    path: '/findpwd/complete',
+    name: 'changePasswordComplete',
+    component: changePasswordCompleteView
   },
   {
     path: '/join',
@@ -154,7 +159,7 @@ router.beforeEach((to, from, next) => {
     }
   }
   if(to.name !== 'login' && to.name !== 'findId' && to.name !== 'findPwd' && to.name !== 'findPwd2' && to.name !== 'join' && to.name !== 'phoneVerification' && to.name !== 'checkPhoneVerification' 
-      && to.name !== 'changePassword') {
+      && to.name !== 'changePassword' && to.name !== 'changePasswordComplete') {
     NProgress.configure({ showSpinner: false });
     NProgress.start(); // 라우팅 시작 시 NProgress 시작
   }
