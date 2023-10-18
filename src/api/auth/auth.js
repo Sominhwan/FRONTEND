@@ -78,3 +78,12 @@ export function changePassword(data) { // 비밀번호 변경
         headers: { 'Content-Type': 'application/json;charset=utf8' }
     })
 }
+export function sendEmail(data) { // 이메일 인증
+    return request({
+        url: `/api/v1/auth/email`,
+        method: 'POST',
+        data: data,
+        meta: { apiVersion: '1.0.0' },
+        headers: { 'Content-Type': 'application/json;charset=utf8' }
+    })
+}
