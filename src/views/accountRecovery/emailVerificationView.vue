@@ -22,6 +22,7 @@
                         <v-text-field 
                             hide-details
                             clearable
+                            :disabled="textDisabled"
                             class="id-text-field rounded-0"
                             ref="name"
                             v-model="name"
@@ -36,10 +37,11 @@
                     <v-col cols="3">
                         <v-subheader class="vertification-title">생년월일</v-subheader>
                     </v-col>
-                    <v-col cols="9">
+                    <v-col cols="6">
                         <v-text-field
                             hide-details
                             clearable
+                            :disabled="textDisabled"
                             class="id-text-field rounded-0"
                             ref="birthDate"
                             v-model="birthDate"
@@ -49,13 +51,33 @@
                             background-color="#F5F5F5"
                         ></v-text-field>
                     </v-col>
+                    <v-col cols="3">
+                    <v-btn :disabled="textDisabled" class="identification-btn rounded-0" x-large text block @click="emailVerification()">
+                        인증하기
+                    </v-btn>
+                    </v-col>
                 </v-row>
                 <v-row>
                     <v-col cols="3">
+                        <v-subheader class="vertification-title">인증번호</v-subheader>
                     </v-col>
-                    <v-col cols="9">
+                    <v-col cols="6">
+                        <v-text-field
+                            hide-details
+                            :disabled="isDisabled"
+                            class="id-text-field rounded-0"
+                            ref="checkCertificationNumber"
+                            v-model="checkCertificationNumber"
+                            single-line
+                            outlined
+                            :background-color="certificationColor"
+                        ></v-text-field>
+                        <div v-if="textDisabled" class="time-text">{{ certificationTime }}</div>
+                        <div class="certification-text mt-2">⦁ 3분 이내로 인증번호를 입력해 주세요.</div>
+                    </v-col>
+                    <v-col cols="3">
                     <v-btn class="identification-btn rounded-0" x-large text block @click="emailVerification()">
-                        인증번호 발송
+                        인증하기
                     </v-btn>
                     </v-col>
                 </v-row>
@@ -75,6 +97,12 @@ export default {
         email: '',
         name: '',
         birthDate: '',
+        certificationTime: '03:00',
+        certificationNumber: null,
+        checkCertificationNumber: null,
+        certificationColor: '#F5F5F5',
+        textDisabled: false,
+        isDisabled: true,
         token: null,
         accountTabTitle: [
             { text: '아이디 찾기', disabled: false, href: '/findid', color: 'grey'}, 
@@ -94,6 +122,32 @@ export default {
         } 
     },
     methods: {
+        // TODO 20231021 checkCertificationNumber 인증번호 확인 추가
+        decrementTime(e) {
+            if(e) {
+                clearInterval(this.timer);
+            } 
+            this.timer = setInterval(() => {
+                const [minutes, seconds] = this.certificationTime.split(":").map(Number);
+                if (this.certificationTime.indexOf(":") === 1) {
+                    this.certificationTime = "0" + this.certificationTime;
+                }
+                if (minutes === 0 && seconds === 0) {
+                    this.certificationNumber = null;
+                    clearInterval(this.timer);
+                    alert('인증시간이 지났습니다.')
+                } else {
+                    if (seconds === 0) {
+                        this.certificationTime = `0${minutes - 1}:59`;
+                    } else if(seconds > 10) {
+                        this.certificationTime = `0${minutes}:${seconds - 1}`;
+                    } else {
+                        this.certificationTime = `0${minutes}:0${seconds - 1}`;
+                    }
+                }
+            }, 1000); // 1초마다 실행
+        },
+    
         emailVerification() {
             if(this.name === '') {
                 alert('이름을 입력해주세요.')
@@ -110,7 +164,11 @@ export default {
                 .then((res) => {
                     console.log(res.data)
                     if(res.data.code === 0) {
-                        alert(res.data.data)
+                        this.textDisabled = true
+                        this.certificationColor = 'white'
+                        this.isDisabled = false
+                        this.certificationNumber = res.data.data
+                        this.decrementTime(false)
                         //this.$router.push({name: 'checkPhoneVerification', params: { certificationNumber: res.data.data, email : this.email, koreaName: this.name, phoneNum: this.phoneNum }})
                     } else {
                         alert(res.data.data)
@@ -150,6 +208,18 @@ export default {
     font-size: 14px;
     color: #fff;
     background-color: #6E81DF;
+ }
+ .time-text {
+    position: absolute;
+    top: 340px;
+    left: 64%;
+    display: inline;
+    text-align: center;
+    font-size: 16px;
+    color:#FF003E;
+ }
+ .certification-text {
+    color: #afafaf;
  }
  .identification-footer {
     position: absolute; 
