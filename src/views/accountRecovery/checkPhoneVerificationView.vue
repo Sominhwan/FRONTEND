@@ -100,32 +100,40 @@ export default {
             alert('접근되지 않은 권한입니다.')
             this.$router.push({name: 'findPwd'})
         } else {
+            window.addEventListener('beforeunload', this.handleBeforeUnload);
             this.decrementTime(false)
         }
     },
+    beforeDestroy() {
+        window.removeEventListener('beforeunload', this.handleBeforeUnload);
+    },
     methods: {
+        handleBeforeUnload() {
+            this.decrementTime(true)
+        },
         decrementTime(e) {
             if(e) {
                 clearInterval(this.timer);
-            } 
-            this.timer = setInterval(() => {
-                const [minutes, seconds] = this.certificationTime.split(":").map(Number);
-                if (this.certificationTime.indexOf(":") === 1) {
-                    this.certificationTime = "0" + this.certificationTime;
-                }
-                if (minutes === 0 && seconds === 0) {
-                    this.certificationNumber = null;
-                    clearInterval(this.timer);
-                } else {
-                    if (seconds === 0) {
-                        this.certificationTime = `0${minutes - 1}:59`;
-                    } else if(seconds > 10) {
-                        this.certificationTime = `0${minutes}:${seconds - 1}`;
-                    } else {
-                        this.certificationTime = `0${minutes}:0${seconds - 1}`;
+            } else {
+                this.timer = setInterval(() => {
+                    const [minutes, seconds] = this.certificationTime.split(":").map(Number);
+                    if (this.certificationTime.indexOf(":") === 1) {
+                        this.certificationTime = "0" + this.certificationTime;
                     }
-                }
-            }, 1000); // 1초마다 실행
+                    if (minutes === 0 && seconds === 0) {
+                        this.certificationNumber = null;
+                        clearInterval(this.timer);
+                    } else {
+                        if (seconds === 0) {
+                            this.certificationTime = `0${minutes - 1}:59`;
+                        } else if(seconds > 10) {
+                            this.certificationTime = `0${minutes}:${seconds - 1}`;
+                        } else {
+                            this.certificationTime = `0${minutes}:0${seconds - 1}`;
+                        }
+                    }
+                }, 1000); // 1초마다 실행
+            }
         },
         reSendCertificationNumber() {
             const data = { email : this.email, koreaName: this.koreaName, phoneNum: this.phoneNum}
@@ -149,7 +157,7 @@ export default {
                 })  
         },
         certification() {
-            if(this.certificationNumber === this.checkCertificationNumber) {
+            if(this.certificationNumber === this.checkCertificationNumber && this.checkCertificationNumber !=null && this.certificationNumber != null) {
                 alert('휴대폰 인증에 성공하였습니다.')
                 this.$router.push({name: 'changePassword', params: { email : this.email }})
             } else {
