@@ -136,14 +136,14 @@ export default {
         window.removeEventListener('beforeunload', this.handleBeforeUnload);
     },
     methods: {
-        handleBeforeUnload() {
+        handleBeforeUnload(event) {
             // 새로고침 이벤트를 감지하거나 사용자에게 경고를 표시할 수 있습니다.
             if (this.canLeaveSite) {
                 // 새로고침 이벤트 발생하지 않음
                 return;
-            }
+            }      
             this.decrementTime(true)
-            //event.preventDefault();
+            event.preventDefault();
             //event.returnValue = '이 페이지를 떠나시겠습니까? 변경사항이 저장되지 않을 수 있습니다.';
         },
         // TODO 20231021 checkCertificationNumber 인증번호 확인 추가
@@ -197,7 +197,6 @@ export default {
                         this.certificationNumber = res.data.data
                         this.decrementTime(true)
                         this.decrementTime(false)
-                        //this.$router.push({name: 'checkPhoneVerification', params: { certificationNumber: res.data.data, email : this.email, koreaName: this.name, phoneNum: this.phoneNum }})
                     } else {
                         alert(res.data.data)
                     }
@@ -211,8 +210,8 @@ export default {
         },
         checkCertification() {
             if(this.certificationNumber === this.checkCertificationNumber && this.checkCertificationNumber !=null && this.certificationNumber != null) {
-                alert('인증완료')
-                // TODO 20231022 인증 추가
+                alert('이메일 인증에 성공하였습니다.')
+                this.$router.push({name: 'changePassword', params: { email : this.email }})
             } else {
                 alert('인증번호가 틀립니다.')
             }
