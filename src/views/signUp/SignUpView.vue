@@ -223,8 +223,24 @@ export default {
         this.loadAgreementContent()
         this.loadAgreementContent2()
         this.loadAgreementContent3()
+        window.addEventListener('beforeunload', this.handleBeforeUnload);
+    },
+    beforeDestroy() {
+        window.removeEventListener('beforeunload', this.handleBeforeUnload);
+    },
+    beforeRouteLeave(to, from, next) {
+        const isConfirmed = confirm('이 사이트에서 나가시겠습니까?\n변경사항이 저장되지 않을 수 있습니다.');
+        if (isConfirmed) {
+            next();
+        } else {
+            next(false);
+        }
     },
     methods: {
+        handleBeforeUnload(event) {
+            event.preventDefault();
+            event.returnValue = '';     
+        },
         onScroll (e) {
             if (typeof window === 'undefined') 
             return

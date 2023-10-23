@@ -79,9 +79,22 @@ export default {
             alert('접근되지 않은 권한입니다.')
             this.$router.push({name: 'findPwd'})
         }
+        window.addEventListener('beforeunload', this.handleBeforeUnload);
+    },
+    beforeUnmount() {
+        window.removeEventListener('beforeunload', this.handleBeforeUnload);
+        alert('zzz')
     },
     methods: {
-
+        handleBeforeUnload(event) {
+            // 새로고침 이벤트를 감지하거나 사용자에게 경고를 표시할 수 있습니다.
+            // if (this.canLeaveSite) {
+            //     // 새로고침 이벤트 발생하지 않음
+            //     return;
+            // }      
+            event.preventDefault();
+            event.returnValue = '';
+        }
     }     
 }
 </script>

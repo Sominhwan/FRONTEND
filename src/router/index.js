@@ -168,7 +168,7 @@ router.beforeEach((to, from, next) => {
       && to.name !== 'changePassword' && to.name !== 'changePasswordComplete' && to.name !== 'emailVerification') {
     NProgress.configure({ showSpinner: false });
     NProgress.start(); // 라우팅 시작 시 NProgress 시작
-  }
+  } 
   // 이전 코드에서 NProgress.done()를 제거하고, next()를 호출하여 다음 단계로 진행합니다.
   next();
 })
