@@ -43,6 +43,11 @@ const routes = [
     component: findIdView
   },
   {
+    path: '/findid',
+    name: 'phoneVerificationId',
+    component: phoneVerificationView
+  },
+  {
     path: '/findpwd',
     name: 'findPwd',
     component: findPasswordView
@@ -165,7 +170,7 @@ router.beforeEach((to, from, next) => {
     }
   }
   if(to.name !== 'login' && to.name !== 'findId' && to.name !== 'findPwd' && to.name !== 'findPwd2' && to.name !== 'join' && to.name !== 'phoneVerification' && to.name !== 'checkPhoneVerification' 
-      && to.name !== 'changePassword' && to.name !== 'changePasswordComplete' && to.name !== 'emailVerification') {
+      && to.name !== 'changePassword' && to.name !== 'changePasswordComplete' && to.name !== 'emailVerification' && to.name !== 'phoneVerificationId') {
     NProgress.configure({ showSpinner: false });
     NProgress.start(); // 라우팅 시작 시 NProgress 시작
   } 

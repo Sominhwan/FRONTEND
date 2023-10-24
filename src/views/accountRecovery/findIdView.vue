@@ -25,7 +25,7 @@
                             <div class="identification-content">고객님 명의의 휴대폰으로 인증</div>
                         </v-card-title>
                         <v-card-actions>
-                            <v-btn class="identification-btn rounded-0" text @click="$router.push({name: ''})">
+                            <v-btn class="identification-btn rounded-0" text @click="$router.push({name: 'phoneVerificationId'})">
                                 인증하기
                             </v-btn>
                         </v-card-actions>
