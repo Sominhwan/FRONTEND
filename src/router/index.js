@@ -12,6 +12,7 @@ import emailVerificationView from '@/views/accountRecovery/emailVerificationView
 import findIdView from '@/views/accountRecovery/findIdView.vue'
 import findPassword2View from '@/views/accountRecovery/findPassword2View.vue'
 import findPasswordView from '@/views/accountRecovery/findPasswordView.vue'
+import phoneVerificationIdView from '@/views/accountRecovery/phoneVerificationIdView.vue'
 import phoneVerificationView from '@/views/accountRecovery/phoneVerificationView.vue'
 import LoginView from '@/views/login/loginView.vue'
 import SignUpView from '@/views/signUp/SignUpView.vue'
@@ -45,7 +46,7 @@ const routes = [
   {
     path: '/findid',
     name: 'phoneVerificationId',
-    component: phoneVerificationView
+    component: phoneVerificationIdView
   },
   {
     path: '/findpwd',

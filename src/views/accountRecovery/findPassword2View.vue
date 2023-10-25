@@ -83,7 +83,6 @@ export default {
     },
     beforeUnmount() {
         window.removeEventListener('beforeunload', this.handleBeforeUnload);
-        alert('zzz')
     },
     methods: {
         handleBeforeUnload(event) {
