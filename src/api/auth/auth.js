@@ -60,6 +60,15 @@ export function checkPhoneNum(data) { // 비밀번호 찾기(휴대폰번호 인
         headers: { 'Content-Type': 'application/json;charset=utf8' }
     })
 }
+export function checkPhoneNumId(data) { // 아이디 찾기(휴대폰번호 인증)
+    return request({
+        url: `/api/v1/auth/phonenum/id`,
+        method: 'POST',
+        data: data,
+        meta: { apiVersion: '1.0.0' },
+        headers: { 'Content-Type': 'application/json;charset=utf8' }
+    })
+}
 export function reCAPTCHA(data) { // reCAPTCHA 인증
     return request({
         url: `/api/v1/auth/recaptcha`,

@@ -66,7 +66,7 @@
 </template>
 <script src="https://www.google.com/recaptcha/enterprise.js?render=6LeVyIkoAAAAAKMvziugsAX40vRPkceyjmhjgY4v"></script>
 <script>
-import { checkPhoneNum, reCAPTCHA } from "@/api/auth/auth";
+import { checkPhoneNumId, reCAPTCHA } from "@/api/auth/auth";
 export default {
     data () {
       return { 
@@ -147,7 +147,7 @@ export default {
                     if(res.data.data == "true") {
                         // TODO 휴대폰 번호 전송 
                         const data = { koreaName: this.name, phoneNum: this.phoneNum}
-                        checkPhoneNum(data)
+                        checkPhoneNumId(data)
                             .then((res) => {
                                 console.log(res.data)
                                 if(res.data.code === 0) {
