@@ -151,7 +151,9 @@ export default {
                             .then((res) => {
                                 console.log(res.data)
                                 if(res.data.code === 0) {
-                                    //this.$router.push({name: 'checkPhoneVerification', params: { certificationNumber: res.data.data, email : this.email, koreaName: this.name, phoneNum: this.phoneNum }})
+                                    console.log(res.data.data2.email)
+                                    console.log(res.data.data2.certificationNumber)
+                                    this.$router.push({name: 'checkPhoneVerificationId', params: { certificationNumber: res.data.data2.certificationNumber, email : res.data.data2.email }})
                                 } else {
                                     alert(res.data.data)
                                     this.findPwdState = false
