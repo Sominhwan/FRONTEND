@@ -65,7 +65,7 @@
     </div>
 </template>
 <script>
-import { checkPhoneNum } from "@/api/auth/auth";
+import { checkPhoneNumId } from "@/api/auth/auth";
 export default {
     data () {
       return { 
@@ -90,8 +90,9 @@ export default {
         document.documentElement.style.overflow = 'hidden'
         this.email = this.$route.params.email
         this.certificationNumber = this.$route.params.certificationNumber
-
-        if(this.email === '' && this.certificationNumber === null) {
+        this.koreaName = this.$route.params.koreaName
+        this.phoneNum = this.$route.params.phoneNum
+        if(this.email === '' && this.certificationNumber === null && this.koreaName === '' && this.phoneNum === '') {
             alert('접근되지 않은 권한입니다.')
             this.$router.push({name: 'findId'})
         } else {
@@ -132,14 +133,16 @@ export default {
         },
         reSendCertificationNumber() {
             const data = { email : this.email, koreaName: this.koreaName, phoneNum: this.phoneNum}
-            checkPhoneNum(data)
+            checkPhoneNumId(data)
                 .then((res) => {
                     console.log(res.data)
                     if(res.data.code === 0) {
                         this.checkCertificationNumber = null
-                        this.certificationNumber = res.data.data
+                        this.certificationNumber = res.data.data2.certificationNumber
+                        this.email = res.data.data2.email
                         this.certificationTime = '03:00'
                         this.decrementTime(true)
+                        this.decrementTime(false)
                     } else {
                         alert(res.data.data)
                     }
@@ -154,7 +157,8 @@ export default {
         certification() {
             if(this.certificationNumber === this.checkCertificationNumber && this.checkCertificationNumber !=null && this.certificationNumber != null) {
                 alert('휴대폰 인증에 성공하였습니다.')
-                this.$router.push({name: 'changePassword', params: { email : this.email }})
+                // TODO 20231028 아이디 출력 이동
+                //this.$router.push({name: 'changePassword', params: { email : this.email }})
             } else {
                 alert('휴대폰 인증번호가 틀립니다.')
             }
