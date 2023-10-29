@@ -34,7 +34,7 @@
                             </v-list-item-action>
                         </v-list-item>
                         <v-divider/>
-                        <v-list-item v-for="item in items" :key="item.title" link>
+                        <v-list-item v-for="item in items" :key="item.title" link @click="headerListEvent(item.title)">
                             <v-list-item-icon>
                             <v-icon class="material-icons" color="">
                                 {{ item.icon }}
@@ -152,7 +152,7 @@ export default {
           { icon: 'account_circle', title: '계정관리', avatar: 'https://cdn.vuetifyjs.com/images/lists/1.jpg' },
           { icon: 'help', title: '고객센터', avatar: 'https://cdn.vuetifyjs.com/images/lists/2.jpg' },
           { icon: 'settings', title: '설정', avatar: 'https://cdn.vuetifyjs.com/images/lists/3.jpg' },
-          { icon: 'logout', title: '로그아웃', avatar: 'https://cdn.vuetifyjs.com/images/lists/4.jpg' },
+          { icon: 'logout', title: '로그아웃', avatar: 'https://cdn.vuetifyjs.com/images/lists/4.jpg'},
       ],
       side_items: [
           { icon: 'home', title: '홈', link: 'home'},
@@ -198,6 +198,17 @@ export default {
                 query: { page: page, count: count, category: category }
             }, () => {});
         },
+        headerListEvent(title) {
+            if(title === '계정관리') {
+                this.$router.push({ name: 'userAccountManagement' }).catch(() => {})
+            } else if(title === '고객센터') {
+                alert('2')
+            } else if(title === '설정') {
+                alert('3')
+            } else if(title === '로그아웃') {
+                this.logout()
+            }
+        }
     },
     watch: {
       group () {

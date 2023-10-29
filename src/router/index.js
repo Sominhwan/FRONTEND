@@ -18,6 +18,7 @@ import phoneVerificationIdView from '@/views/accountRecovery/phoneVerificationId
 import phoneVerificationView from '@/views/accountRecovery/phoneVerificationView.vue'
 import LoginView from '@/views/login/loginView.vue'
 import SignUpView from '@/views/signUp/SignUpView.vue'
+import UserAccountManagementView from '@/views/userManagement/userAccountManagementView.vue'
 import NProgress from "nprogress"
 import "nprogress/nprogress.css"; // css까지 import 해주어야 한다.
 import Vue from 'vue'
@@ -116,6 +117,7 @@ const routes = [
     name: 'boardView',
     component: BoardView
   },
+  /* 404 error */
   {
     path: '/error404',
     name: "error404",
@@ -124,8 +126,15 @@ const routes = [
   {
     path: '*',
     redirect: "/error404"
+  },
+  /* userManagement */
+  {
+    path: '/account',
+    name: 'userAccountManagement',
+    component: UserAccountManagementView
   }
 ]
+ 
 
 const router = new VueRouter({
   mode: 'history', // history 모드를 사용시 # 이 붙여서 url 중복이 허용되지 않음, hash 모드일 경우 # 이 붙여서 중복 허용가능
