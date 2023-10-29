@@ -132,7 +132,7 @@ export default {
             }
         },
         reSendCertificationNumber() {
-            const data = { email : this.email, koreaName: this.koreaName, phoneNum: this.phoneNum}
+            const data = { koreaName: this.koreaName, phoneNum: this.phoneNum}
             checkPhoneNumId(data)
                 .then((res) => {
                     console.log(res.data)
@@ -157,8 +157,7 @@ export default {
         certification() {
             if(this.certificationNumber === this.checkCertificationNumber && this.checkCertificationNumber !=null && this.certificationNumber != null) {
                 alert('휴대폰 인증에 성공하였습니다.')
-                // TODO 20231028 아이디 출력 이동
-                //this.$router.push({name: 'changePassword', params: { email : this.email }})
+                this.$router.push({name: 'findIdComplete', params: { email : this.email }})
             } else {
                 alert('휴대폰 인증번호가 틀립니다.')
             }

@@ -10,6 +10,7 @@ import changePasswordView from '@/views/accountRecovery/changePasswordView'
 import checkPhoneVerificationIdView from '@/views/accountRecovery/checkPhoneVerificationIdView'
 import checkPhoneVerificationView from '@/views/accountRecovery/checkPhoneVerificationView'
 import emailVerificationView from '@/views/accountRecovery/emailVerificationView.vue'
+import findIdCompleteView from '@/views/accountRecovery/findIdCompleteView'
 import findIdView from '@/views/accountRecovery/findIdView.vue'
 import findPassword2View from '@/views/accountRecovery/findPassword2View.vue'
 import findPasswordView from '@/views/accountRecovery/findPasswordView.vue'
@@ -53,6 +54,11 @@ const routes = [
     path: '/findid',
     name: 'checkPhoneVerificationId',
     component: checkPhoneVerificationIdView
+  },
+  {
+    path: '/findid/complete',
+    name: 'findIdComplete',
+    component: findIdCompleteView
   },
   {
     path: '/findpwd',
@@ -177,7 +183,8 @@ router.beforeEach((to, from, next) => {
     }
   }
   if(to.name !== 'login' && to.name !== 'findId' && to.name !== 'findPwd' && to.name !== 'findPwd2' && to.name !== 'join' && to.name !== 'phoneVerification' && to.name !== 'checkPhoneVerification' 
-      && to.name !== 'changePassword' && to.name !== 'changePasswordComplete' && to.name !== 'emailVerification' && to.name !== 'phoneVerificationId' && to.name !== 'checkPhoneVerificationId') {
+      && to.name !== 'changePassword' && to.name !== 'changePasswordComplete' && to.name !== 'emailVerification' && to.name !== 'phoneVerificationId' && to.name !== 'checkPhoneVerificationId'
+      && to.name !== 'findIdComplete') {
     NProgress.configure({ showSpinner: false });
     NProgress.start(); // 라우팅 시작 시 NProgress 시작
   } 
