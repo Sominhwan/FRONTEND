@@ -18,6 +18,9 @@ import phoneVerificationIdView from '@/views/accountRecovery/phoneVerificationId
 import phoneVerificationView from '@/views/accountRecovery/phoneVerificationView.vue'
 import LoginView from '@/views/login/loginView.vue'
 import SignUpView from '@/views/signUp/SignUpView.vue'
+import MyCommentThreadTab from '@/views/userManagement/userAccountManagementTab/myCommentThreadTab.vue'
+import MyLikeThreadTab from '@/views/userManagement/userAccountManagementTab/myLikeThreadTab.vue'
+import MyThreadTab from '@/views/userManagement/userAccountManagementTab/myThreadTab.vue'
 import UserAccountManagementView from '@/views/userManagement/userAccountManagementView.vue'
 import NProgress from "nprogress"
 import "nprogress/nprogress.css"; // css까지 import 해주어야 한다.
@@ -132,6 +135,21 @@ const routes = [
     path: '/account',
     name: 'userAccountManagement',
     component: UserAccountManagementView
+  },
+  {
+    path: '/account/my_thread',
+    name: 'myThreadTab',
+    component: MyThreadTab
+  },
+  {
+    path: '/account/my_comment_thread',
+    name: 'myCommentThreadTab',
+    component: MyCommentThreadTab
+  },
+  {
+    path: '/account/my_like_thread',
+    name: 'myLikeThreadTab',
+    component: MyLikeThreadTab
   }
 ]
  

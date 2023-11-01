@@ -3,7 +3,7 @@
         <v-row class="profile" justify="center" align="center">
             <v-col class="profile-col" cols="8">
                 <v-list class="profile-list" three-line>
-                    <v-card class="mx-auto" height="245px">
+                    <v-card class="mx-auto" height="1500">
                     <v-list-item>
                         <v-list-item-action>
                             <v-icon size="100">account_circle</v-icon>
@@ -27,50 +27,57 @@
                             <template v-slot:extension>
                                 <v-tabs v-model="tabs" fixed-tabs>
                                 <v-tabs-slider></v-tabs-slider>
-                                <v-tab href="#mobile-tabs-5-1" class="tab-text">
+                                <v-tab  class="tab-text" @click="changeTab('tab1')">
                                     작성 글
                                 </v-tab>
-                                <v-tab href="#mobile-tabs-5-2" class="tab-text">
+                                <v-tab  class="tab-text" @click="changeTab('tab2')">
                                     댓글 단 글
                                 </v-tab>
-                                <v-tab href="#mobile-tabs-5-3" class="tab-text">
+                                <v-tab  class="tab-text" @click="changeTab('tab3')">
                                     좋아요 한 글
                                 </v-tab>
                                 </v-tabs>
                             </template>
                         </v-toolbar>
-                    </v-card>
-                    <v-card rounded="0">
                         <v-tabs-items v-model="tabs">
-                        <v-tab-item
-                            v-for="i in 3"
-                            :key="i"
-                            :value="'mobile-tabs-5-' + i"
-                        >
-                            <v-card flat>
-                            <v-card-text>{{ text }}</v-card-text>
-                            </v-card>
-                        </v-tab-item>
+                            <component :is="currentTabComponent"></component>        
                         </v-tabs-items>
-                    </v-card>  
+                    </v-card> 
                 </v-list>
             </v-col>
         </v-row>
     </v-app>
 </template>
 <script>
+import MyCommentThreadTab from '@/views/userManagement/userAccountManagementTab/myCommentThreadTab.vue';
+import MyLikeThreadTab from '@/views/userManagement/userAccountManagementTab/myLikeThreadTab.vue';
+import MyThreadTab from '@/views/userManagement/userAccountManagementTab/myThreadTab.vue';
 import { mapState } from "vuex";
 export default {
     data() {
         return {
             tabs: null,
             text: '게시글이 없습니다.',
+            currentTab: 'tab1',
+            tabComponents: {
+                tab1: MyThreadTab,
+                tab2: MyCommentThreadTab,
+                tab3: MyLikeThreadTab
+            }
         }
     },
     computed: {
         // 회원정보, 권한 가져오기
         ...mapState(['userInfoData']),
+        currentTabComponent() {
+            return this.tabComponents[this.currentTab];
+        }
     },
+    methods: {
+        changeTab(tab) {
+            this.currentTab = tab;
+        },
+    }
 }
 </script>
 <style scoped>
@@ -109,5 +116,4 @@ export default {
     font-weight: 600;
     font-size: 16px;
   }
-  
 </style>

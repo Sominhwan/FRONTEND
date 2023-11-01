@@ -2,10 +2,12 @@
   <v-app>
     <!-- <PageHeader style="z-index: 1000;" :key="$route.fullPath"/> -->
     <PageHeader style="z-index: 1000" v-if="$route.name !== 'join' && $route.name !== 'login' && $route.name !== 'findId' && $route.name !== 'findPwd' && $route.name !== 'findPwd2' && $route.name !== 'phoneVerification' && $route.name !== 'checkPhoneVerification' 
-      && $route.name !== 'changePassword' && $route.name !== 'changePasswordComplete' && $route.name !== 'emailVerification' && $route.name !== 'phoneVerificationId' && $route.name !== 'checkPhoneVerificationId' && $route.name !== 'findIdComplete'"/>
+      && $route.name !== 'changePassword' && $route.name !== 'changePasswordComplete' && $route.name !== 'emailVerification' && $route.name !== 'phoneVerificationId' && $route.name !== 'checkPhoneVerificationId' && $route.name !== 'findIdComplete'
+      && $route.name !== 'myThreadTab' && $route.name !== 'myCommentThreadTab' && $route.name !== 'myLikeThreadTab'"/>
     <router-view :key="$route.fullPath" class="v-app"/>
     <PageFooter class="footer" v-if="$route.name !== 'notice' && $route.name !== 'error404' && $route.name !== 'findId' && $route.name !== 'findPwd' && $route.name !== 'findPwd2' && $route.name !== 'phoneVerification' && $route.name !== 'checkPhoneVerification' 
-      && $route.name !== 'changePassword' && $route.name !== 'changePasswordComplete' && $route.name !== 'emailVerification' && $route.name !== 'phoneVerificationId' && $route.name !== 'checkPhoneVerificationId' && $route.name !== 'findIdComplete'"/>
+      && $route.name !== 'changePassword' && $route.name !== 'changePasswordComplete' && $route.name !== 'emailVerification' && $route.name !== 'phoneVerificationId' && $route.name !== 'checkPhoneVerificationId' && $route.name !== 'findIdComplete'
+      && $route.name !== 'myThreadTab' && $route.name !== 'myCommentThreadTab' && $route.name !== 'myLikeThreadTab'"/>
   </v-app>
 </template>
 
