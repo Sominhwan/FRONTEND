@@ -9,7 +9,7 @@
 export default {
   data() {
     return {
-      text: 'Content for Tab 1' // Change this content for different tabs
+      text: '게시글이 없습니다.' // Change this content for different tabs
     };
   }
 };

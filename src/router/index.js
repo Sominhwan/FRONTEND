@@ -137,17 +137,17 @@ const routes = [
     component: UserAccountManagementView
   },
   {
-    path: '/account/my_thread',
+    path: '/account/',
     name: 'myThreadTab',
     component: MyThreadTab
   },
   {
-    path: '/account/my_comment_thread',
+    path: '/account',
     name: 'myCommentThreadTab',
     component: MyCommentThreadTab
   },
   {
-    path: '/account/my_like_thread',
+    path: '/account',
     name: 'myLikeThreadTab',
     component: MyLikeThreadTab
   }

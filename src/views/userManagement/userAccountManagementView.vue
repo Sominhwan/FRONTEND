@@ -4,6 +4,7 @@
             <v-col class="profile-col" cols="8">
                 <v-list class="profile-list" three-line>
                     <v-card class="mx-auto" height="1500">
+                        <ProfileEditDialog :dialog="dialog"/>
                     <v-list-item>
                         <v-list-item-action>
                             <v-icon size="100">account_circle</v-icon>
@@ -16,7 +17,7 @@
                                 <img :src="require('@/assets/userManagement/edit_document.svg')" width="22"/>
                                 <span class="write-text">300</span>
                                 <v-spacer></v-spacer>
-                                <v-btn color="#E4E6EB">
+                                <v-btn color="#E4E6EB" @click="openProfileDialog()">
                                     <v-icon left>mdi-pencil</v-icon>
                                     <span class="profile-edit-text">프로필 편집</span>
                                 </v-btn>
@@ -25,9 +26,10 @@
                     </v-list-item>
                         <v-toolbar flat>
                             <template v-slot:extension>
-                                <v-tabs v-model="tabs" fixed-tabs>
+                                <!-- fixed-tabs 탭 좌우로 균형 배분 -->
+                                <v-tabs v-model="tabs">
                                 <v-tabs-slider></v-tabs-slider>
-                                <v-tab  class="tab-text" @click="changeTab('tab1')">
+                                <v-tab class="tab-text" @click="changeTab('tab1')">
                                     작성 글
                                 </v-tab>
                                 <v-tab  class="tab-text" @click="changeTab('tab2')">
@@ -49,6 +51,7 @@
     </v-app>
 </template>
 <script>
+import ProfileEditDialog from '@/views/userManagement/profileEditDialog.vue';
 import MyCommentThreadTab from '@/views/userManagement/userAccountManagementTab/myCommentThreadTab.vue';
 import MyLikeThreadTab from '@/views/userManagement/userAccountManagementTab/myLikeThreadTab.vue';
 import MyThreadTab from '@/views/userManagement/userAccountManagementTab/myThreadTab.vue';
@@ -63,8 +66,12 @@ export default {
                 tab1: MyThreadTab,
                 tab2: MyCommentThreadTab,
                 tab3: MyLikeThreadTab
-            }
+            },
+            dialog: false
         }
+    },
+    components: {
+        ProfileEditDialog
     },
     computed: {
         // 회원정보, 권한 가져오기
@@ -77,6 +84,12 @@ export default {
         changeTab(tab) {
             this.currentTab = tab;
         },
+        openProfileDialog() {
+            this.dialog = true
+        },
+        closeProfileDialog(val) {
+            this.dialog = val
+        }
     }
 }
 </script>
