@@ -1,10 +1,11 @@
 <template>
     <v-app class="v-app">
+        <ProfileEditDialog :dialog="dialog" @close="closeProfileEditDialog()"/>
         <v-row class="profile" justify="center" align="center">
             <v-col class="profile-col" cols="8">
                 <v-list class="profile-list" three-line>
                     <v-card class="mx-auto" height="1500">
-                        <ProfileEditDialog :dialog="dialog"/>
+                        
                     <v-list-item>
                         <v-list-item-action>
                             <v-icon size="100">account_circle</v-icon>
@@ -17,7 +18,7 @@
                                 <img :src="require('@/assets/userManagement/edit_document.svg')" width="22"/>
                                 <span class="write-text">300</span>
                                 <v-spacer></v-spacer>
-                                <v-btn color="#E4E6EB" @click="openProfileDialog()">
+                                <v-btn color="#E4E6EB" @click="openProfileEditDialog()">
                                     <v-icon left>mdi-pencil</v-icon>
                                     <span class="profile-edit-text">프로필 편집</span>
                                 </v-btn>
@@ -51,10 +52,10 @@
     </v-app>
 </template>
 <script>
-import ProfileEditDialog from '@/views/userManagement/profileEditDialog.vue';
-import MyCommentThreadTab from '@/views/userManagement/userAccountManagementTab/myCommentThreadTab.vue';
-import MyLikeThreadTab from '@/views/userManagement/userAccountManagementTab/myLikeThreadTab.vue';
-import MyThreadTab from '@/views/userManagement/userAccountManagementTab/myThreadTab.vue';
+import ProfileEditDialog from '@/views/userManagement/ProfileEditDialog.vue';
+import MyCommentThreadTab from '@/views/userManagement/userAccountManagementTab/MyCommentThreadTab.vue';
+import MyLikeThreadTab from '@/views/userManagement/userAccountManagementTab/MyLikeThreadTab.vue';
+import MyThreadTab from '@/views/userManagement/userAccountManagementTab/MyThreadTab.vue';
 import { mapState } from "vuex";
 export default {
     data() {
@@ -84,11 +85,13 @@ export default {
         changeTab(tab) {
             this.currentTab = tab;
         },
-        openProfileDialog() {
+        openProfileEditDialog() {
             this.dialog = true
+            document.documentElement.style.overflow = 'hidden'
         },
-        closeProfileDialog(val) {
-            this.dialog = val
+        closeProfileEditDialog() {
+            this.dialog = false
+            document.documentElement.style.overflowY = 'auto'
         }
     }
 }

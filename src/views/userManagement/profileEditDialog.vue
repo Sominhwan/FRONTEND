@@ -1,37 +1,80 @@
 <template>
-        <v-dialog
+    <v-dialog
         v-model="dialogValue"
-    persistent
-    max-width="290"
+        max-width="700"
+        style="z-index: 1001 !important;"
     >
-    <!-- <template v-slot:activator="{ on, attrs }">
-        <v-btn
-        color="primary"
-        dark
-        v-bind="attrs"
-        v-on="on"
-        >
-        Open Dialog
-        </v-btn>
-    </template> -->
     <v-card>
-        <v-card-title class="text-h5">
-        Use Google's location service?
+        <v-card-title class="profile-title text-h6">
+            프로필 편집
+        <v-spacer></v-spacer>
+        <v-btn icon color="#303030" @click="closeProfieEditDialog()">
+            <v-icon>mdi-close</v-icon>
+        </v-btn>
         </v-card-title>
-        <v-card-text>Let Google help apps determine location. This means sending anonymous location data to Google, even when no apps are running.</v-card-text>
+        <v-divider></v-divider>
+
+        <v-container>
+            <v-row dense>
+                <v-col cols="12">
+                    <v-card flat>
+                        <v-card-title class="profile-sub-title text-h6">
+                            프로필 사진
+                            <v-spacer></v-spacer>
+                            <span text class="edit-btn">
+                                수정
+                            </span>
+                        </v-card-title>
+                        <v-card-text class="d-flex justify-center">
+                            <v-icon size="180">account_circle</v-icon>
+                        </v-card-text>
+                    </v-card>
+                </v-col>
+                <v-col cols="12">
+                    <v-card flat>
+                        <v-card-title class="profile-sub-title text-h6">
+                            프로필 설정
+                        </v-card-title> 
+                        <v-card-subtitle>
+                            계정의 세부 정보 식별 변경
+                        </v-card-subtitle>  
+                    </v-card>
+                    <v-card class="profile-setting ml-4 mr-4" elevation="0">
+                        <v-card-title class="nickname-change-text">
+                            닉네임
+                        </v-card-title> 
+                        <v-card-subtitle>
+                            계정의 세부 정보 식별 변경
+                        </v-card-subtitle>  
+                    </v-card>
+                </v-col>
+                <v-col cols="12">
+                    <v-card>
+                        <v-card-title class="profile-sub-title text-h6">
+                            프로필 사진
+                        </v-card-title>
+                        <v-card-actions>
+                            <v-btn text>
+                                Listen Now
+                            </v-btn>
+                        </v-card-actions>
+                    </v-card>
+                </v-col>
+            </v-row>           
+        </v-container>
         <v-card-actions>
         <v-spacer></v-spacer>
         <v-btn
             color="green darken-1"
             text
-            @click="disagree()"
+            @click="closeProfieEditDialog()"
         >
             Disagree
         </v-btn>
         <v-btn
             color="green darken-1"
             text
-            @click="disagree()"
+            @click="closeProfieEditDialog()"
         >
             Agree
         </v-btn>
@@ -43,7 +86,7 @@
 export default {
     data() {
         return {
-            
+
         }
     },
     props: {
@@ -52,18 +95,21 @@ export default {
             default: false
         }
     },
+    mounted() {
+
+    },
     computed: {
         dialogValue: {
             get() {
                 return this.dialog;
             },
             set(val) {
-                this.$emit('closeProfileDialog', val);
+                this.$emit('close', val);
             }
         }
     },
     methods: {
-        disagree() {
+        closeProfieEditDialog() {
             this.dialogValue = false;
         },
         agree() {
@@ -73,5 +119,26 @@ export default {
 }
 </script>
 <style scoped>
+ .profile-title {
+    font-weight: 600 !important;
+ }
+ .profile-sub-title {
+    font-weight: 600 !important;
+ }
+ .edit-btn {
+    color: #0064D1;
+    font-weight: 500;
+    font-size: 16px;
+    cursor: pointer;
+ }
+ .edit-btn:hover {
 
+ }
+ .profile-setting {
+    border: 1px solid #eee;
+ }
+ .nickname-change-text {
+    font-size: 16px;
+    font-weight: 600;
+ }
 </style>

@@ -5,23 +5,23 @@ import BoardWriteView from '@/views/BoardWriteView.vue'
 import ErrorView from '@/views/ErrorView.vue'
 import HomeView from '@/views/HomeView.vue'
 import NoticeView from '@/views/NoticeView.vue'
-import changePasswordCompleteView from '@/views/accountRecovery/changePasswordCompleteView'
-import changePasswordView from '@/views/accountRecovery/changePasswordView'
-import checkPhoneVerificationIdView from '@/views/accountRecovery/checkPhoneVerificationIdView'
-import checkPhoneVerificationView from '@/views/accountRecovery/checkPhoneVerificationView'
-import emailVerificationView from '@/views/accountRecovery/emailVerificationView.vue'
-import findIdCompleteView from '@/views/accountRecovery/findIdCompleteView'
-import findIdView from '@/views/accountRecovery/findIdView.vue'
-import findPassword2View from '@/views/accountRecovery/findPassword2View.vue'
-import findPasswordView from '@/views/accountRecovery/findPasswordView.vue'
-import phoneVerificationIdView from '@/views/accountRecovery/phoneVerificationIdView.vue'
-import phoneVerificationView from '@/views/accountRecovery/phoneVerificationView.vue'
-import LoginView from '@/views/login/loginView.vue'
+import ChangePasswordCompleteView from '@/views/accountRecovery/ChangePasswordCompleteView'
+import ChangePasswordView from '@/views/accountRecovery/ChangePasswordView'
+import CheckPhoneVerificationIdView from '@/views/accountRecovery/CheckPhoneVerificationIdView'
+import CheckPhoneVerificationView from '@/views/accountRecovery/CheckPhoneVerificationView'
+import EmailVerificationView from '@/views/accountRecovery/EmailVerificationView.vue'
+import FindIdCompleteView from '@/views/accountRecovery/FindIdCompleteView'
+import FindIdView from '@/views/accountRecovery/FindIdView.vue'
+import FindPassword2View from '@/views/accountRecovery/FindPassword2View.vue'
+import FindPasswordView from '@/views/accountRecovery/FindPasswordView.vue'
+import PhoneVerificationIdView from '@/views/accountRecovery/PhoneVerificationIdView.vue'
+import PhoneVerificationView from '@/views/accountRecovery/PhoneVerificationView.vue'
+import LoginView from '@/views/login/LoginView.vue'
 import SignUpView from '@/views/signUp/SignUpView.vue'
-import MyCommentThreadTab from '@/views/userManagement/userAccountManagementTab/myCommentThreadTab.vue'
-import MyLikeThreadTab from '@/views/userManagement/userAccountManagementTab/myLikeThreadTab.vue'
-import MyThreadTab from '@/views/userManagement/userAccountManagementTab/myThreadTab.vue'
-import UserAccountManagementView from '@/views/userManagement/userAccountManagementView.vue'
+import UserAccountManagementView from '@/views/userManagement/UserAccountManagementView.vue'
+import MyCommentThreadTab from '@/views/userManagement/userAccountManagementTab/MyCommentThreadTab.vue'
+import MyLikeThreadTab from '@/views/userManagement/userAccountManagementTab/MyLikeThreadTab.vue'
+import MyThreadTab from '@/views/userManagement/userAccountManagementTab/MyThreadTab.vue'
 import NProgress from "nprogress"
 import "nprogress/nprogress.css"; // css까지 import 해주어야 한다.
 import Vue from 'vue'
@@ -47,57 +47,57 @@ const routes = [
   {
     path: '/findid',
     name: 'findId',
-    component: findIdView
+    component: FindIdView
   },
   {
     path: '/findid',
     name: 'phoneVerificationId',
-    component: phoneVerificationIdView
+    component: PhoneVerificationIdView
   },
   {
     path: '/findid',
     name: 'checkPhoneVerificationId',
-    component: checkPhoneVerificationIdView
+    component: CheckPhoneVerificationIdView
   },
   {
     path: '/findid/complete',
     name: 'findIdComplete',
-    component: findIdCompleteView
+    component: FindIdCompleteView
   },
   {
     path: '/findpwd',
     name: 'findPwd',
-    component: findPasswordView
+    component: FindPasswordView
   },
   {
     path: '/findpwd',
     name: 'findPwd2',
-    component: findPassword2View
+    component: FindPassword2View
   },
   {
     path: '/findpwd',
     name: 'phoneVerification',
-    component: phoneVerificationView
+    component: PhoneVerificationView
   },
   {
     path: '/findpwd',
     name: 'checkPhoneVerification',
-    component: checkPhoneVerificationView
+    component: CheckPhoneVerificationView
   },
   {
     path: '/findpwd',
     name: 'changePassword',
-    component: changePasswordView
+    component: ChangePasswordView
   },
   {
     path: '/findpwd/complete',
     name: 'changePasswordComplete',
-    component: changePasswordCompleteView
+    component: ChangePasswordCompleteView
   },
   {
     path: '/findpwd',
     name: 'emailVerification',
-    component: emailVerificationView
+    component: EmailVerificationView
   },
   {
     path: '/join',
