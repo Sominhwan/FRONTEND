@@ -1,22 +1,5 @@
 <template>
-  <v-app>
-    <!-- scroll to top 버튼 -->
-    <v-btn
-      v-scroll="onScroll"
-      v-show="fab"
-      elevation="0"
-      fab
-      tile
-      dark
-      fixed
-      bottom
-      right
-      color="white"
-      @click="toTop"
-      style="border: 2px solid #eee !important"
-    >
-      <v-icon color="grey" large>keyboard_arrow_up</v-icon>
-    </v-btn>    
+  <v-app>   
     <v-row justify="center">
       <v-col cols="12" md="5" offset="0" style="position: relative; top: 105px;">
         <v-carousel
@@ -115,7 +98,6 @@ export default {
   },
   data () {
     return {
-      fab: false, // 상단 스크롤 이동
       pagingBtn: 0,
       loading: true,
       paging: 0,
@@ -168,15 +150,6 @@ export default {
    console.log(this.items_select)
   },
   methods: {
-    onScroll (e) {
-      if (typeof window === 'undefined') 
-        return
-      const top = window.pageYOffset || e.target.scrollTop || 0
-      this.fab = top > 20
-    },
-    toTop () {
-      this.$vuetify.goTo(0)
-    },
     search(curPage, category){    
       selectNoticeBoard(curPage, category)
         .then((res) => {

@@ -1,22 +1,5 @@
 <template>
   <div>
-    <!-- scroll to top 버튼 -->
-    <v-btn
-      v-scroll="onScroll"
-      v-show="fab"
-      elevation="0"
-      fab
-      tile
-      dark
-      fixed
-      bottom
-      right
-      color="white"
-      @click="toTop"
-      style="border: 2px solid #eee !important"
-    >
-      <v-icon color="grey" large>keyboard_arrow_up</v-icon>
-    </v-btn>
         <v-row class="mt-3" justify="center" style="position: relative; margin-bottom: 250px; top: 80px;">
           <v-col cols="6" md="5" offset="0">
             <v-carousel class="main-banner" cycle height="350" hide-delimiter-background show-arrows-on-hover>
@@ -200,7 +183,6 @@ import { mapState } from "vuex";
   export default {
     data () {
       return {
-        fab: false, // 상단 스크롤 이동
         drawer: false,
         group: null,
         sheet: false,
@@ -303,15 +285,6 @@ import { mapState } from "vuex";
       this.weather();
     },
     methods: {
-      onScroll (e) {
-        if (typeof window === 'undefined') 
-          return
-        const top = window.pageYOffset || e.target.scrollTop || 0
-        this.fab = top > 20
-      },
-      toTop () {
-        this.$vuetify.goTo(0)
-      },
       menuBackground() {
         this.menu = true
       },
