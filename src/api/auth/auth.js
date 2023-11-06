@@ -96,3 +96,12 @@ export function sendEmail(data) { // 이메일 인증
         headers: { 'Content-Type': 'application/json;charset=utf8' }
     })
 }
+export function checkNickname(data) { // 닉네임 중복확인
+    return request({
+        url: `/api/v1/auth/nickname`,
+        method: 'GET',
+        params: { "nickname" : data },
+        meta: { apiVersion: '1.0.0' },
+        headers: { 'Content-Type': 'application/json;charset=utf8' }
+    })
+}

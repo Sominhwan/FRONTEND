@@ -64,22 +64,11 @@
                                 </template>
                             </v-text-field>  
                         </v-card-text>   
-                        <div v-if="false" class="double-check-warn">이미 존재하는 닉네임입니다.</div>
+                        <div v-if="useNicknameCheck" class="double-check-ok">사용가능한 닉네임입니다.</div>
+                        <div v-if="existNicknameCheck" class="double-check-warn">이미 존재하는 닉네임입니다.</div>
                         <div v-if="currentNicknameCheck" class="double-check-warn">현재 사용하고 있는 닉네임입니다.</div>
                     </v-card>
                 </v-col>
-                <!-- <v-col cols="12">
-                    <v-card>
-                        <v-card-title class="profile-sub-title text-h6">
-                            프로필 사진
-                        </v-card-title>
-                        <v-card-actions>
-                            <v-btn text>
-                                Listen Now
-                            </v-btn>
-                        </v-card-actions>
-                    </v-card>
-                </v-col> -->
             </v-row>           
         </v-container>
         <v-card-actions>
@@ -87,29 +76,26 @@
         <v-btn
             color="green darken-1"
             text
-            @click="closeProfieEditDialog()"
+            @click="saveProfileData()"
         >
-            Disagree
-        </v-btn>
-        <v-btn
-            color="green darken-1"
-            text
-            @click="closeProfieEditDialog()"
-        >
-            Agree
+            저장하기
         </v-btn>
         </v-card-actions>
     </v-card>
     </v-dialog>
 </template>
 <script>
+import { checkNickname } from "@/api/auth/auth";
 import { mapState } from "vuex";
+
 export default {
     data() {
         return {
             useNickname: true,
             nickname: '',
             currentNicknameCheck: false,
+            existNicknameCheck: false,
+            useNicknameCheck: false
         }
     },
     props: {
@@ -138,6 +124,8 @@ export default {
             if (isConfirmed) {
                 this.nickname = this.userInfoData.nickname
                 this.currentNicknameCheck = false
+                this.existNicknameCheck = false
+                this.useNicknameCheck = false
                 this.useNickname = true
                 this.dialogValue = false
             } else {
@@ -153,8 +141,39 @@ export default {
         },
         nicknameDoubleCheck() {
             if(this.userInfoData.nickname === this.nickname) {
+                this.existNicknameCheck = false
+                this.useNicknameCheck = false
                 this.currentNicknameCheck = true
+            } else {
+                checkNickname(this.nickname)
+                    .then((res) => {
+                        console.log(res)
+                        if(res.data.code === 1) {
+                            this.currentNicknameCheck = false
+                            this.existNicknameCheck = false
+                            this.useNicknameCheck = true
+                        } else {
+                            this.currentNicknameCheck = false
+                            this.useNicknameCheck = false
+                            this.existNicknameCheck = true
+                        }
+                    })
+                    .catch(() => {
+                        alert("서버와의 연결이 불안합니다.")
+                    })
+                    .finally(() => {
+
+                    })
             }
+        },
+        saveProfileData() {
+            const isConfirmed = confirm('변경된 사항을 저장하시겠습니까?')
+            if(isConfirmed) {
+                if(this.useNicknameCheck === true) {
+                    alert('저장 완료!')
+                }
+                // TODO 20231107 프로필 저장하기 추가
+            } 
         }
     }
 }
@@ -207,5 +226,14 @@ export default {
     left: 20px;
     top: -10px;
     color: #FF003E;
+ }
+ .double-check-ok {
+    display: inline;
+    position: relative;
+    font-weight: 300;
+    font-size: 13px;
+    left: 20px;
+    top: -10px;
+    color: #1877F2; 
  }
 </style>
