@@ -85,7 +85,7 @@
     </v-dialog>
 </template>
 <script>
-import { checkNickname } from "@/api/auth/auth";
+import { changeNickname, checkNickname } from "@/api/auth/auth";
 import { mapState } from "vuex";
 
 export default {
@@ -159,7 +159,7 @@ export default {
                         }
                     })
                     .catch(() => {
-                        alert("서버와의 연결이 불안합니다.")
+                        alert("서버와 연결이 불안합니다.")
                     })
                     .finally(() => {
 
@@ -170,7 +170,18 @@ export default {
             const isConfirmed = confirm('변경된 사항을 저장하시겠습니까?')
             if(isConfirmed) {
                 if(this.useNicknameCheck === true) {
-                    alert('저장 완료!')
+                    const data = { "nickname" : this.nickname, "userId" : this.userInfoData.userId }
+                    changeNickname(data)
+                        .then((res) => {
+                            location.reload()
+                            alert(res.data.data)
+                        })
+                        .catch(() => {
+                            alert("서버와 연결이 불안합니다.")
+                        })
+                        .finally(() => {
+
+                        })
                 }
                 // TODO 20231107 프로필 저장하기 추가
             } 

@@ -105,3 +105,12 @@ export function checkNickname(data) { // 닉네임 중복확인
         headers: { 'Content-Type': 'application/json;charset=utf8' }
     })
 }
+export function changeNickname(data) {
+    return request({
+        url: `/api/v1/auth/nickname`,
+        method: 'POST',
+        data: data,
+        meta: { apiVersion: '1.0.0' },
+        headers: { 'Content-Type': 'application/json;charset=utf8' }
+    })    
+}
