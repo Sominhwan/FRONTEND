@@ -5,31 +5,28 @@
         persistent
         style="z-index: 1001 !important;"
     >
-    <ProfileImageDialog :imageDialog="imageDialog" @close="closeProfileImageDialog()"/>
     <v-card>
-        <v-card-title class="profile-title text-h6">
-            프로필 편집
+        <v-card-title class="profile-image-title text-h6">
+            프로필 사진 선택
         <v-spacer></v-spacer>
         <v-btn icon color="#303030" @click="closeProfieEditDialog()">
             <v-icon>mdi-close</v-icon>
         </v-btn>
         </v-card-title>
         <v-divider></v-divider>
-
         <v-container>
             <v-row dense>
                 <v-col cols="12">
                     <v-card flat>
-                        <v-card-title class="profile-sub-title text-h6">
-                            프로필 사진
-                            <v-spacer></v-spacer>
-                            <span text class="edit-btn" @click="openProfileImageDialog()">
-                                수정
-                            </span>
-                        </v-card-title>
-                        <v-card-text class="d-flex justify-center">
-                            <v-icon size="180">account_circle</v-icon>
-                        </v-card-text>
+                        <v-btn class="image-upload-btn" block elevation="0" color="#EBF5FF">
+                            <v-icon size="16">add</v-icon><span class="ml-1">사진 업로드</span>
+                        </v-btn>
+                        <v-btn class="avatar-profile-image-btn mt-2" block elevation="0" color="#E4E6EB">
+                            <v-icon size="16" style="width: 16px;">familiar_face_and_zone</v-icon><span class="ml-1">아바타 프로필 사진 만들기</span>
+                        </v-btn>
+                        <v-btn class="frame-add-btn mt-2" block elevation="0" color="#E4E6EB">
+                            <v-icon size="16">add</v-icon><span class="ml-1">프레임 추가</span>
+                        </v-btn>
                     </v-card>
                 </v-col>
                 <v-col cols="12">
@@ -70,20 +67,6 @@
                         <div v-if="currentNicknameCheck" class="double-check-warn">현재 사용하고 있는 닉네임입니다.</div>
                     </v-card>
                 </v-col>
-                <v-col cols="12">
-                    <v-card flat>
-                        <v-card-title class="profile-sub-title text-h6">
-                            프로필 사진
-                            <v-spacer></v-spacer>
-                            <span text class="edit-btn">
-                                수정
-                            </span>
-                        </v-card-title>
-                        <v-card-text class="d-flex justify-center">
-                            <v-icon size="180">account_circle</v-icon>
-                        </v-card-text>
-                    </v-card>
-                </v-col>
             </v-row>           
         </v-container>
         <v-card-actions>
@@ -101,7 +84,6 @@
 </template>
 <script>
 import { changeNickname, checkNickname } from "@/api/auth/auth";
-import ProfileImageDialog from '@/views/userManagement/ProfileImageDialog.vue';
 import { mapState } from "vuex";
 
 export default {
@@ -111,12 +93,11 @@ export default {
             nickname: '',
             currentNicknameCheck: false,
             existNicknameCheck: false,
-            useNicknameCheck: false,
-            imageDialog: false
+            useNicknameCheck: false
         }
     },
     props: {
-        dialog: {
+        imageDialog: {
             type: Boolean,
             default: false
         }
@@ -124,14 +105,11 @@ export default {
     mounted() {
         this.nickname = this.userInfoData.nickname
     },
-    components: {
-        ProfileImageDialog
-    },
     computed: {
         ...mapState(['userInfoData']),
         dialogValue: {
             get() {
-                return this.dialog;
+                return this.imageDialog;
             },
             set(val) {
                 this.$emit('close', val);
@@ -140,25 +118,7 @@ export default {
     },
     methods: {
         closeProfieEditDialog() {
-            const isConfirmed = confirm('변경된 사항이 있습니다.\n변경사항이 저장되지 않을 수 있습니다.')
-            if (isConfirmed) {
-                this.nickname = this.userInfoData.nickname
-                this.currentNicknameCheck = false
-                this.existNicknameCheck = false
-                this.useNicknameCheck = false
-                this.useNickname = true
-                this.dialogValue = false
-            } else {
-                return
-            }
-        },
-        closeProfileImageDialog() {
-            this.imageDialog = false
-            document.documentElement.style.overflowY = 'auto'
-        },
-        openProfileImageDialog() {
-            this.imageDialog = true
-            document.documentElement.style.overflow = 'hidden'
+            this.dialogValue = false
         },
         agree() {
             this.dialogValue = true
@@ -218,11 +178,24 @@ export default {
 }
 </script>
 <style scoped>
- .profile-title {
+ .profile-image-title {
     font-weight: 600 !important;
  }
  .profile-sub-title {
     font-weight: 600 !important;
+ }
+ .image-upload-btn {
+    color: #0064D1;
+    font-size: 15px;
+    font-weight: 600;
+ }
+ .avatar-profile-image-btn {
+    font-size: 15px;
+    font-weight: 600;
+ }
+ .frame-add-btn {
+    font-size: 15px;
+    font-weight: 600;
  }
  .edit-btn {
     color: #0064D1;

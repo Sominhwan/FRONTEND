@@ -5,7 +5,6 @@
             <v-col class="profile-col" cols="8">
                 <v-list class="profile-list" three-line>
                     <v-card class="mx-auto" height="1500">
-                        
                     <v-list-item>
                         <v-list-item-action>
                             <v-icon size="100">account_circle</v-icon>
