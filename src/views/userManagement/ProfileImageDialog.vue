@@ -30,41 +30,27 @@
                     </v-card>
                 </v-col>
                 <v-col cols="12">
-                    <v-card flat>
-                        <v-card-title class="profile-sub-title text-h6">
-                            프로필 설정
-                        </v-card-title> 
-                        <v-card-subtitle>
-                            계정의 세부 정보 식별 변경
-                        </v-card-subtitle>  
-                    </v-card>
-                    <v-card class="profile-setting ml-4 mr-4" elevation="0">
-                        <v-card-title class="nickname-change-text">
-                            닉네임<span class="nickname-rule">(최대 한글 6자, 영문 12자 입력 가능)</span>
-                            <v-spacer></v-spacer>
-                            <span text class="edit-btn" @click="editNickname()">
-                                변경
-                            </span>
-                        </v-card-title> 
-                        <v-card-text>
-                            <v-text-field
-                                class=""
-                                ref="nickname"
-                                v-model="nickname"
-                                single-line
-                                outlined
-                                required
-                                hide-details
-                                :readonly="useNickname"
-                            >
-                                <template v-slot:append>
-                                    <span v-if="!useNickname" class="double-check-btn" @click="nicknameDoubleCheck()">중복확인</span>
-                                </template>
-                            </v-text-field>  
-                        </v-card-text>   
-                        <div v-if="useNicknameCheck" class="double-check-ok">사용가능한 닉네임입니다.</div>
-                        <div v-if="existNicknameCheck" class="double-check-warn">이미 존재하는 닉네임입니다.</div>
-                        <div v-if="currentNicknameCheck" class="double-check-warn">현재 사용하고 있는 닉네임입니다.</div>
+                    <v-card flat class="mt-2">
+                        <span class="upload-image-sub-title">업로드한 사진</span>
+                            <v-row class="mt-1 scrollable-container mb-3">
+                                <v-col v-for="n in 9" :key="n" class="d-flex child-flex" cols="3">
+                                    <v-img
+                                        :src="`https://picsum.photos/500/300?image=${n * 5 + 10}`"
+                                        :lazy-src="`https://picsum.photos/10/6?image=${n * 5 + 10}`"
+                                        aspect-ratio="1"
+                                        height="130"
+                                        max-width="130"
+                                        class="grey lighten-2"
+                                    >
+                                        <template v-slot:placeholder>
+                                            <v-row class="fill-height ma-0" align="center" justify="center">
+                                                <v-progress-circular indeterminate color="grey lighten-5"></v-progress-circular>
+                                            </v-row>
+                                        </template>
+                                    </v-img>
+                                </v-col> 
+                            </v-row>
+                        <span class="profile-image-sub-title">프로필 사진</span>
                     </v-card>
                 </v-col>
             </v-row>           
@@ -83,7 +69,7 @@
     </v-dialog>
 </template>
 <script>
-import { changeNickname, checkNickname } from "@/api/auth/auth";
+import { changeNickname } from "@/api/auth/auth";
 import { mapState } from "vuex";
 
 export default {
@@ -122,37 +108,6 @@ export default {
         },
         agree() {
             this.dialogValue = true
-        },
-        editNickname() {
-            this.useNickname = false
-            this.$refs.nickname.focus()
-        },
-        nicknameDoubleCheck() {
-            if(this.userInfoData.nickname === this.nickname) {
-                this.existNicknameCheck = false
-                this.useNicknameCheck = false
-                this.currentNicknameCheck = true
-            } else {
-                checkNickname(this.nickname)
-                    .then((res) => {
-                        console.log(res)
-                        if(res.data.code === 1) {
-                            this.currentNicknameCheck = false
-                            this.existNicknameCheck = false
-                            this.useNicknameCheck = true
-                        } else {
-                            this.currentNicknameCheck = false
-                            this.useNicknameCheck = false
-                            this.existNicknameCheck = true
-                        }
-                    })
-                    .catch(() => {
-                        alert("서버와 연결이 불안합니다.")
-                    })
-                    .finally(() => {
-
-                    })
-            }
         },
         saveProfileData() {
             const isConfirmed = confirm('변경된 사항을 저장하시겠습니까?')
@@ -197,55 +152,26 @@ export default {
     font-size: 15px;
     font-weight: 600;
  }
- .edit-btn {
-    color: #0064D1;
-    font-weight: 500;
-    font-size: 16px;
-    cursor: pointer;
+ .upload-image-sub-title {
+    margin-top: 10px !important;
+    font-weight: 700;
  }
- .edit-btn:hover {
-
+ .scrollable-container {
+    max-height: 400px; /* 예시로 설정한 최대 높이 */
+    overflow-y: auto;
  }
- .profile-setting {
-    border: 1px solid #eee;
+ .scrollable-container::-webkit-scrollbar {
+    width: 8px; /* 스크롤바의 너비 */
  }
- .nickname-change-text {
-    font-size: 16px;
-    font-weight: 600;
+ .scrollable-container::-webkit-scrollbar-thumb {
+    height: 30%; /* 스크롤바의 길이 */
+    background: #E4E6EB; /* 스크롤바의 색상 */
+    border-radius: 8px; /* 스크롤바의 모서리를 둥글게 설정 */
  }
- .nickname-rule {
-    margin-left: 5px;
-    color: grey;
-    font-weight: 400;
-    font-size: 13px;
+ .scrollable-container::-webkit-scrollbar-track {
+    background: #fff; /*스크롤바 뒷 배경 색상*/
  }
- .v-text-field--outlined >>> fieldset {
-  border-color: #eee;
- }
- .double-check-btn {
-    z-index: 100;
-    color: #1877F2;
-    position: relative;
-    display: inline;
-    top: 3px;
-    cursor: pointer;
- }
- .double-check-warn {
-    display: inline;
-    position: relative;
-    font-weight: 300;
-    font-size: 13px;
-    left: 20px;
-    top: -10px;
-    color: #FF003E;
- }
- .double-check-ok {
-    display: inline;
-    position: relative;
-    font-weight: 300;
-    font-size: 13px;
-    left: 20px;
-    top: -10px;
-    color: #1877F2; 
+ .profile-image-sub-title {
+    font-weight: 700;
  }
 </style>

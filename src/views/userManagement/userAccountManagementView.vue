@@ -17,7 +17,7 @@
                                 <img :src="require('@/assets/userManagement/edit_document.svg')" width="22"/>
                                 <span class="write-text">300</span>
                                 <v-spacer></v-spacer>
-                                <v-btn color="#E4E6EB" @click="openProfileEditDialog()">
+                                <v-btn color="#E4E6EB" @click="openProfileEditDialog()" elevation="0">
                                     <v-icon left>mdi-pencil</v-icon>
                                     <span class="profile-edit-text">프로필 편집</span>
                                 </v-btn>
