@@ -193,7 +193,7 @@ router.beforeEach((to, from, next) => {
       })
   } 
   if(token === null) {
-    if(currentName === 'write') {
+    if(currentName === 'write' || currentName === 'userAccountManagement') {
       const authState = store.state.authState
       if(!authState) {
         location.href = '/home/main'

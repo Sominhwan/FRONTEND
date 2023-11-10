@@ -154,7 +154,6 @@ export default {
         },
         closeProfileImageDialog() {
             this.imageDialog = false
-            document.documentElement.style.overflowY = 'auto'
         },
         openProfileImageDialog() {
             this.imageDialog = true
