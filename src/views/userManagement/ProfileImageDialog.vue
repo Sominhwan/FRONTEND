@@ -5,8 +5,12 @@
         persistent
         style="z-index: 1001 !important;"
     >
+
     <ProfileImageEditDialog :imageEditDialog="imageEditDialog" :imageFile="imageFile" :imageUrl="imageUrl" @close="closeProfileImageEditDialog()"/>
     <v-card>
+        <div class="loading text-center" v-if="loading">
+            <v-progress-circular color="grey" indeterminate :value="20" style="top: 45%;"></v-progress-circular>
+        </div>
         <v-card-title class="profile-image-title text-h6">
             프로필 사진 선택
         <v-spacer></v-spacer>
@@ -101,6 +105,7 @@ export default {
             imageEditDialog: false,
             imageFile: null,
             imageUrl: null,
+            loading: false,
         }
     },
     props: {
@@ -140,6 +145,7 @@ export default {
         },
         handleFileUpload(event) { 
             if(event.target.files.length < 2) {
+                this.loading = true
                 const imageFile = event.target.files[0]
                 const maxImageSize = 500 * 1024 // 500KB 
                 if(imageFile.size > maxImageSize) {
@@ -153,7 +159,8 @@ export default {
                         this.imageUrl = reader.result
                     }
                     reader.readAsDataURL(imageFile)  
-                    event.target.value = '';          
+                    event.target.value = '';   
+                    this.loading = false     
                     this.openProfileImageDialog()
                 }
             } else {
@@ -184,6 +191,13 @@ export default {
 }
 </script>
 <style scoped>
+ .loading {
+    background-color: rgba(255, 255, 255, 0.6);
+    width: 100%; 
+    height: 100%;
+    z-index: 10; 
+    position: absolute;
+ }
  .profile-image-title {
     font-weight: 600 !important;
  }

@@ -18,16 +18,17 @@
             <v-row dense>
                 <v-col cols="12">
                     <v-card flat>
-                        <v-btn class="image-upload-btn" block elevation="0" color="#EBF5FF" @click="alertFile()">
-                            <v-icon size="16">add</v-icon><span class="ml-1">사진 업로드</span>
-                        </v-btn>
-                        <v-btn class="avatar-profile-image-btn mt-2" block elevation="0" color="#E4E6EB">
-                            <v-icon size="16" style="width: 16px;">familiar_face_and_zone</v-icon><span class="ml-1">아바타 프로필 사진 만들기</span>
-                        </v-btn>
-                        <v-btn class="frame-add-btn mt-2" block elevation="0" color="#E4E6EB">
-                            <v-icon size="16">add</v-icon><span class="ml-1">프레임 추가</span>
-                        </v-btn>
-                        <v-img :src="url" aspect-ratio="1" sizes="150" alt="이미지 파일"/>
+                        <div>
+                        <!-- <img class="img" ref="image" :src="url" alt="이미지 파일"/> -->
+                        <cropper class="img" :src="url" @change="change"/>
+                        </div>
+                        <div class="w-1/4">
+                            <div class="pb-2">Preview</div>
+                            <div class="flex items-center justify-center h-32 bg-yellow-100">
+                                <div class="preview overflow-hidden w-full h-32 text-center bg-gray-200"></div>
+                            </div>
+                        </div>
+                        <button @click="cropImage()">Crop Image</button>
                     </v-card>
                 </v-col>
             </v-row>           
@@ -46,13 +47,19 @@
     </v-dialog>
 </template>
 <script>
+import { Cropper } from 'vue-advanced-cropper';
+import 'vue-advanced-cropper/dist/style.css';
 import { mapState } from "vuex";
 export default {
     data() {
         return {
-            url: null
+            url: null,
+            image: {},
         }
     },
+    components: {
+		Cropper,
+	},
     props: {
         imageEditDialog: {
             type: Boolean,
@@ -63,17 +70,18 @@ export default {
         },
         imageUrl: {
             type: String
-        }
+        },
     },
     mounted() {
         console.log(this.imageFile)
         this.alertFile()
+        //this.image = this.$refs.iamge
     },
     watch: {
         imageUrl(newImageData) {
             // 이미지가 변경될 때 실행되는 로직을 추가할 수 있습니다.
-            this.url = newImageData
-        }
+            this.url = newImageData        
+        },
     },
     computed: {
         ...mapState(['userInfoData']),
@@ -93,11 +101,19 @@ export default {
         alertFile() {
             console.log(this.imageUrl)
             this.url = this.imageFile
-        }
+            
+        },
+        change({ coordinates, canvas }) {
+			console.log(coordinates, canvas);
+		},
     }
 }
 </script>
 <style scoped>
+  img {
+    display: block;
+    max-width: 100%; /* This rule is very important, please do not ignore this! */
+ }
  .profile-image-title {
     font-weight: 600 !important;
  }
