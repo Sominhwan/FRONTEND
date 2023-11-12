@@ -18,17 +18,148 @@
             <v-row dense>
                 <v-col cols="12">
                     <v-card flat>
-                        <div>
-                        <!-- <img class="img" ref="image" :src="url" alt="이미지 파일"/> -->
-                        <cropper class="img" :src="url" @change="change"/>
+                        <div style="width: 87%;">
+                            <cropper 
+                                class="cropper" 
+                                ref="cropper"
+                                :src="url" 
+                                :canvas="{
+                                    height: 250,
+                                    width: 250
+                                }"
+                                :stencil-props="{
+                                    handlers: {},
+                                    movable: false,
+                                    resizable: false,
+                                    aspectRatio: 1,
+                                }"
+                                :resize-image="{
+                                    adjustStencil: false
+                                }"
+                                :default-size="defaultSize"
+                                :debounce="false"
+                                image-restriction="stencil"
+                                stencil-component="circle-stencil"
+                                @change="change"
+                            />
+                            <!-- 편집 버튼 -->
+                            <v-btn 
+                                class="rotate-right-btn"
+                                v-show="!hidden"
+                                color="white"
+                                elevation="0"
+                                fab
+                                large
+                                absolute
+                                bottom
+                                left
+                                @click="rotate(90)"
+                            >
+                                <v-icon>rotate_right</v-icon>
+                            </v-btn>
+                            <v-btn 
+                                class="rotate-left-btn"
+                                v-show="!hidden"
+                                color="white"
+                                elevation="0"
+                                fab
+                                large
+                                absolute
+                                bottom
+                                left
+                                @click="rotate(-90)"
+                            >
+                                <v-icon>rotate_left</v-icon>
+                            </v-btn>
+                            <v-btn 
+                                class="flip-right-btn"
+                                v-show="!hidden"
+                                color="white"
+                                elevation="0"
+                                fab
+                                large
+                                absolute
+                                bottom
+                                left
+                                @click="flip(true,false)"
+                            >
+                                <v-icon>flip</v-icon>
+                            </v-btn>
+                            <v-btn 
+                                class="flip-up-btn"
+                                v-show="!hidden"
+                                color="white"
+                                elevation="0"
+                                fab
+                                large
+                                absolute
+                                bottom
+                                left
+                                @click="flip(false,true)"
+                            >
+                                <v-icon>flip</v-icon>
+                            </v-btn>
                         </div>
+                        <v-card-text>
+                            <v-row>
+                                <v-col cols="1">
+                                    <v-btn 
+                                        class="size-minus-btn"
+                                        v-show="!hidden"
+                                        color="white"
+                                        elevation="0"
+                                        fab
+                                        small
+                                        @click="flip(false,true)"
+                                    >
+                                        <v-icon>mdi-minus</v-icon>
+                                    </v-btn>
+                                    </v-col>
+                                    <v-col cols="8">
+                                    <v-slider
+                                        class="image-size-slider"
+                                        v-model="value"
+                                        hide-details
+                                        height="20"
+                                        color="#0064D1"
+                                        track-color="grey"
+                                        step="10"
+                                        ticks="always"
+                                        tick-size="0"
+                                    ></v-slider>
+                                    </v-col>
+                                    <v-col cols="1">
+                                    <v-btn 
+                                        class="size-plus-btn"
+                                        v-show="!hidden"
+                                        color="white"
+                                        elevation="0"
+                                        fab
+                                        small
+                                        @click="flip(false,true)"
+                                    >
+                                        <v-icon>mdi-plus</v-icon>
+                                    </v-btn>
+                                    </v-col>
+                            </v-row>
+                        </v-card-text>
+                            <preview
+                                class="preview"
+                                :width="200"
+                                :height="200"
+                                :image="result.image"
+                                :coordinates="result.coordinates"
+                            />
+
                         <div class="w-1/4">
                             <div class="pb-2">Preview</div>
                             <div class="flex items-center justify-center h-32 bg-yellow-100">
                                 <div class="preview overflow-hidden w-full h-32 text-center bg-gray-200"></div>
                             </div>
                         </div>
-                        <button @click="cropImage()">Crop Image</button>
+                        <button @click="value()">Crop Image</button>
+                        <button @click="flip(true,false)">뒤집기</button>
+                        <button @click="rotate()">돌리기</button>
                     </v-card>
                 </v-col>
             </v-row>           
@@ -47,18 +178,32 @@
     </v-dialog>
 </template>
 <script>
-import { Cropper } from 'vue-advanced-cropper';
+import { Cropper, Preview } from 'vue-advanced-cropper';
 import 'vue-advanced-cropper/dist/style.css';
 import { mapState } from "vuex";
 export default {
     data() {
         return {
             url: null,
-            image: {},
+            cropper: null,
+			coordinates: {
+				width: 0,
+				height: 0,
+				left: 0,
+				top: 0,
+			},
+			//image: null,
+            profileImg: null,
+            result: {
+				coordinates: null,
+				image: null
+			},
+            angle: true
         }
     },
     components: {
 		Cropper,
+        Preview 
 	},
     props: {
         imageEditDialog: {
@@ -71,6 +216,9 @@ export default {
         imageUrl: {
             type: String
         },
+        stencilComponent: {
+            type: Object
+        }
     },
     mounted() {
         console.log(this.imageFile)
@@ -96,6 +244,9 @@ export default {
     },
     methods: {
         closeProfieImageEditDialog() {
+            //this.url = null
+            this.profileImg = null
+            this.imagfeUrl = null
             this.dialogValue = false
         },
         alertFile() {
@@ -103,31 +254,88 @@ export default {
             this.url = this.imageFile
             
         },
-        change({ coordinates, canvas }) {
-			console.log(coordinates, canvas);
+        change({ coordinates, image }) {
+            this.result = {
+				coordinates,
+				image
+			};
+			console.log(coordinates, image);
 		},
+        /* 뒤집기 */
+        flip(x,y) {
+			this.$refs.cropper.flip(x,y);
+		},
+        /* 회전하기 */
+		rotate(angle) {
+			this.$refs.cropper.rotate(angle);
+		},
+        /* 편집 줌 크기 */
+        defaultSize() {
+			return {
+				width: 300,
+				height: 300,
+			};
+		},
+        /* 결과 출력 */
+        value() {
+			const { coordinates, canvas, } = this.$refs.cropper.getResult();
+			this.coordinates = coordinates;
+			// You able to do different manipulations at a canvas
+			// but there we just get a cropped image, that can be used 
+			// as src for <img/> to preview result
+			this.image = canvas.toDataURL()
+            this.profileImg = canvas.toDataURL()
+            console.log(this.coordinates)
+            console.log(this.image)
+            console.log(this.$refs.cropper.getResult())
+        }
     }
 }
 </script>
 <style scoped>
-  img {
-    display: block;
-    max-width: 100%; /* This rule is very important, please do not ignore this! */
+  .cropper {
+    /* display: block;
+    max-width: 100%; */
+ }
+ .preview {
+    border-radius: 50%;
  }
  .profile-image-title {
     font-weight: 600 !important;
  }
- .image-upload-btn {
-    color: #0064D1;
-    font-size: 15px;
-    font-weight: 600;
+ .rotate-right-btn {
+    position: absolute; 
+    top: 0px; 
+    left: 90%;
  }
- .avatar-profile-image-btn {
-    font-size: 15px;
-    font-weight: 600;
+ .rotate-left-btn {
+    position: absolute; 
+    top: 75px; 
+    left: 90%;
  }
- .frame-add-btn {
-    font-size: 15px;
-    font-weight: 600;
+ .flip-right-btn {
+    position: absolute; 
+    top: 150px; 
+    left: 90%;
  }
+ .flip-up-btn {
+    position: absolute; 
+    top: 225px; 
+    left: 90%;
+    transform: rotate(90deg);
+ }
+ .image-size-slider {
+    /* position: relative; 
+    width: 80%;
+    left: 50px; */
+ }
+ .size-minus-btn {
+    bottom: 10px;
+    left: 5px;
+ }
+ .size-plus-btn {
+    bottom: 10px;
+    right: 20px;
+ }
+
 </style>

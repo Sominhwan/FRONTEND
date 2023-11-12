@@ -144,8 +144,8 @@ export default {
             this.imageEditDialog = true
         },
         handleFileUpload(event) { 
+            this.loading = true
             if(event.target.files.length < 2) {
-                this.loading = true
                 const imageFile = event.target.files[0]
                 const maxImageSize = 500 * 1024 // 500KB 
                 if(imageFile.size > maxImageSize) {
