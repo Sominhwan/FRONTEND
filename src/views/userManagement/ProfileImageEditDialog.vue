@@ -23,29 +23,27 @@
                                 class="cropper" 
                                 ref="cropper"
                                 :src="url" 
-                                :canvas="{
-                                    height: 250,
-                                    width: 250
-                                }"
+                                :transitions="true"
                                 :stencil-props="{
                                     handlers: {},
-                                    movable: false,
+                                    minAspectRatio: 10 / 20,
+                                    movable: true,
                                     resizable: false,
-                                    aspectRatio: 1,
                                 }"
                                 :resize-image="{
-                                    adjustStencil: false
+                                    adjustStencil: true
                                 }"
-                                :default-size="defaultSize"
+                                :default-size="{
+                                    width: 250,
+                                    height: 250
+                                }"
                                 :debounce="false"
-                                image-restriction="stencil"
                                 stencil-component="circle-stencil"
                                 @change="change"
                             />
                             <!-- 편집 버튼 -->
                             <v-btn 
                                 class="rotate-right-btn"
-                                v-show="!hidden"
                                 color="white"
                                 elevation="0"
                                 fab
@@ -59,7 +57,6 @@
                             </v-btn>
                             <v-btn 
                                 class="rotate-left-btn"
-                                v-show="!hidden"
                                 color="white"
                                 elevation="0"
                                 fab
@@ -73,7 +70,6 @@
                             </v-btn>
                             <v-btn 
                                 class="flip-right-btn"
-                                v-show="!hidden"
                                 color="white"
                                 elevation="0"
                                 fab
@@ -87,7 +83,6 @@
                             </v-btn>
                             <v-btn 
                                 class="flip-up-btn"
-                                v-show="!hidden"
                                 color="white"
                                 elevation="0"
                                 fab
@@ -100,25 +95,26 @@
                                 <v-icon>flip</v-icon>
                             </v-btn>
                         </div>
+                        <!-- 줌 인,아웃 -->
                         <v-card-text>
                             <v-row>
                                 <v-col cols="1">
                                     <v-btn 
                                         class="size-minus-btn"
-                                        v-show="!hidden"
                                         color="white"
                                         elevation="0"
                                         fab
                                         small
-                                        @click="flip(false,true)"
+                                        @click="zoom(0.5)"
+                                        :disabled="minusBtnCheck"
                                     >
                                         <v-icon>mdi-minus</v-icon>
                                     </v-btn>
-                                    </v-col>
-                                    <v-col cols="8">
+                                </v-col>
+                                <v-col cols="8">
                                     <v-slider
                                         class="image-size-slider"
-                                        v-model="value"
+                                        v-model="zoomValue"
                                         hide-details
                                         height="20"
                                         color="#0064D1"
@@ -127,29 +123,30 @@
                                         ticks="always"
                                         tick-size="0"
                                     ></v-slider>
-                                    </v-col>
-                                    <v-col cols="1">
+                                </v-col>
+                                <v-col cols="1">
                                     <v-btn 
                                         class="size-plus-btn"
-                                        v-show="!hidden"
                                         color="white"
                                         elevation="0"
                                         fab
                                         small
-                                        @click="flip(false,true)"
+                                        @click="zoom(2)"
+                                        :disabled="plusBtnCheck"
                                     >
                                         <v-icon>mdi-plus</v-icon>
                                     </v-btn>
-                                    </v-col>
+                                </v-col>
                             </v-row>
                         </v-card-text>
-                            <preview
-                                class="preview"
-                                :width="200"
-                                :height="200"
-                                :image="result.image"
-                                :coordinates="result.coordinates"
-                            />
+                        <!-- 편집 미리보기 -->
+                        <preview
+                            class="preview"
+                            :width="200"
+                            :height="200"
+                            :image="result.image"
+                            :coordinates="result.coordinates"
+                        />
 
                         <div class="w-1/4">
                             <div class="pb-2">Preview</div>
@@ -158,8 +155,6 @@
                             </div>
                         </div>
                         <button @click="value()">Crop Image</button>
-                        <button @click="flip(true,false)">뒤집기</button>
-                        <button @click="rotate()">돌리기</button>
                     </v-card>
                 </v-col>
             </v-row>           
@@ -169,7 +164,7 @@
         <v-btn
             color="green darken-1"
             text
-            @click="saveProfileData()"
+            @click="uploadImage()"
         >
             저장하기
         </v-btn>
@@ -178,6 +173,7 @@
     </v-dialog>
 </template>
 <script>
+import { profileImage } from "@/api/upload/upload";
 import { Cropper, Preview } from 'vue-advanced-cropper';
 import 'vue-advanced-cropper/dist/style.css';
 import { mapState } from "vuex";
@@ -192,13 +188,16 @@ export default {
 				left: 0,
 				top: 0,
 			},
-			//image: null,
+			zoomValue: 0,
             profileImg: null,
             result: {
 				coordinates: null,
 				image: null
 			},
-            angle: true
+            angle: true,
+            minusBtnCheck: false,
+            plusBtnCheck: false,
+            zoomCount: 0
         }
     },
     components: {
@@ -230,6 +229,11 @@ export default {
             // 이미지가 변경될 때 실행되는 로직을 추가할 수 있습니다.
             this.url = newImageData        
         },
+        zoomValue(event) {
+            // 줌 컨트롤러 추가
+            this.zoomController(event)
+            console.log(event)
+        }
     },
     computed: {
         ...mapState(['userInfoData']),
@@ -259,15 +263,32 @@ export default {
 				coordinates,
 				image
 			};
-			console.log(coordinates, image);
+			console.log(coordinates, image)
+		},
+        zoomController(e) {
+            this.zoomCount = e/10
+            if(this.zoomCount === 10) {
+                this.plusBtnCheck = true    
+            } else if(this.zoomCount === 0) {
+                this.minusBtnCheck = true
+            } else {
+                this.plusBtnCheck = false
+                this.minusBtnCheck = false
+            }
+            this.$refs.cropper.zoom(2 * this.zoomCount)
+            
+        },
+        /* 줌 인,아웃 */
+        zoom(event) {
+			this.$refs.cropper.zoom(event)
 		},
         /* 뒤집기 */
         flip(x,y) {
-			this.$refs.cropper.flip(x,y);
+			this.$refs.cropper.flip(x,y)
 		},
         /* 회전하기 */
 		rotate(angle) {
-			this.$refs.cropper.rotate(angle);
+			this.$refs.cropper.rotate(angle)
 		},
         /* 편집 줌 크기 */
         defaultSize() {
@@ -278,7 +299,7 @@ export default {
 		},
         /* 결과 출력 */
         value() {
-			const { coordinates, canvas, } = this.$refs.cropper.getResult();
+			const { coordinates, canvas, } = this.$refs.cropper.getResult()
 			this.coordinates = coordinates;
 			// You able to do different manipulations at a canvas
 			// but there we just get a cropped image, that can be used 
@@ -288,12 +309,40 @@ export default {
             console.log(this.coordinates)
             console.log(this.image)
             console.log(this.$refs.cropper.getResult())
+        },
+        uploadImage() {
+            const { canvas } = this.$refs.cropper.getResult()
+            if (canvas) {
+				let form = new FormData();
+                let data = {
+                        userId: this.userInfoData.userId,
+                        originName: this.imageFile.name
+                }
+                console.log(data)
+				canvas.toBlob(blob => {
+					form.append('file', blob);
+                    form.append('key', new Blob([JSON.stringify(data)], { type: 'application/json' }))
+                    profileImage(form)
+                        .then((res) => {
+                            console.log(res)
+                        })
+                        .catch(() => {
+                            alert("서버와 연결이 불안합니다.")
+                        })
+                        .finally(() => {
+
+                        })
+				}, 'image/jpeg');
+
+			}
         }
     }
 }
 </script>
 <style scoped>
   .cropper {
+    max-height: 500px;
+		background: black;
     /* display: block;
     max-width: 100%; */
  }
