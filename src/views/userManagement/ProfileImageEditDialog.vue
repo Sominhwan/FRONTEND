@@ -315,8 +315,8 @@ export default {
             if (canvas) {
 				let form = new FormData();
                 let data = {
-                        userId: this.userInfoData.userId,
-                        originName: this.imageFile.name
+                    userId: this.userInfoData.userId,
+                    originFileName: this.imageFile.name
                 }
                 console.log(data)
 				canvas.toBlob(blob => {
@@ -324,9 +324,14 @@ export default {
                     form.append('key', new Blob([JSON.stringify(data)], { type: 'application/json' }))
                     profileImage(form)
                         .then((res) => {
-                            console.log(res)
+                            if(res.data.code === 0) {
+                                location.reload()
+                            } else if(res.data.code === 1) {
+                                alert(res.data.message)
+                            }             
                         })
                         .catch(() => {
+   
                             alert("서버와 연결이 불안합니다.")
                         })
                         .finally(() => {

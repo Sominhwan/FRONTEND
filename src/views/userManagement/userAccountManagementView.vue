@@ -7,7 +7,13 @@
                     <v-card class="mx-auto" height="1500">
                     <v-list-item>
                         <v-list-item-action>
-                            <v-icon size="100">account_circle</v-icon>
+                            <v-icon v-if="userInfoData.profileUrl == null" size="100">account_circle</v-icon>
+                            <v-img 
+                                :src="userInfoData.profileUrl"                                         
+                                height="100"
+                                max-width="100"
+                                style="border-radius: 50%;"
+                                ></v-img>
                         </v-list-item-action>
                         <v-list-item-content style="align-content: center;">
                             <v-list-item-title class="profile-nickname" style="margin-bottom: 10px;">{{ userInfoData.nickname }}</v-list-item-title>
