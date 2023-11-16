@@ -19,28 +19,74 @@
                 <v-col cols="12">
                     <v-card flat>
                         <div style="width: 87%;">
-                            <cropper 
-                                class="cropper" 
-                                ref="cropper"
-                                :src="url" 
-                                :transitions="true"
-                                :stencil-props="{
-                                    handlers: {},
-                                    minAspectRatio: 10 / 20,
-                                    movable: true,
-                                    resizable: false,
-                                }"
-                                :resize-image="{
-                                    adjustStencil: true
-                                }"
-                                :default-size="{
-                                    width: 250,
-                                    height: 250
-                                }"
-                                :debounce="false"
-                                stencil-component="circle-stencil"
-                                @change="change"
-                            />
+                            <div style="position: relative; height: 500px;">
+                                <cropper 
+                                    class="cropper" 
+                                    ref="cropper"
+                                    :src="url" 
+                                    :transitions="true"
+                                    :stencil-props="{
+                                        handlers: {},
+                                        minAspectRatio: 10 / 20,
+                                        movable: true,
+                                        resizable: false,
+                                    }"
+                                    :resize-image="{
+                                        adjustStencil: true
+                                    }"
+                                    :default-size="{
+                                        width: 250,
+                                        height: 250
+                                    }"
+                                    :debounce="false"
+                                    stencil-component="circle-stencil"
+                                    @change="change"
+                                />
+                                                        <!-- 줌 인,아웃 -->
+                                <v-card-text v-if="cropperFlag">
+                                    <v-row>
+                                        <v-col cols="1">
+                                            <v-btn 
+                                                class="size-minus-btn"
+                                                color="white"
+                                                elevation="0"
+                                                fab
+                                                small
+                                                @click="zoom(0.5)"
+                                                :disabled="minusBtnCheck"
+                                            >
+                                                <v-icon>mdi-minus</v-icon>
+                                            </v-btn>
+                                        </v-col>
+                                        <v-col cols="8">
+                                            <v-slider
+                                                class="image-size-slider"
+                                                v-model="zoomValue"
+                                                hide-details
+                                                height="20"
+                                                color="#0064D1"
+                                                track-color="grey"
+                                                step="10"
+                                                ticks="always"
+                                                tick-size="0"
+                                            ></v-slider>
+                                        </v-col>
+                                        <v-col cols="1">
+                                            <v-btn 
+                                                class="size-plus-btn"
+                                                color="white"
+                                                elevation="0"
+                                                fab
+                                                small
+                                                @click="zoom(2)"
+                                                :disabled="plusBtnCheck"
+                                            >
+                                                <v-icon>mdi-plus</v-icon>
+                                            </v-btn>
+                                        </v-col>
+                                    </v-row>
+                                </v-card-text>
+                            </div>
                             <!-- 편집 버튼 -->
                             <v-btn 
                                 class="rotate-right-btn"
@@ -95,52 +141,8 @@
                                 <v-icon>flip</v-icon>
                             </v-btn>
                         </div>
-                        <!-- 줌 인,아웃 -->
-                        <v-card-text>
-                            <v-row>
-                                <v-col cols="1">
-                                    <v-btn 
-                                        class="size-minus-btn"
-                                        color="white"
-                                        elevation="0"
-                                        fab
-                                        small
-                                        @click="zoom(0.5)"
-                                        :disabled="minusBtnCheck"
-                                    >
-                                        <v-icon>mdi-minus</v-icon>
-                                    </v-btn>
-                                </v-col>
-                                <v-col cols="8">
-                                    <v-slider
-                                        class="image-size-slider"
-                                        v-model="zoomValue"
-                                        hide-details
-                                        height="20"
-                                        color="#0064D1"
-                                        track-color="grey"
-                                        step="10"
-                                        ticks="always"
-                                        tick-size="0"
-                                    ></v-slider>
-                                </v-col>
-                                <v-col cols="1">
-                                    <v-btn 
-                                        class="size-plus-btn"
-                                        color="white"
-                                        elevation="0"
-                                        fab
-                                        small
-                                        @click="zoom(2)"
-                                        :disabled="plusBtnCheck"
-                                    >
-                                        <v-icon>mdi-plus</v-icon>
-                                    </v-btn>
-                                </v-col>
-                            </v-row>
-                        </v-card-text>
                         <!-- 편집 미리보기 -->
-                        <preview
+                        <!-- <preview
                             class="preview"
                             :width="200"
                             :height="200"
@@ -154,16 +156,18 @@
                                 <div class="preview overflow-hidden w-full h-32 text-center bg-gray-200"></div>
                             </div>
                         </div>
-                        <button @click="value()">Crop Image</button>
+                        <button @click="value()">Crop Image</button> -->
                     </v-card>
                 </v-col>
             </v-row>           
         </v-container>
+        <v-divider></v-divider>
         <v-card-actions>
         <v-spacer></v-spacer>
         <v-btn
-            color="green darken-1"
-            text
+            class="ma-2"
+            color="primary"
+            depressed
             @click="uploadImage()"
         >
             저장하기
@@ -174,7 +178,7 @@
 </template>
 <script>
 import { profileImage } from "@/api/upload/upload";
-import { Cropper, Preview } from 'vue-advanced-cropper';
+import { Cropper } from 'vue-advanced-cropper';
 import 'vue-advanced-cropper/dist/style.css';
 import { mapState } from "vuex";
 export default {
@@ -182,6 +186,7 @@ export default {
         return {
             url: null,
             cropper: null,
+            cropperFlag: false, 
 			coordinates: {
 				width: 0,
 				height: 0,
@@ -202,7 +207,7 @@ export default {
     },
     components: {
 		Cropper,
-        Preview 
+        //Preview 
 	},
     props: {
         imageEditDialog: {
@@ -227,7 +232,9 @@ export default {
     watch: {
         imageUrl(newImageData) {
             // 이미지가 변경될 때 실행되는 로직을 추가할 수 있습니다.
-            this.url = newImageData        
+            // TODO 로딩 추가
+            this.url = newImageData 
+            this.cropperFlag = true       
         },
         zoomValue(event) {
             // 줌 컨트롤러 추가
@@ -338,7 +345,6 @@ export default {
 
                         })
 				}, 'image/jpeg');
-
 			}
         }
     }

@@ -21,7 +21,13 @@
                     <v-list>
                         <v-list-item>
                             <v-list-item-avatar>
-                            <img src="https://cdn.vuetifyjs.com/images/john.jpg" alt="John">
+                                <v-icon v-if="userInfoData.profileUrl == null" size="50">account_circle</v-icon>
+                                <v-img 
+                                    :src="userInfoData.profileUrl"                                         
+                                    height="50"
+                                    max-width="50"
+                                    style="border-radius: 50%;"
+                                ></v-img>
                             </v-list-item-avatar>
                             <v-list-item-content>
                                 <v-list-item-title>{{ userInfoData.nickname }}</v-list-item-title>
@@ -58,7 +64,13 @@
             >
             <v-list-item class="px-2">
                 <v-list-item-avatar>
-                <v-img src="https://randomuser.me/api/portraits/men/85.jpg"></v-img>
+                <v-icon v-if="userInfoData.profileUrl == null" size="50">account_circle</v-icon>
+                <v-img 
+                    :src="userInfoData.profileUrl"                                         
+                    height="50"
+                    max-width="50"
+                    style="border-radius: 50%;"
+                ></v-img>
                 </v-list-item-avatar>
                 <v-list-item-title>{{ userInfoData.nickname }}</v-list-item-title>
             </v-list-item>

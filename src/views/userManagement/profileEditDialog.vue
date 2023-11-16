@@ -28,7 +28,13 @@
                             </span>
                         </v-card-title>
                         <v-card-text class="d-flex justify-center">
-                            <v-icon size="180">account_circle</v-icon>
+                            <v-icon v-if="userInfoData.profileUrl == null" size="180">account_circle</v-icon>
+                            <v-img 
+                                :src="userInfoData.profileUrl"                                         
+                                height="150"
+                                max-width="150"
+                                style="border-radius: 50%;"
+                            ></v-img>
                         </v-card-text>
                     </v-card>
                 </v-col>
@@ -86,11 +92,13 @@
                 </v-col>
             </v-row>           
         </v-container>
+        <v-divider></v-divider>
         <v-card-actions>
         <v-spacer></v-spacer>
         <v-btn
-            color="green darken-1"
-            text
+            class="ma-2"
+            color="primary"
+            depressed
             @click="saveProfileData()"
         >
             저장하기

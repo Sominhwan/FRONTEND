@@ -82,21 +82,10 @@
                 </v-col>
             </v-row>           
         </v-container>
-        <v-card-actions>
-        <v-spacer></v-spacer>
-        <v-btn
-            color="green darken-1"
-            text
-            @click="saveProfileData()"
-        >
-            저장하기
-        </v-btn>
-        </v-card-actions>
     </v-card>
     </v-dialog>
 </template>
 <script>
-import { changeNickname } from "@/api/auth/auth";
 import ProfileImageEditDialog from '@/views/userManagement/ProfileImageEditDialog.vue';
 import { mapState } from "vuex";
 export default {
@@ -167,26 +156,6 @@ export default {
                 alert('파일 개수가 제한 되어있습니다.')
             }
         },
-        saveProfileData() {
-            const isConfirmed = confirm('변경된 사항을 저장하시겠습니까?')
-            if(isConfirmed) {
-                if(this.useNicknameCheck === true) {
-                    const data = { "nickname" : this.nickname, "userId" : this.userInfoData.userId }
-                    changeNickname(data)
-                        .then((res) => {
-                            location.reload()
-                            alert(res.data.data)
-                        })
-                        .catch(() => {
-                            alert("서버와 연결이 불안합니다.")
-                        })
-                        .finally(() => {
-
-                        })
-                }
-                // TODO 20231107 프로필 저장하기 추가
-            } 
-        }
     }
 }
 </script>
