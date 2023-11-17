@@ -77,7 +77,6 @@
                                     </v-img>
                                 </v-col> 
                             </v-row>
-
                     </v-card>
                 </v-col>
             </v-row>           
@@ -86,6 +85,7 @@
     </v-dialog>
 </template>
 <script>
+import { getProfileImage, getUploadImage } from "@/api/profile/profile.js";
 import ProfileImageEditDialog from '@/views/userManagement/ProfileImageEditDialog.vue';
 import { mapState } from "vuex";
 export default {
@@ -117,7 +117,46 @@ export default {
             }
         }
     },
+    watch: {
+        imageDialog(flag) {
+            if(flag) {
+                this.uploadImage()
+                this.profileImage()
+            }
+        },
+    },
+    mounted() {
+
+    },
     methods: {
+        // TODO 업로드 한 사진 불러오기
+        uploadImage() {
+            const userId = this.userInfoData.userId 
+            getUploadImage(userId)
+                .then(() => {
+                    
+                })
+                .catch(() => {
+
+                })
+                .finally(() => {
+
+                })
+        },
+        // TODO 프로필 사진 불러오기
+        profileImage() {
+            const userId = this.userInfoData.userId 
+            getProfileImage(userId)
+                .then(() => {
+          
+                })
+                .catch(() => {
+
+                })
+                .finally(() => {
+
+                })
+        },
         closeProfileImageDialog() {
             this.dialogValue = false
         },

@@ -6,6 +6,9 @@
         style="z-index: 1001 !important;"
     >
     <v-card>
+        <div class="loading text-center" v-if="loading">
+            <v-progress-circular color="grey" indeterminate :value="20" style="top: 45%;"></v-progress-circular>
+        </div>
         <v-card-title class="profile-image-title text-h6">
             프로필 사진 편집
         <v-spacer></v-spacer>
@@ -184,6 +187,7 @@ import { mapState } from "vuex";
 export default {
     data() {
         return {
+            loading: false,
             url: null,
             cropper: null,
             cropperFlag: false, 
@@ -232,7 +236,6 @@ export default {
     watch: {
         imageUrl(newImageData) {
             // 이미지가 변경될 때 실행되는 로직을 추가할 수 있습니다.
-            // TODO 로딩 추가
             this.url = newImageData 
             this.cropperFlag = true       
         },
@@ -256,9 +259,14 @@ export default {
     methods: {
         closeProfieImageEditDialog() {
             //this.url = null
-            this.profileImg = null
-            this.imagfeUrl = null
-            this.dialogValue = false
+            const isConfirmed = confirm('변경된 사항이 있습니다.\n변경사항이 저장되지 않을 수 있습니다.')
+            if(isConfirmed) {
+                this.profileImg = null
+                this.imagfeUrl = null
+                this.dialogValue = false
+            } else {
+                return
+            }
         },
         alertFile() {
             console.log(this.imageUrl)
@@ -283,7 +291,6 @@ export default {
                 this.minusBtnCheck = false
             }
             this.$refs.cropper.zoom(2 * this.zoomCount)
-            
         },
         /* 줌 인,아웃 */
         zoom(event) {
@@ -308,9 +315,6 @@ export default {
         value() {
 			const { coordinates, canvas, } = this.$refs.cropper.getResult()
 			this.coordinates = coordinates;
-			// You able to do different manipulations at a canvas
-			// but there we just get a cropped image, that can be used 
-			// as src for <img/> to preview result
 			this.image = canvas.toDataURL()
             this.profileImg = canvas.toDataURL()
             console.log(this.coordinates)
@@ -318,6 +322,7 @@ export default {
             console.log(this.$refs.cropper.getResult())
         },
         uploadImage() {
+            this.loading = true
             const { canvas } = this.$refs.cropper.getResult()
             if (canvas) {
 				let form = new FormData();
@@ -333,13 +338,15 @@ export default {
                         .then((res) => {
                             if(res.data.code === 0) {
                                 location.reload()
+                                this.loading = false
                             } else if(res.data.code === 1) {
                                 alert(res.data.message)
+                                this.loading = false
                             }             
                         })
                         .catch(() => {
-   
                             alert("서버와 연결이 불안합니다.")
+                            this.loading = false
                         })
                         .finally(() => {
 
@@ -351,11 +358,16 @@ export default {
 }
 </script>
 <style scoped>
+ .loading {
+    background-color: rgba(255, 255, 255, 0.6);
+    width: 100%; 
+    height: 100%;
+    z-index: 50; 
+    position: absolute;
+ }
   .cropper {
     max-height: 500px;
-		background: black;
-    /* display: block;
-    max-width: 100%; */
+	background: black;
  }
  .preview {
     border-radius: 50%;
