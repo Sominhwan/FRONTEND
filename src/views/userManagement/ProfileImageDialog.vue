@@ -39,9 +39,9 @@
                     <v-card flat class="mt-2">
                         <span class="upload-image-sub-title">업로드한 사진</span>
                             <v-row class="mt-1 scrollable-container mb-3">
-                                <v-col v-for="n in 5" :key="n" class="d-flex child-flex" cols="3">
+                                <v-col v-for="n in uploadImageList" :key="n.fileUrl" class="d-flex child-flex" cols="3">
                                     <v-img
-                                        :src="`https://picsum.photos/500/300?image=${n * 5 + 10}`"
+                                        :src="`${n.fileUrl}`"
                                         :lazy-src="`https://picsum.photos/10/6?image=${n * 5 + 10}`"
                                         aspect-ratio="1"
                                         height="130"
@@ -60,9 +60,9 @@
                     <v-card flat class="mt-2">
                         <span class="profile-image-sub-title">프로필 사진</span>
                             <v-row class="mt-1 scrollable-container mb-3">
-                                <v-col v-for="n in 3" :key="n" class="d-flex child-flex" cols="3">
+                                <v-col v-for="n in profileImageList" :key="n.fileUrl" class="d-flex child-flex" cols="3">
                                     <v-img
-                                        :src="`https://picsum.photos/500/300?image=${n * 5 + 10}`"
+                                        :src="`${n.fileUrl}`"
                                         :lazy-src="`https://picsum.photos/10/6?image=${n * 5 + 10}`"
                                         aspect-ratio="1"
                                         height="130"
@@ -95,6 +95,8 @@ export default {
             imageFile: null,
             imageUrl: null,
             loading: false,
+            uploadImageList: [],
+            profileImageList: []
         }
     },
     props: {
@@ -129,29 +131,29 @@ export default {
 
     },
     methods: {
-        // TODO 업로드 한 사진 불러오기
+        // 업로드 한 사진 불러오기
         uploadImage() {
             const userId = this.userInfoData.userId 
             getUploadImage(userId)
-                .then(() => {
-                    
+                .then((res) => {
+                    this.uploadImageList = res.data.data
                 })
                 .catch(() => {
-
+                    alert("서버와 연결이 불안합니다.")
                 })
                 .finally(() => {
 
                 })
         },
-        // TODO 프로필 사진 불러오기
+        // 프로필 사진 불러오기
         profileImage() {
             const userId = this.userInfoData.userId 
             getProfileImage(userId)
-                .then(() => {
-          
+                .then((res) => {
+                    this.profileImageList = res.data.data
                 })
                 .catch(() => {
-
+                    alert("서버와 연결이 불안합니다.")
                 })
                 .finally(() => {
 

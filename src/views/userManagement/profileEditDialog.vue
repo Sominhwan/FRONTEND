@@ -76,20 +76,6 @@
                         <div v-if="currentNicknameCheck" class="double-check-warn">현재 사용하고 있는 닉네임입니다.</div>
                     </v-card>
                 </v-col>
-                <v-col cols="12">
-                    <v-card flat>
-                        <v-card-title class="profile-sub-title text-h6">
-                            프로필 사진
-                            <v-spacer></v-spacer>
-                            <span text class="edit-btn">
-                                수정
-                            </span>
-                        </v-card-title>
-                        <v-card-text class="d-flex justify-center">
-                            <v-icon size="180">account_circle</v-icon>
-                        </v-card-text>
-                    </v-card>
-                </v-col>
             </v-row>           
         </v-container>
         <v-divider></v-divider>
