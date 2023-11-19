@@ -11,7 +11,10 @@ export default {
     return {
       text: 'Content for Tab 2' // Change this content for different tabs
     };
-}
+  },
+  mounted() {
+    alert('페이지1')
+  }
 };
 </script>
 <style>

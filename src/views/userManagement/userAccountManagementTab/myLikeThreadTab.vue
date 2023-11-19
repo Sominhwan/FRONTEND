@@ -11,6 +11,9 @@ export default {
     return {
       text: 'Content for Tab 3' // Change this content for different tabs
     };
+  },
+  mounted() {
+    alert('페이지2')
   }
 };
 </script>

@@ -105,7 +105,7 @@ export default {
  .profile {
     position: relative;
     display: inline;
-    padding: 150px;
+    padding: 130px;
  }
   .profile-col {
     top: 50%;
