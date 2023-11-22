@@ -73,14 +73,17 @@
                 </v-col>
               </v-row>
             </v-card>
+            <VChart class="chart pa-5" :option="option" autoresize/>
           </v-sheet>
         </v-col>
       </v-row>
-      <LoadingBar :loading="isLoading"></LoadingBar>
+      <LoadingBar :loading="isLoading" :passive="true"></LoadingBar>
   </v-card>
 </template>
 <script>
 import LoadingBar from '@/components/LoadingBar.vue';
+import 'echarts';
+import VChart from 'vue-echarts';
 import Datepicker from 'vue2-datepicker';
 import 'vue2-datepicker/index.css';
 export default {
@@ -95,7 +98,22 @@ export default {
         monthBeforeYear: false,
       },
       calendarIconColor: '#0000008A',
-      isLoading: false
+      isLoading: false,
+      option: {
+        xAxis: {
+          type: 'category',
+          data: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun']
+        },
+        yAxis: {
+          type: 'value'
+        },
+        series: [
+          {
+            data: [150, 230, 224, 218, 135, 147, 260],
+            type: 'line'
+          }
+        ]
+      }
     };
   },
   mounted () {
@@ -103,7 +121,8 @@ export default {
   },
   components: {
     Datepicker,
-    LoadingBar
+    LoadingBar,
+    VChart
   },
   computed: {
     formattedDate() {
@@ -210,5 +229,8 @@ export default {
     top: 80%; /* 원하는 위치로 조정 */
     left: 55%;
     z-index: 1100 !important; /* datepicker가 다른 엘리먼트 위에 나타나도록 설정 */
+  }
+  .chart {
+    height: 600px;
   }
 </style>

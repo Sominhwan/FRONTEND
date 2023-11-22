@@ -10,7 +10,6 @@
         </div>
         <div class="loading-text">지금 데이터를 불러오고 있습니다.</div>
     </div>
-
 </template>
 <script>
 export default {
