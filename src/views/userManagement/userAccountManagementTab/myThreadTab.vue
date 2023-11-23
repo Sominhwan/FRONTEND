@@ -73,7 +73,8 @@
                 </v-col>
               </v-row>
             </v-card>
-            <VChart class="chart pa-5" :option="option" autoresize/>
+            <div class="pt-5">{{ formattedNow }}</div>
+            <VChart class="chart" :option="option" autoresize/>
           </v-sheet>
         </v-col>
       </v-row>
@@ -100,23 +101,60 @@ export default {
       calendarIconColor: '#0000008A',
       isLoading: false,
       option: {
+        title: {
+          text: '',
+          textStyle: {
+            fontSize: 16,
+            color: '#333333'
+          }
+        },
         xAxis: {
           type: 'category',
-          data: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun']
+          data: ['00', '01', '02', '03', '04', '05', 
+                 '06', '07', '08', '09', '10', '11', 
+                 '12', '13', '14', '15', '16', '17', 
+                 '18', '19', '20', '21', '22', '23']
         },
         yAxis: {
           type: 'value'
         },
+        tooltip: {
+          trigger: 'axis', // 툴팁이 축에 따라 트리거되도록 설정
+          axisPointer: {
+       
+          },
+          backgroundColor: 'rgba(255, 255, 255, 1)', // 배경색 설정
+          borderColor: '#999', // 테두리 색상 설정
+          borderWidth: 1, // 테두리 두께 설정
+          textStyle: {
+            color: 'black' // 텍스트 색상 설정
+          },
+          formatter: function (params) {
+            var numericValue = parseInt(params[0].name, 10) + 1;
+            var formattedValue = ('0' + numericValue).slice(-2);
+            // 커스텀 포맷 함수
+            return '시간: ' + params[0].name + '~' + formattedValue  + '<br/>' +
+                      '<div class="content-wrapper">' +
+                    '<div class="vertical-line"></div>' +
+                    '<div class="text-content">' +  '값: ' + params[0].data + '</div>' +
+                  '</div>';
+
+          }
+        },
         series: [
           {
-            data: [150, 230, 224, 218, 135, 147, 260],
-            type: 'line'
+            data: ['10', '20', '30', '40', '50', '60', 
+                   '55', '40', '35', '30', '20', '25', 
+                   '30', '35', '50', '60', '70', '75', 
+                   '70', '60', '40', '30', '35', '40'],
+            type: 'line',
           }
         ]
       }
     };
   },
   mounted () {
+    this.option.title.text = this.formattedNow()
 
   },
   components: {
@@ -125,6 +163,17 @@ export default {
     VChart
   },
   computed: {
+    formattedNow() {
+      const today = new Date()
+      const year = today.getFullYear()
+      const month = ('0' + (today.getMonth() + 1)).slice(-2)
+      const day = ('0' + today.getDate()).slice(-2)  
+      const hours = ('0' + today.getHours()).slice(-2)
+      const minutes = ('0' + today.getMinutes()).slice(-2)
+      //const seconds = ('0' + today.getSeconds()).slice(-2)
+      const todayFormat = year + '.' + month  + '.' + day + '. ' + hours + ':' + minutes + ' 기준'
+      return todayFormat
+    },
     formattedDate() {
       const options = { year: 'numeric', month: '2-digit', day: '2-digit' };
       return this.selectedDate.toLocaleDateString('ko-KR', options);
@@ -232,5 +281,19 @@ export default {
   }
   .chart {
     height: 600px;
+  }
+  .content-wrapper {
+    display: flex;
+    align-items: center; /* 수직 정렬 설정 */
+  }
+  .vertical-line {
+    border-left: 4px solid green; /* 선의 색상 및 두께 설정 */
+    height: 20px; /* 선의 높이 설정 */
+    display: inline-block; /* inline-block으로 설정하여 텍스트와 같은 라인에 위치하도록 함 */
+    margin-right: 5px;
+  }
+  .text-content {
+    margin-top: 5px; /* Text의 위쪽 간격 조절 */
+    margin-bottom: 5px; /* Text의 아래쪽 간격 조절 */
   }
 </style>
