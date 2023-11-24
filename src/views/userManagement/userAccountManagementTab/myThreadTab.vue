@@ -73,8 +73,31 @@
                 </v-col>
               </v-row>
             </v-card>
-            <div class="pt-5">{{ formattedNow }}</div>
-            <VChart class="chart" :option="option" autoresize/>
+            <v-toolbar flat>
+                    <!-- fixed-tabs 탭 좌우로 균형 배분 -->
+                    <v-tabs v-model="tabs">
+                    <v-tabs-slider></v-tabs-slider>
+                    <v-tab class="chart-tab-text" @click="changeTab('tab1')">
+                        조회수
+                    </v-tab>
+                    <v-tab  class="chart-tab-text" @click="changeTab('tab2')">
+                        댓글 단 글
+                    </v-tab>
+                    <v-tab  class="chart-tab-text" @click="changeTab('tab3')">
+                        좋아요 한 글
+                    </v-tab>
+                    </v-tabs>
+            </v-toolbar>
+            <v-tabs-items v-model="tabs">
+                <component :is="currentTabComponent" v-if="!isLoading"></component>        
+            </v-tabs-items>
+
+            <div class="pt-5" style="display: flex; justify-content: space-between;">
+                <div>{{ formattedNow }}</div>
+                <div><span class="pr-2" style="color: #0064D1;">●</span>시간별 평균 조회수</div>
+            </div>
+            <VChart v-if="!isLoading" class="chart" :option="option" autoresize/>
+            <!-- TODO 하단 시간별 표 추가 -->
           </v-sheet>
         </v-col>
       </v-row>
@@ -83,6 +106,7 @@
 </template>
 <script>
 import LoadingBar from '@/components/LoadingBar.vue';
+import MyThreadViewChart from '@/views/userManagement/userAccountManagementTab/userStatsChartTab/MyThreadViewChart.vue';
 import 'echarts';
 import VChart from 'vue-echarts';
 import Datepicker from 'vue2-datepicker';
@@ -100,6 +124,13 @@ export default {
       },
       calendarIconColor: '#0000008A',
       isLoading: false,
+            /****************************************************** 탭 */
+      tabs: null,
+      currentTab: 'tab1',
+      tabComponents: {
+          tab1: MyThreadViewChart
+      },
+      /****************************************************** 차트 */
       option: {
         title: {
           text: '',
@@ -118,6 +149,17 @@ export default {
         yAxis: {
           type: 'value'
         },
+        grid: {
+          left: '0%',
+          right: '0%',
+          bottom: '0%',
+          containLabel: true
+        },
+        legend: {
+          textStyle: {
+            color: 'black'
+          }
+        },
         tooltip: {
           trigger: 'axis', // 툴팁이 축에 따라 트리거되도록 설정
           axisPointer: {
@@ -133,29 +175,27 @@ export default {
             var numericValue = parseInt(params[0].name, 10) + 1;
             var formattedValue = ('0' + numericValue).slice(-2);
             // 커스텀 포맷 함수
-            return '시간: ' + params[0].name + '~' + formattedValue  + '<br/>' +
-                      '<div class="content-wrapper">' +
-                    '<div class="vertical-line"></div>' +
-                    '<div class="text-content">' +  '값: ' + params[0].data + '</div>' +
-                  '</div>';
-
+            return  '<div class="tooltip-title">' + params[0].name + '~' + formattedValue  + '시</div>' +
+                    '<div class="content-wrapper">' +
+                    '<div class="tooltip-vertical-line"></div>' +
+                    '<div class="text-content">' +  '조회수 ' + '<span class="tooltip-counter">&nbsp;&nbsp;&nbsp;' + params[0].data + '</span>' + '</div>' +
+                    '</div>';
           }
         },
         series: [
           {
+            // name: '시간별 평균 조회수',
             data: ['10', '20', '30', '40', '50', '60', 
                    '55', '40', '35', '30', '20', '25', 
                    '30', '35', '50', '60', '70', '75', 
                    '70', '60', '40', '30', '35', '40'],
-            type: 'line',
+            type: 'line'
           }
         ]
       }
     };
   },
   mounted () {
-    this.option.title.text = this.formattedNow()
-
   },
   components: {
     Datepicker,
@@ -170,7 +210,6 @@ export default {
       const day = ('0' + today.getDate()).slice(-2)  
       const hours = ('0' + today.getHours()).slice(-2)
       const minutes = ('0' + today.getMinutes()).slice(-2)
-      //const seconds = ('0' + today.getSeconds()).slice(-2)
       const todayFormat = year + '.' + month  + '.' + day + '. ' + hours + ':' + minutes + ' 기준'
       return todayFormat
     },
@@ -183,6 +222,9 @@ export default {
       today.setHours(0, 0, 0, 0);
       return this.selectedDate.getTime() >= today.getTime();
     },
+    currentTabComponent() {
+        return this.tabComponents[this.currentTab];
+    }
   },
   methods: {
     decreaseDate() {
@@ -218,6 +260,9 @@ export default {
       const today = new Date();
       today.setHours(0, 0, 0, 0); // 현재 시간 이전의 모든 날짜는 비활성화
       return date.getTime() > today.getTime();
+    },
+    changeTab(tab) {
+        this.currentTab = tab;
     },
   },
 };
@@ -273,6 +318,10 @@ export default {
     padding-left: 5px;
     padding-top: 20px;
   }
+  .chart-tab-text:before {
+
+  }
+  
   .datepicker {
     position: absolute;
     top: 80%; /* 원하는 위치로 조정 */
@@ -280,20 +329,28 @@ export default {
     z-index: 1100 !important; /* datepicker가 다른 엘리먼트 위에 나타나도록 설정 */
   }
   .chart {
-    height: 600px;
+    height: 400px;
   }
   .content-wrapper {
     display: flex;
     align-items: center; /* 수직 정렬 설정 */
   }
-  .vertical-line {
-    border-left: 4px solid green; /* 선의 색상 및 두께 설정 */
+  .tooltip-vertical-line {
+    border-left: 3px solid #0064D1; /* 선의 색상 및 두께 설정 */
     height: 20px; /* 선의 높이 설정 */
     display: inline-block; /* inline-block으로 설정하여 텍스트와 같은 라인에 위치하도록 함 */
     margin-right: 5px;
   }
   .text-content {
-    margin-top: 5px; /* Text의 위쪽 간격 조절 */
-    margin-bottom: 5px; /* Text의 아래쪽 간격 조절 */
+    margin-top: 4px; /* Text의 위쪽 간격 조절 */
+    margin-bottom: 4px; /* Text의 아래쪽 간격 조절 */
+    color: grey;
+  }
+  .tooltip-title {
+    font-size: 13px;
+    font-weight: bold;
+  }
+  .tooltip-counter {
+    color: black;
   }
 </style>
