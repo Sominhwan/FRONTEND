@@ -1,10 +1,11 @@
 <template>
     <div>
         <div class="pt-5" style="display: flex; justify-content: space-between;">
-            <div>{{ formattedNow }}</div>
-            <div><span class="pr-2" style="color: #0064D1;">●</span>시간별 평균 조회수</div>
+            <div style="color: #333;">{{ formattedNow }}</div>
+            <div style="color: #333;"><span class="pr-2" style="color: #0064D1 !important;">●</span>시간별 평균 조회수</div>
         </div>
         <VChart class="chart" :option="option" autoresize/>
+        <v-btn @click="loadingChange()">안녕</v-btn>
     </div>
 </template>
 <script>
@@ -77,7 +78,12 @@ export default {
         ]
       }
     };
-  },   
+  },  
+  props: {
+
+  },
+  watch: {
+  },
   components: {
     VChart
   }, 
@@ -91,16 +97,23 @@ export default {
       const minutes = ('0' + today.getMinutes()).slice(-2)
       const todayFormat = year + '.' + month  + '.' + day + '. ' + hours + ':' + minutes + ' 기준'
       return todayFormat
+    },
+    loadingState: {
+      set(val) {
+          this.$emit('loadingState', val);
+      }
     }
   },
   methods: {
-
+    loadingChange() {
+      this.loadingState = true
+    }
   },
 }
 </script>
 <style>
   .chart {
-    height: 400px;
+    height: 370px;
   }
   .content-wrapper {
     display: flex;

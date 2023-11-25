@@ -75,23 +75,28 @@
             </v-card>
             <v-card class="tab-card mt-15" tile outlined>
               <!-- fixed-tabs 탭 좌우로 균형 배분 -->
-              <v-tabs active-class="active-tab black--text" grow slider-size="0" v-model="tabs" style="position: inherit !important;">
-   
-              <v-tab class="chart-tab-text" :ripple="false" @click="changeTab('tab1')">
-                  조회수
-              </v-tab>
-              <v-divider class="z-index-10" vertical></v-divider>
-              <v-tab  class="chart-tab-text" :ripple="false" @click="changeTab('tab2')">
-                  댓글 단 글
-              </v-tab>
-              <v-divider class="z-index-10" vertical></v-divider>
-              <v-tab  class="chart-tab-text" :ripple="false" @click="changeTab('tab3')">
-                  좋아요 한 글
-              </v-tab>
+              <v-tabs 
+                active-class="active-tab" 
+                class="inactive-tab"
+                grow slider-size="0" 
+                background-color="#F3F3F3"
+                v-model="tabs" 
+              >
+                <v-tab class="chart-tab-text" :ripple="false" @click="changeTab('tab1')">
+                    조회수
+                </v-tab>
+                <v-divider class="z-index-10" vertical></v-divider>
+                <v-tab  class="chart-tab-text" :ripple="false" @click="changeTab('tab2')">
+                    댓글 단 글
+                </v-tab>
+                <v-divider class="z-index-10" vertical></v-divider>
+                <v-tab  class="chart-tab-text" :ripple="false" @click="changeTab('tab3')">
+                    좋아요 한 글
+                </v-tab>
               </v-tabs>
             </v-card>
             <v-tabs-items v-model="tabs">
-                <component :is="currentTabComponent" v-if="!isLoading"></component>        
+                <component :is="currentTabComponent" v-if="!isLoading" @loadingState="loadingState()"></component>        
             </v-tabs-items>
             <!-- TODO 하단 시간별 표 추가 -->
           </v-sheet>
@@ -118,7 +123,7 @@ export default {
       },
       calendarIconColor: '#0000008A',
       isLoading: false,
-            /****************************************************** 탭 */
+      /****************************************************** 탭 */
       tabs: null,
       currentTab: 'tab1',
       tabComponents: {
@@ -184,6 +189,10 @@ export default {
     changeTab(tab) {
         this.currentTab = tab;
     },
+    // 로딩바 컨트롤러
+    loadingState() {
+      this.isLoading = true
+    }
   },
 };
 </script>
@@ -240,10 +249,14 @@ export default {
     padding-top: 20px;
   }
   .active-tab {
-    background-color: transparent;
+    background-color: white !important;
     border-color: transparent;
-    color: #fff;
+    color: black !important;
+    font-weight: bold;
     z-index: 10;
+  }
+  .inactive-tab {
+    font-weight: bold;
   }
   .datepicker {
     position: absolute;
