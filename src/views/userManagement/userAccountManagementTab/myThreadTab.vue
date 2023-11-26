@@ -44,7 +44,7 @@
               <v-spacer></v-spacer>
             </v-toolbar>
           </v-sheet>
-          <v-sheet height="1000">
+          <v-sheet height="1300">
             <v-card class="statistics-contontainer" flat rounded="0" elevation="0">
               <v-row>
                 <v-col>
@@ -96,7 +96,7 @@
               </v-tabs>
             </v-card>
             <v-tabs-items v-model="tabs">
-                <component :is="currentTabComponent" v-if="!isLoading" @loadingState="loadingState()"></component>        
+                <component :is="currentTabComponent" v-if="!isLoading" @loadingState="loadingState()" :selectedDate="selectedDate"></component>        
             </v-tabs-items>
             <!-- TODO 하단 시간별 표 추가 -->
           </v-sheet>
@@ -158,7 +158,8 @@ export default {
       const newDate = new Date(this.selectedDate);
       newDate.setDate(newDate.getDate() - 1);
       this.onDateSelected(newDate);
-      this.isLoading = true
+      this.selectedDate = newDate;
+      //this.isLoading = true
     },
     increaseDate() {
       this.openPicker = false
@@ -166,7 +167,8 @@ export default {
       const newDate = new Date(this.selectedDate);
       newDate.setDate(newDate.getDate() + 1);
       this.onDateSelected(newDate);
-      this.isLoading = false
+      this.selectedDate = newDate;
+      //this.isLoading = false
     },
     onDateSelected(date) {
       this.selectedDate = date
@@ -187,7 +189,7 @@ export default {
       return date.getTime() > today.getTime();
     },
     changeTab(tab) {
-        this.currentTab = tab;
+      this.currentTab = tab;
     },
     // 로딩바 컨트롤러
     loadingState() {

@@ -1,11 +1,37 @@
 <template>
     <div>
         <div class="pt-5" style="display: flex; justify-content: space-between;">
-            <div style="color: #333;">{{ formattedNow }}</div>
-            <div style="color: #333;"><span class="pr-2" style="color: #0064D1 !important;">●</span>시간별 평균 조회수</div>
+            <div style="color: #333;" v-if="nowDate">{{ formattedNow }}</div>
+            <div style="color: #333; margin-left: auto;"><span class="pr-2" style="color: #0064D1 !important;">●</span>시간별 평균 조회수</div>
         </div>
         <VChart class="chart" :option="option" autoresize/>
-        <v-btn @click="loadingChange()">안녕</v-btn>
+        <div class="pt-10" style="display: flex; justify-content: space-between;">
+          <table>
+              <thead>
+                  <th>시간대</th>
+                  <th>11월 24일</th>
+                  <th>11월 25일</th>
+              </thead>
+              <tbody>
+                  <tr v-for="line in timeView" :key="line">
+                      <td v-for="item in line" :key="item">{{ item }}</td>
+                  </tr>
+              </tbody>
+          </table>
+          <table>
+              <thead>
+                  <th>시간대</th>
+                  <th>11월 24일</th>
+                  <th>11월 25일</th>
+              </thead>
+              <tbody>
+                  <tr v-for="line in timeView2" :key="line">
+                      <td v-for="item in line" :key="item">{{ item }}</td>
+                  </tr>
+              </tbody>
+          </table>
+        </div>
+        <div>{{ selectedDate }}</div>
     </div>
 </template>
 <script>
@@ -14,6 +40,7 @@ import VChart from 'vue-echarts';
 export default {
     data() {
     return {
+      nowDate: true,
       /****************************************************** 차트 */
       option: {
         title: {
@@ -76,13 +103,56 @@ export default {
             type: 'line'
           }
         ]
-      }
+      },
+      timeView:[
+          ['00시',1,2],
+          ['01시',2,1],
+          ['02시',2,1],
+          ['03시',2,1],
+          ['04시',2,1],
+          ['05시',2,1],
+          ['06시',2,1],
+          ['07시',2,1],
+          ['08시',2,1],
+          ['09시',2,1],
+          ['10시',2,1],
+          ['11시',2,1]
+      ],
+      timeView2:[
+          ['12시',1,2],
+          ['13시',2,1],
+          ['14시',2,1],
+          ['15시',2,1],
+          ['16시',2,1],
+          ['17시',2,1],
+          ['18시',2,1],
+          ['19시',2,1],
+          ['20시',2,1],
+          ['21시',2,1],
+          ['22시',2,1],
+          ['23시',2,1]
+      ]    
     };
   },  
   props: {
-
+    selectedDate: {
+      type: Date,
+      default: ''
+    }
+  },
+  mounted() {
+    this.getThreadViewChartData(this.formattedSelectDate(this.selectedDate))
   },
   watch: {
+    selectedDate() {
+      if(this.formattedSelectDate(this.selectedDate) !== this.formattedSelectDate(new Date())) {
+        this.nowDate = false
+      } else {
+        this.nowDate = true
+      }
+      const selectedDate = this.formattedSelectDate(this.selectedDate)
+      this.getThreadViewChartData(selectedDate)
+    }
   },
   components: {
     VChart
@@ -107,13 +177,22 @@ export default {
   methods: {
     loadingChange() {
       this.loadingState = true
+    },
+    formattedSelectDate(date) {
+      const year = JSON.stringify(date.getFullYear());
+      const month = JSON.stringify(date.getMonth() + 1).padStart(2, '0');
+      const day = JSON.stringify(date.getDate()).padStart(2, '0');
+      return `${year}${month}${day}`
+    },
+    getThreadViewChartData(data) {
+      console.log(data)
     }
   },
 }
 </script>
-<style>
+<style scoped>
   .chart {
-    height: 370px;
+    height: 350px;
   }
   .content-wrapper {
     display: flex;
@@ -136,5 +215,24 @@ export default {
   }
   .tooltip-counter {
     color: black;
+  }
+  table{
+    width: 49%;
+    text-align : right;
+    border-collapse: collapse;
+  }
+  table th{
+    padding : 5px;
+    border-bottom: 1px solid  #303030;
+    font-weight: 300;
+    font-size: 13px;
+  }
+  table td{
+    padding : 8px;
+    border-bottom: 1px solid  #eee;
+    font-size: 15px;
+  }
+  table tr:nth-of-type(even){
+    background-color: rgba(190, 190, 190, 0.1);
   }
 </style>

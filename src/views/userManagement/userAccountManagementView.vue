@@ -4,7 +4,7 @@
         <v-row class="profile" justify="center" align="center">
             <v-col class="profile-col" cols="8">
                 <v-list class="profile-list" three-line>
-                    <v-card class="mx-auto" height="1500">
+                    <v-card class="mx-auto" height="1800">
                     <v-list-item>
                         <v-list-item-action>
                             <v-icon v-if="userInfoData.profileUrl == null" size="100">account_circle</v-icon>
