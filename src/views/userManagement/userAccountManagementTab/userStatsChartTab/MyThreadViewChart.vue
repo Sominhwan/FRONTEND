@@ -8,7 +8,7 @@
         <div class="pt-10" style="display: flex; justify-content: space-between;">
           <table>
               <thead>
-                  <th>시간대</th>
+                  <th style="width: 25%;">시간대</th>
                   <th>11월 24일</th>
                   <th>11월 25일</th>
               </thead>
@@ -20,7 +20,7 @@
           </table>
           <table>
               <thead>
-                  <th>시간대</th>
+                  <th style="width: 25%;">시간대</th>
                   <th>11월 24일</th>
                   <th>11월 25일</th>
               </thead>
@@ -35,8 +35,10 @@
     </div>
 </template>
 <script>
+import { threadView } from "@/api/userManagement/myThreadTab.js";
 import 'echarts';
 import VChart from 'vue-echarts';
+import { mapState } from "vuex";
 export default {
     data() {
     return {
@@ -141,6 +143,11 @@ export default {
     }
   },
   mounted() {
+    if(this.formattedSelectDate(this.selectedDate) !== this.formattedSelectDate(new Date())) {
+      this.nowDate = false
+    } else {
+      this.nowDate = true
+    }
     this.getThreadViewChartData(this.formattedSelectDate(this.selectedDate))
   },
   watch: {
@@ -158,6 +165,8 @@ export default {
     VChart
   }, 
   computed: {
+    // 회원정보
+    ...mapState(['userInfoData']),
     formattedNow() {
       const today = new Date()
       const year = today.getFullYear()
@@ -185,7 +194,18 @@ export default {
       return `${year}${month}${day}`
     },
     getThreadViewChartData(data) {
-      console.log(data)
+      const inserDate = data
+      const param = { 'userId': this.userInfoData.userId, 'insertDate': inserDate }
+      threadView(param)
+        .then((res) => {
+          console.log(res)
+        })
+        .catch(() => {
+            alert("서버와 연결이 불안합니다.")
+        })
+        .finally(() => {
+
+        })
     }
   },
 }
@@ -218,7 +238,7 @@ export default {
   }
   table{
     width: 49%;
-    text-align : right;
+    text-align : center;
     border-collapse: collapse;
   }
   table th{
