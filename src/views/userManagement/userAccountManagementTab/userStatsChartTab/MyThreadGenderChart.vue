@@ -42,65 +42,60 @@ export default {
       nowDate: true,
       /****************************************************** 차트 */
       option: {
-        title: {
-          text: '',
-          textStyle: {
-            fontSize: 16,
-            color: '#333333'
-          }
-        },
-        xAxis: {
-          type: 'category',
-          data: ['00', '01', '02', '03', '04', '05', 
-                 '06', '07', '08', '09', '10', '11', 
-                 '12', '13', '14', '15', '16', '17', 
-                 '18', '19', '20', '21', '22', '23']
-        },
-        yAxis: {
-          type: 'value'
-        },
-        grid: {
-          left: '0%',
-          right: '0%',
-          bottom: '0%',
-          containLabel: true
+        tooltip: {
+            trigger: 'axis',
+            axisPointer: {
+            type: 'shadow'
+            }
         },
         legend: {
-          textStyle: {
-            color: 'black'
-          }
+            data: ['남자', '여자']
         },
-        tooltip: {
-          trigger: 'axis', // 툴팁이 축에 따라 트리거되도록 설정
-          axisPointer: {
-       
-          },
-          backgroundColor: 'rgba(255, 255, 255, 1)', // 배경색 설정
-          borderColor: '#999', // 테두리 색상 설정
-          borderWidth: 1, // 테두리 두께 설정
-          textStyle: {
-            color: 'black' // 텍스트 색상 설정
-          },
-          formatter: function (params) {
-            var numericValue = parseInt(params[0].name, 10) + 1;
-            var formattedValue = ('0' + numericValue).slice(-2);
-            // 커스텀 포맷 함수
-            return  '<div class="tooltip-title">' + params[0].name + '~' + formattedValue  + '시</div>' +
-                    '<div class="content-wrapper">' +
-                    '<div class="tooltip-vertical-line"></div>' +
-                    '<div class="text-content">' +  '조회수 ' + '<span class="tooltip-counter">&nbsp;&nbsp;&nbsp;' + params[0].data + '</span>' + '</div>' +
-                    '</div>';
-          }
+        toolbox: {
+            show: true,
+            orient: 'vertical',
+            left: 'right',
+            top: 'center',
+            feature: {
+                mark: { show: true },
+                dataView: { show: true, readOnly: false },
+                magicType: { show: true, type: ['line', 'bar', 'stack'] },
+                restore: { show: true },
+                saveAsImage: { show: true }
+            }
         },
+        xAxis: [
+            {
+                type: 'category',
+                axisTick: { show: false },
+                data: ['2012', '2013', '2014', '2015', '2016']
+            }
+        ],
+        yAxis: [
+            {
+                type: 'value'
+            }
+        ],
         series: [
-          {
-            // name: '시간별 평균 조회수',
-            data: ['10', '20', '30', '40', '50', '60', 
-                   '55', '40', '35', '30', '20', '25', 
-                   '30', '35', '50', '60', '70', '75', 
-                   '70', '60', '40', '30', '35', '40'],
-            type: 'line'
-          }
+            {
+                name: '남자',
+                type: 'bar',
+                barGap: 0,
+                label: '남자',
+                emphasis: {
+                    focus: 'series'
+                },
+                data: [320, 332, 301, 334, 390]
+            },
+            {
+                name: '여자',
+                type: 'bar',
+                label: '남자',
+                emphasis: {
+                    focus: 'series'
+                },
+                data: [220, 182, 191, 234, 290]
+            }
         ]
       },
       timeView:[
@@ -195,7 +190,7 @@ export default {
   },
 }
 </script>
-<style>
+<style scoped>
   .chart {
     height: 350px;
   }

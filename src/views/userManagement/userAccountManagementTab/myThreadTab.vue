@@ -50,25 +50,25 @@
                 <v-col>
                   <v-card class="write-text" flat rounded="0">
                     <span class="count-title" style="font-size: 16px;">글쓴 횟수</span>
-                    <div class="count-text">10</div>
+                    <div class="count-text">{{ writeCount }}</div>
                   </v-card>
                 </v-col>
                 <v-col>
                   <v-card class="views-text" flat rounded="0">
                     <span class="count-title" style="font-size: 16px;">조회수</span>
-                    <div class="count-text">0</div>
+                    <div class="count-text">{{ viewCount }}</div>
                   </v-card>
                 </v-col>
                 <v-col>
                   <v-card class="like-text" flat rounded="0">
                     <span class="count-title" style="font-size: 16px;">좋아요 수</span>
-                    <div class="count-text">0</div>
+                    <div class="count-text">{{ likeCount }}</div>
                   </v-card>
                 </v-col>
                 <v-col>
                   <v-card class="comment-text" flat rounded="0">
                     <span class="count-title" style="font-size: 16px;">댓글 수</span>
-                    <div class="count-text">0</div>
+                    <div class="count-text">{{ commentCount }}</div>
                   </v-card>
                 </v-col>
               </v-row>
@@ -106,10 +106,13 @@
   </v-card>
 </template>
 <script>
+import { threadView } from "@/api/userManagement/myThreadTab.js";
 import LoadingBar from '@/components/LoadingBar.vue';
+import MyThreadGenderChart from '@/views/userManagement/userAccountManagementTab/userStatsChartTab/MyThreadGenderChart.vue';
 import MyThreadViewChart from '@/views/userManagement/userAccountManagementTab/userStatsChartTab/MyThreadViewChart.vue';
 import Datepicker from 'vue2-datepicker';
 import 'vue2-datepicker/index.css';
+import { mapState } from "vuex";
 export default {
   data() {
     return {
@@ -123,21 +126,31 @@ export default {
       },
       calendarIconColor: '#0000008A',
       isLoading: false,
+      /****************************************************** 작성글 횟수 */
+      writeCount: 0,
+      viewCount: 0,
+      likeCount: 0,
+      commentCount: 0,
       /****************************************************** 탭 */
       tabs: null,
       currentTab: 'tab1',
       tabComponents: {
-          tab1: MyThreadViewChart
+          tab1: MyThreadViewChart,
+          tab2: MyThreadGenderChart
       }
     };
   },
   mounted () {
+    console.log(this.selectedDate)
+    this.getThreadViewChartData(this.formattedSelectDate(this.selectedDate))
   },
   components: {
     Datepicker,
     LoadingBar,
   },
   computed: {
+    // 회원정보
+    ...mapState(['userInfoData']),
     formattedDate() {
       const options = { year: 'numeric', month: '2-digit', day: '2-digit' };
       return this.selectedDate.toLocaleDateString('ko-KR', options);
@@ -152,6 +165,12 @@ export default {
     }
   },
   methods: {
+    formattedSelectDate(date) {
+      const year = JSON.stringify(date.getFullYear());
+      const month = JSON.stringify(date.getMonth() + 1).padStart(2, '0');
+      const day = JSON.stringify(date.getDate()).padStart(2, '0');
+      return `${year}${month}${day}`
+    },
     decreaseDate() {
       this.openPicker = false
       this.calendarIconColor = '#0000008A'
@@ -159,6 +178,7 @@ export default {
       newDate.setDate(newDate.getDate() - 1);
       this.onDateSelected(newDate);
       this.selectedDate = newDate;
+      this.getThreadViewChartData(this.formattedSelectDate(this.selectedDate))
       //this.isLoading = true
     },
     increaseDate() {
@@ -168,12 +188,14 @@ export default {
       newDate.setDate(newDate.getDate() + 1);
       this.onDateSelected(newDate);
       this.selectedDate = newDate;
+      this.getThreadViewChartData(this.formattedSelectDate(this.selectedDate))
       //this.isLoading = false
     },
     onDateSelected(date) {
       this.selectedDate = date
       this.openPicker = false
       this.calendarIconColor = '#0000008A'
+      this.getThreadViewChartData(this.formattedSelectDate(this.selectedDate))
     },
     openDatePicker() {
       this.openPicker = !this.openPicker
@@ -194,6 +216,23 @@ export default {
     // 로딩바 컨트롤러
     loadingState() {
       this.isLoading = true
+    },
+    getThreadViewChartData(data) {
+      const inserDate = data
+      const param = { 'userId': this.userInfoData.userId, 'insertDate': inserDate }
+      threadView(param)
+        .then((res) => {
+          this.writeCount = res.data.data.writeCount
+          this.viewCount = res.data.data.viewCount
+          this.likeCount = res.data.data.likeCount
+          this.commentCount = res.data.data.commentCount
+        })
+        .catch(() => {
+            alert("서버와 연결이 불안합니다.")
+        })
+        .finally(() => {
+
+        })
     }
   },
 };
