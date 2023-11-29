@@ -1,5 +1,5 @@
 <template>
-  <v-card class="my-thread-container"> 
+  <v-card class="my-thread-container" flat> 
       <v-row class="fill-height">
         <v-col>
           <v-sheet height="80">
@@ -87,7 +87,7 @@
                 </v-tab>
                 <v-divider class="z-index-10" vertical></v-divider>
                 <v-tab  class="chart-tab-text" :ripple="false" @click="changeTab('tab2')">
-                    댓글 단 글
+                    성별, 연령별 분포
                 </v-tab>
                 <v-divider class="z-index-10" vertical></v-divider>
                 <v-tab  class="chart-tab-text" :ripple="false" @click="changeTab('tab3')">

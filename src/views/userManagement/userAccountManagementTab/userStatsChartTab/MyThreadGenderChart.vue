@@ -2,7 +2,10 @@
     <div>
         <div class="pt-5" style="display: flex; justify-content: space-between;">
             <div style="color: #333;" v-if="nowDate">{{ formattedNow }}</div>
-            <div style="color: #333; margin-left: auto;"><span class="pr-2" style="color: #0064D1 !important;">●</span>시간별 평균 조회수</div>
+            <div style="display: flex;">
+            <div class="pr-3" style="color: #333; margin-left: auto;"><span class="pr-2" style="color: #0064D1 !important;">●</span>남자</div>
+            <div style="color: #333; margin-left: auto;"><span class="pr-2" style="color: #91CC75 !important;">●</span>여자</div>
+            </div>
         </div>
         <VChart class="chart" :option="option" autoresize/>
         <div class="pt-10" style="display: flex; justify-content: space-between;">
@@ -43,88 +46,76 @@ export default {
       /****************************************************** 차트 */
       option: {
         tooltip: {
-            trigger: 'axis',
-            axisPointer: {
+          trigger: 'axis',
+          axisPointer: {
             type: 'shadow'
-            }
+          }
         },
         legend: {
-            data: ['남자', '여자']
+            data: []
         },
         toolbox: {
-            show: true,
-            orient: 'vertical',
-            left: 'right',
-            top: 'center',
-            feature: {
-                mark: { show: true },
-                dataView: { show: true, readOnly: false },
-                magicType: { show: true, type: ['line', 'bar', 'stack'] },
-                restore: { show: true },
-                saveAsImage: { show: true }
-            }
+          show: false,
+          orient: 'vertical',
+          left: 'right',
+          top: 'center',
+          feature: {
+            mark: { show: true },
+            dataView: { show: true, readOnly: false },
+            magicType: { show: true, type: ['line', 'bar', 'stack'] },
+            restore: { show: true },
+            saveAsImage: { show: true }
+          }
         },
         xAxis: [
-            {
-                type: 'category',
-                axisTick: { show: false },
-                data: ['2012', '2013', '2014', '2015', '2016']
-            }
+          {
+            type: 'category',
+            axisTick: { show: false },
+            data: ['0~12', '13~18', '19~24', '25~29', '30~34', '35~39', '40~44', '45~49', '50~54', '55~59', '60~64', '65~']
+          }
         ],
         yAxis: [
-            {
-                type: 'value'
-            }
+          {
+            type: 'value'
+          }
         ],
         series: [
-            {
-                name: '남자',
-                type: 'bar',
-                barGap: 0,
-                label: '남자',
-                emphasis: {
-                    focus: 'series'
-                },
-                data: [320, 332, 301, 334, 390]
+          {
+            name: '남자',
+            type: 'bar',
+            barGap: 0,
+            label: '남자',
+            emphasis: {
+              focus: 'series'
             },
-            {
-                name: '여자',
-                type: 'bar',
-                label: '남자',
-                emphasis: {
-                    focus: 'series'
-                },
-                data: [220, 182, 191, 234, 290]
-            }
+            data: [320, 332, 301, 334, 390, 250, 300, 400 , 124, 128, 383, 250]
+          },
+          {
+            name: '여자',
+            type: 'bar',
+            label: '남자',
+            emphasis: {
+              focus: 'series'
+            },
+            data: [220, 182, 191, 234, 290, 120, 159, 240, 80, 300, 250, 128]
+          }
         ]
       },
       timeView:[
-          ['00시',1,2],
-          ['01시',2,1],
-          ['02시',2,1],
-          ['03시',2,1],
-          ['04시',2,1],
-          ['05시',2,1],
-          ['06시',2,1],
-          ['07시',2,1],
-          ['08시',2,1],
-          ['09시',2,1],
-          ['10시',2,1],
-          ['11시',2,1]
+          ['0~12세',1,2],
+          ['13~18세',2,1],
+          ['19~24세',2,1],
+          ['25~29세',2,1],
+          ['30~34세',2,1],
+          ['35~39세',2,1],
       ],
       timeView2:[
-          ['12시',1,2],
-          ['13시',2,1],
-          ['14시',2,1],
-          ['15시',2,1],
-          ['16시',2,1],
-          ['17시',2,1],
-          ['18시',2,1],
-          ['19시',2,1],
-          ['20시',2,1],
-          ['21시',2,1],
-          ['22시',2,1],
-          ['23시',2,1]
+          ['40~44세',1,2],
+          ['45~49세',2,1],
+          ['50~54세',2,1],
+          ['55~59세',2,1],
+          ['60~64세',2,1],
+          ['65세~',2,1]
       ]    
     };
   },  
