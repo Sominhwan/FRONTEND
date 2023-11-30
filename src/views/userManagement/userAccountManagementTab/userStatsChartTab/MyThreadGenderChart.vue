@@ -2,7 +2,8 @@
     <div>
         <div class="pt-5" style="display: flex; justify-content: space-between;">
             <div style="color: #333;" v-if="nowDate">{{ formattedNow }}</div>
-            <div style="display: flex;">
+            <div v-else></div>
+            <div style="display: flex; align-items: center;">
             <div class="pr-3" style="color: #333; margin-left: auto;"><span class="pr-2" style="color: #0064D1 !important;">●</span>남자</div>
             <div style="color: #333; margin-left: auto;"><span class="pr-2" style="color: #91CC75 !important;">●</span>여자</div>
             </div>
