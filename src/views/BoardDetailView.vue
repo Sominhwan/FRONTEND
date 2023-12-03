@@ -56,7 +56,7 @@
                                     </v-list-item-avatar>
                                     <v-list-item-content>
                                         <v-list-title-title>{{ board_detail_list.writer }}</v-list-title-title>
-                                        <v-list-item-subtitle style="position: relative; top: 2px;">{{ board_detail_list.insertDate }}</v-list-item-subtitle>
+                                        <v-list-item-subtitle style="position: relative; top: 2px;">{{ board_detail_list.createAt }}</v-list-item-subtitle>
                                     </v-list-item-content>
                                 </v-list-item>
                             </v-list>
@@ -80,7 +80,7 @@
                         </div>
                     </v-col>
                     <v-col cols="12" sm="12" md="13">
-                        <v-subheader style="margin-left: 3px; margin-bottom: 5px; font-weight: bold;">댓글 <span style="color: #2889f1;">{{ board_detail_list.commentCount }}</span> 개</v-subheader>
+                        <v-subheader style="margin-left: 3px; margin-bottom: 5px; font-weight: bold;">댓글 <span style="color: #2889f1;">{{ commentTotal }}</span> 개</v-subheader>
                         <v-row>
                             <v-textarea
                                 class="comment-input rounded-0"
@@ -109,7 +109,7 @@
                         </v-row>
                     </v-col> 
                     <!-- 댓글 리스트 -->
-                    <v-list three-line v-if="commentTotal !== ''">
+                    <v-list three-line v-if="commentTotal !== 0">
                         <v-card max-height="1000" flat style="margin-bottom: 150px;">
                         <template v-for="(comment_list, index) in comment_list">            
                             <v-list-item v-if="comment_list" :key="comment_list.writer">
@@ -175,7 +175,7 @@
 </template>
 
 <script>
-import { selectNoticeBoardDetail, selectNoticeBoardDetailList } from "@/api/noticeBoard/noticeBoard";
+import { insertNoticeComment, selectNoticeBoardDetail, selectNoticeBoardDetailList, selectNoticeComment } from "@/api/noticeBoard/noticeBoard";
 import AuthDialog from '@/components/AuthDialog';
 import { mapState } from "vuex";
 export default {
@@ -234,7 +234,7 @@ export default {
             'Fourth',
             'Fifth',
           ],
-          commentTotal: '2',
+          commentTotal: '',
           comment_list: [
               {
                   writer: '소민환',
@@ -247,6 +247,7 @@ export default {
                   insert_date: '2023.08.20'
               },
           ],
+          comment: null, // 댓글 내용
           cruds: [
               ['Create', 'mdi-plus-outline'],
               ['Read', 'mdi-file-outline'],
@@ -285,9 +286,9 @@ export default {
       changeLikeBtn() {
           this.like_btn =  !this.like_btn;
       },
-      select() {
+      async select() {
           const data = { id: this.$route.query.board }
-          selectNoticeBoardDetail(data)
+          await selectNoticeBoardDetail(data)
               .then((res) => {
                 this.loading = false,
                 this.board_category = '[공지사항]',
@@ -299,16 +300,11 @@ export default {
               .finally(() => {
 
               })
-      },
-      noticeBoardList() {
-        const data = { id: this.$route.query.board }
-        selectNoticeBoardDetailList(data)
-              .then((res) => {
-                console.log(res.data);
-                  // this.loading = false,
-                  // this.board_category = '[공지사항]',
-                  // this.board_detail_list = res.data.data[0]
-                  // console.log(res.data.data[0])
+          const param = {'noticeId': this.$route.query.board}
+          await selectNoticeComment(param)
+            .then((res) => {
+                console.log(res.data.data)
+                this.commentTotal = res.data.data.length
               })
               .catch((error) => {
                 console.log(error)
@@ -317,12 +313,44 @@ export default {
 
               })
       },
+      noticeBoardList() {
+        const data = { id: this.$route.query.board }
+        selectNoticeBoardDetailList(data)
+          .then((res) => {
+            console.log(res.data);
+              // this.loading = false,
+              // this.board_category = '[공지사항]',
+              // this.board_detail_list = res.data.data[0]
+              // console.log(res.data.data[0])
+          })
+          .catch((error) => {
+            console.log(error)
+          })
+          .finally(() => {
+
+          })
+      },
       saveComment() {
         if(!this.authState) { // 비로그인 상태시
           document.documentElement.style.overflow = 'hidden'
           this.authDialog = true
         } else { // 로그인 상태시
-          alert('로그인중')
+          if(this.comment === '' || this.comment === null) {
+            alert('댓글을 입력해주세요')
+          } else {
+            const data = {'comment': this.comment, 'noticeId': this.$route.query.board, 'userId': this.userInfoData.userId }
+            insertNoticeComment(data)
+              .then((res) => {
+                console.log(res.data.code)
+                this.comment = null
+              })
+              .catch((error) => {
+                console.log(error)
+              })
+              .finally(() => {
+
+              })
+          }
         }
       },
 

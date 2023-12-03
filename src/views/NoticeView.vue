@@ -59,7 +59,7 @@
               </v-list-item-avatar>
               <v-list-item-content>
                 <v-list-item-title><span style="color: #2889f1; font-weight: bold; font-size: 16px; margin-right: 10px;">[진행 이벤트]</span><span class="notice-title" @click="$router.push({name: 'boardView', query: { notice_board: 1, board: notice_board_list.noticeId }})">{{ notice_board_list.title }}</span></v-list-item-title>
-                <v-list-item-subtitle><span style="font-size: 14px; margin-right: 30px;">{{ notice_board_list.writer }}</span>{{ notice_board_list.insertDate }}</v-list-item-subtitle>
+                <v-list-item-subtitle><span style="font-size: 14px; margin-right: 30px;">{{ notice_board_list.writer }}</span>{{ notice_board_list.createAt }}</v-list-item-subtitle>
               </v-list-item-content>  
                 <v-icon color="orange lighten-1" style="margin-right: 20px;">mdi-information</v-icon>
                 <v-icon color="primary" style="margin-right: 20px;">mdi-thumb-up</v-icon>
