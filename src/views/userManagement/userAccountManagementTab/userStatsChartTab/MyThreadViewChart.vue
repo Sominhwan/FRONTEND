@@ -196,7 +196,7 @@ export default {
   },
 }
 </script>
-<style scoped>
+<style>
   .chart {
     height: 350px;
   }

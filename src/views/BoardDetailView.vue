@@ -1,5 +1,6 @@
 <template>
     <v-app>
+        <SnackBar :snackbarValue="snackbarValue" :snackbarContent="snackbarContent"/>
         <!-- scroll to top 버튼 -->
         <v-btn
           v-scroll="onScroll"
@@ -100,6 +101,7 @@
                                 clearable
                                 clear-icon="mdi-close-circle"
                                 background-color="#F9F9F9"
+                                @keydown.enter="saveComment()"
                             >
                             </v-textarea>
                             <v-btn class="comment-btn rounded-0" @click="saveComment()" text color="black" outlined style="height: 130px; left: 1px;" v-bind="attrs" v-on="on">
@@ -111,20 +113,41 @@
                     <!-- 댓글 리스트 -->
                     <v-list three-line v-if="commentTotal !== 0">
                         <v-card max-height="1000" flat style="margin-bottom: 150px;">
-                        <template v-for="(comment_list, index) in comment_list">            
-                            <v-list-item v-if="comment_list" :key="comment_list.writer">
+                        <template v-for="(commentList, index) in commentList">            
+                            <v-list-item v-if="commentList" :key="commentList.nickname">
                             <v-list-item-avatar>
-                                <v-img :src="require('@/assets/boardDetail/igns_logo.png')" style="border: 1px solid #eee;"></v-img>
+                                <v-img :src="commentList.profileUrl" style="border: 1px solid #eee;"></v-img>
                             </v-list-item-avatar>
                             <v-list-item-content>
-                                <v-list-title-title>{{ comment_list.writer }} <span style="color: grey;">(192.138.08.2)</span></v-list-title-title>
+                                <v-list-title-title>{{ commentList.nickname }}</v-list-title-title>
                                 <br>
-                                <v-list-title-sub-title style="padding-bottom: 3px;">{{ comment_list.comment }}</v-list-title-sub-title>
-                                <v-list-item-subtitle>{{ comment_list.insert_date }}</v-list-item-subtitle>
+                                <v-list-title-sub-title style="padding-bottom: 3px;">{{ commentList.comment }}</v-list-title-sub-title>
+                                <v-list-item-subtitle>{{ commentList.createAt }}</v-list-item-subtitle>
                             </v-list-item-content>
-                            
+                            <v-list-item-action>
+                              <v-menu v-if="commentList.userId === userInfoData.userId" offset-y left content-class="elevation-0">
+                                <template v-slot:activator="{ on, attrs }">
+                                    <v-btn icon v-bind="attrs" v-on="on">
+                                        <v-icon color="grey">mdi-dots-vertical</v-icon>
+                                    </v-btn> 
+                                </template>
+                                <v-card style="border: 1px solid #CCCCCC;" width="90px">                  
+                                  <v-list-item  class="comment-update-btn">
+                                      <v-list-item-content>
+                                          <v-list-item-title style="text-align: center;">수정</v-list-item-title>
+                                      </v-list-item-content>
+                                  </v-list-item>
+                                  <v-divider/>
+                                  <v-list-item class="comment-delete-btn" @click="deleteComment(commentList.noticeCommentId)">
+                                      <v-list-item-content>
+                                          <v-list-item-title style="text-align: center;">삭제</v-list-item-title>
+                                      </v-list-item-content>
+                                  </v-list-item> 
+                                </v-card>
+                              </v-menu>
+                            </v-list-item-action>
                             </v-list-item>
-                            <v-divider v-if="comment_list" :key="index"></v-divider>
+                            <v-divider v-if="commentList" :key="index"></v-divider>
                         </template>
                     </v-card>
                     </v-list>
@@ -175,8 +198,9 @@
 </template>
 
 <script>
-import { insertNoticeComment, selectNoticeBoardDetail, selectNoticeBoardDetailList, selectNoticeComment } from "@/api/noticeBoard/noticeBoard";
+import { deleteNoticeComment, insertNoticeComment, selectNoticeBoardDetail, selectNoticeBoardDetailList, selectNoticeComment } from "@/api/noticeBoard/noticeBoard";
 import AuthDialog from '@/components/AuthDialog';
+import SnackBar from '@/components/snackbar/SnackBar.vue';
 import { mapState } from "vuex";
 export default {
     data () {
@@ -235,18 +259,7 @@ export default {
             'Fifth',
           ],
           commentTotal: '',
-          comment_list: [
-              {
-                  writer: '소민환',
-                  comment: '안녕하세요',
-                  insert_date: '2023.08.20'
-              },
-              {
-                  writer: '소민환',
-                  comment: '안녕하세요',
-                  insert_date: '2023.08.20'
-              },
-          ],
+          commentList: [],
           comment: null, // 댓글 내용
           cruds: [
               ['Create', 'mdi-plus-outline'],
@@ -257,11 +270,14 @@ export default {
           model: 0, // 하단 공지사항 리스트
           notice_list: [
             '1','2','3'
-          ]
+          ],
+          snackbarValue: false,
+          snackbarContent: '',
         }
     },
     components: {
-      AuthDialog
+      AuthDialog,
+      SnackBar
     },
     computed: {
       ...mapState(['userInfoData', 'authState']),
@@ -270,7 +286,8 @@ export default {
         
     },
     mounted() {
-      this.select()
+      this.selectNoticeBoardList()
+      this.selectNoticeCommentList()
         //this.noticeBoardList()
     },
     methods: {
@@ -286,7 +303,7 @@ export default {
       changeLikeBtn() {
           this.like_btn =  !this.like_btn;
       },
-      async select() {
+      async selectNoticeBoardList() {
           const data = { id: this.$route.query.board }
           await selectNoticeBoardDetail(data)
               .then((res) => {
@@ -300,11 +317,15 @@ export default {
               .finally(() => {
 
               })
+      },
+      async selectNoticeCommentList() {
           const param = {'noticeId': this.$route.query.board}
           await selectNoticeComment(param)
             .then((res) => {
                 console.log(res.data.data)
                 this.commentTotal = res.data.data.length
+                this.commentList = res.data.data
+                this.snackbarValue = false
               })
               .catch((error) => {
                 console.log(error)
@@ -343,6 +364,7 @@ export default {
               .then((res) => {
                 console.log(res.data.code)
                 this.comment = null
+                this.selectNoticeCommentList()
               })
               .catch((error) => {
                 console.log(error)
@@ -353,12 +375,30 @@ export default {
           }
         }
       },
+      deleteComment(val) {
+        const data = { 'noticeCommentId': val }
+        const isConfirmed = confirm('댓글을 삭제하시겠습니까?')
+        if(isConfirmed) {
+          deleteNoticeComment(data)
+            .then((res) => {
+              this.snackbarValue = true
+              this.snackbarContent = res.data.message
+              this.selectNoticeCommentList()
+            })
+            .catch((error) => {
+              console.log(error)
+            })
+            .finally(() => {
 
+            })
+
+        }
+      }
     }
 }
 </script>
 
-<style>
+<style scoped>
     @media (max-width: 1200px) {
       .left-banner {display:none}
     } 
@@ -399,5 +439,11 @@ export default {
     }
     .notice_delimiter .v-btn--active {
       background-color: #2889f1 !important;
+    }
+    .comment-delete-btn {
+      cursor: pointer;
+    }
+    .comment-update-btn {
+      cursor: pointer;
     }
 </style>

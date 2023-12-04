@@ -59,10 +59,20 @@ export function selectNoticeComment(data) { // 공지사항 댓글 가져오기
     })
 }
 
-export function insertNoticeComment(data) {
+export function insertNoticeComment(data) { // 공지사항 댓글 작성하기
     return request({
         url: `/api/v1/noticeboard/comment`,
         method: 'POST',
+        data: data,
+        meta: { apiVersion: '1.0.0' },
+        headers: { 'Content-Type': 'application/json;charset=utf8' }
+    })    
+}
+
+export function deleteNoticeComment(data) { // 공지사항 댓글 삭제하기
+    return request({
+        url: `/api/v1/noticeboard/comment`,
+        method: 'DELETE',
         data: data,
         meta: { apiVersion: '1.0.0' },
         headers: { 'Content-Type': 'application/json;charset=utf8' }
