@@ -113,52 +113,67 @@
                     <!-- 댓글 리스트 -->
                     <v-list three-line v-if="commentTotal !== 0">
                         <v-card max-height="1000" flat style="margin-bottom: 150px;">
-                        <template v-for="(commentList, index) in commentList">            
+                        <template v-for="(commentList, index) in commentList">              
                             <v-list-item v-if="commentList" :key="commentList.nickname">
                             <v-list-item-avatar>
                                 <v-img :src="commentList.profileUrl" style="border: 1px solid #eee;"></v-img>
                             </v-list-item-avatar>
-                            <v-list-item-content>
+                            <template v-if="commentList.noticeCommentId !== updateCommentFlag"> 
+                              <v-list-item-content>
                                 <v-list-title-title>{{ commentList.nickname }}</v-list-title-title>
                                 <br>
                                 <v-list-title-sub-title style="padding-bottom: 3px;">{{ commentList.comment }}</v-list-title-sub-title>
                                 <v-list-item-subtitle>{{ commentList.createAt }}</v-list-item-subtitle>
-                            </v-list-item-content>
-                            <v-list-item-action>
-                              <v-menu v-if="commentList.userId === userInfoData.userId" offset-y left content-class="elevation-0">
-                                <template v-slot:activator="{ on, attrs }">
-                                    <v-btn icon v-bind="attrs" v-on="on">
-                                        <v-icon color="grey">mdi-dots-vertical</v-icon>
-                                    </v-btn> 
-                                </template>
-                                <v-card style="border: 1px solid #CCCCCC;" width="90px">                  
-                                  <v-list-item  class="comment-update-btn">
-                                      <v-list-item-content>
-                                          <v-list-item-title style="text-align: center;">수정</v-list-item-title>
-                                      </v-list-item-content>
-                                  </v-list-item>
-                                  <v-divider/>
-                                  <v-list-item class="comment-delete-btn" @click="deleteComment(commentList.noticeCommentId)">
-                                      <v-list-item-content>
-                                          <v-list-item-title style="text-align: center;">삭제</v-list-item-title>
-                                      </v-list-item-content>
-                                  </v-list-item> 
-                                </v-card>
-                              </v-menu>
-                            </v-list-item-action>
+                              </v-list-item-content>
+                              <v-list-item-action>
+                                <v-menu v-if="commentList.userId === userInfoData.userId" offset-y left content-class="elevation-0">
+                                  <template v-slot:activator="{ on, attrs }">
+                                      <v-btn icon v-bind="attrs" v-on="on">
+                                          <v-icon color="grey">mdi-dots-vertical</v-icon>
+                                      </v-btn> 
+                                  </template>
+                                  <v-card style="border: 1px solid #CCCCCC;" width="90px">                  
+                                    <v-list-item  class="comment-update-btn" @click="updateComment(commentList.noticeCommentId)">
+                                        <v-list-item-content>
+                                            <v-list-item-title style="text-align: center;">수정</v-list-item-title>
+                                        </v-list-item-content>
+                                    </v-list-item>
+                                    <v-divider/>
+                                    <v-list-item class="comment-delete-btn" @click="deleteComment(commentList.noticeCommentId)">
+                                        <v-list-item-content>
+                                            <v-list-item-title style="text-align: center;">삭제</v-list-item-title>
+                                        </v-list-item-content>
+                                    </v-list-item> 
+                                  </v-card>
+                                </v-menu>
+                              </v-list-item-action>
+                            </template>
+                            <template v-else>
+                              <v-textarea
+                                :key="index"
+                                name="input-7-1"
+                                auto-grow
+                                rows="1"
+                                dense
+                                :value="commentList.comment"
+                              ></v-textarea>
+                              <v-btn text>
+                                Normal
+                              </v-btn>
+                            </template>
                             </v-list-item>
                             <v-divider v-if="commentList" :key="index"></v-divider>
                         </template>
-                    </v-card>
+                        </v-card>
                     </v-list>
                     <v-list three-line v-else>
-                        <v-card height="400" flat> 
-                                <v-img :src="require('@/assets/boardDetail/commentIcon.svg')" width="75" style="left: 50%; transform: translate(-50%, 0); top: 45px;"></v-img>
-                                <div style="margin-top: 70px;">
-                                <div class="text-center">댓글이 없습니다.</div>
-                                <div class="text-center">첫번째 댓글을 남겨주세요.</div>
-                                </div>
-                        </v-card>
+                      <v-card height="400" flat> 
+                        <v-img :src="require('@/assets/boardDetail/commentIcon.svg')" width="75" style="left: 50%; transform: translate(-50%, 0); top: 45px;"></v-img>
+                        <div style="margin-top: 70px;">
+                        <div class="text-center">댓글이 없습니다.</div>
+                        <div class="text-center">첫번째 댓글을 남겨주세요.</div>
+                        </div>
+                      </v-card>
                     </v-list>
                     <!-- 하단 공지사항 리스트 -->
                     <v-toolbar flat style="border-bottom: 2px solid #eee; top: 20px;">
@@ -273,6 +288,7 @@ export default {
           ],
           snackbarValue: false,
           snackbarContent: '',
+          updateCommentFlag: 0,
         }
     },
     components: {
@@ -391,8 +407,10 @@ export default {
             .finally(() => {
 
             })
-
         }
+      },
+      updateComment(value) {
+        this.updateCommentFlag = value
       }
     }
 }
