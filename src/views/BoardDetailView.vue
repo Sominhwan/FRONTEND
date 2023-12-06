@@ -104,7 +104,7 @@
                                 @keydown.enter="saveComment()"
                             >
                             </v-textarea>
-                            <v-btn class="comment-btn rounded-0" @click="saveComment()" text color="black" outlined style="height: 130px; left: 1px;" v-bind="attrs" v-on="on">
+                            <v-btn class="comment-btn rounded-0" @click="saveComment()" text color="black" outlined style="height: 130px; left: 1px;"  v-on="on">
                               등록
                             </v-btn>
                             <AuthDialog v-model="authDialog" v-if="authDialog"></AuthDialog>
@@ -120,9 +120,9 @@
                             </v-list-item-avatar>
                             <template v-if="commentList.noticeCommentId !== updateCommentFlag"> 
                               <v-list-item-content>
-                                <v-list-title-title>{{ commentList.nickname }}</v-list-title-title>
+                                <v-list-item-subtitle>{{ commentList.nickname }}</v-list-item-subtitle>
                                 <br>
-                                <v-list-title-sub-title style="padding-bottom: 3px;">{{ commentList.comment }}</v-list-title-sub-title>
+                                <v-list-item-title style="padding-bottom: 3px;">{{ commentList.comment }}</v-list-item-title>
                                 <v-list-item-subtitle>{{ commentList.createAt }}</v-list-item-subtitle>
                               </v-list-item-content>
                               <v-list-item-action>
@@ -133,7 +133,7 @@
                                       </v-btn> 
                                   </template>
                                   <v-card style="border: 1px solid #CCCCCC;" width="90px">                  
-                                    <v-list-item  class="comment-update-btn" @click="updateComment(commentList.noticeCommentId)">
+                                    <v-list-item  class="comment-update-btn" @click="updateCommentList(commentList.noticeCommentId)">
                                         <v-list-item-content>
                                             <v-list-item-title style="text-align: center;">수정</v-list-item-title>
                                         </v-list-item-content>
@@ -149,20 +149,30 @@
                               </v-list-item-action>
                             </template>
                             <template v-else>
-                              <v-textarea
-                                :key="index"
-                                name="input-7-1"
-                                auto-grow
-                                rows="1"
-                                dense
-                                :value="commentList.comment"
-                              ></v-textarea>
-                              <v-btn text>
-                                Normal
-                              </v-btn>
+                              <div style="width: 100%; display: flex; flex-direction: column;">
+                                <v-textarea
+                                  :key="index"
+                                  color="grey"
+                                  placeholder="댓글 추가..."
+                                  ref="commentTextArea"
+                                  autofocus
+                                  auto-grow
+                                  rows="1"
+                                  dense
+                                  :value="commentList.comment"
+                                ></v-textarea>
+                                <v-sheet class="pb-3" style="text-align: right;">
+                                  <v-btn text small rounded @click="() => { updateCommentFlag = 0 }">
+                                    취소
+                                  </v-btn>
+                                  <v-btn text small rounded color="primary" @click="updateComment(commentList.comment, commentList.noticeCommentId)">
+                                    저장
+                                  </v-btn>
+                                </v-sheet>
+                              </div>
                             </template>
                             </v-list-item>
-                            <v-divider v-if="commentList" :key="index"></v-divider>
+                            <!-- <v-divider v-if="commentList" :key="index"></v-divider> -->
                         </template>
                         </v-card>
                     </v-list>
@@ -213,7 +223,7 @@
 </template>
 
 <script>
-import { deleteNoticeComment, insertNoticeComment, selectNoticeBoardDetail, selectNoticeBoardDetailList, selectNoticeComment } from "@/api/noticeBoard/noticeBoard";
+import { deleteNoticeComment, insertNoticeComment, selectNoticeBoardDetail, selectNoticeBoardDetailList, selectNoticeComment, updateNoticeComment } from "@/api/noticeBoard/noticeBoard";
 import AuthDialog from '@/components/AuthDialog';
 import SnackBar from '@/components/snackbar/SnackBar.vue';
 import { mapState } from "vuex";
@@ -289,6 +299,7 @@ export default {
           snackbarValue: false,
           snackbarContent: '',
           updateCommentFlag: 0,
+          //commentText: null,
         }
     },
     components: {
@@ -391,6 +402,25 @@ export default {
           }
         }
       },
+      updateComment(comment, noticeCommentId) {
+        
+        console.log(this.$refs.commentTextArea)
+        const data = {'comment': comment, 'noticeId': this.$route.query.board, 'noticeCommentId': noticeCommentId, 'userId': this.userInfoData.userId }
+        console.log(data)
+        updateNoticeComment(data)
+          .then((res) => {
+            if(res.data.code === 0) {
+              this.updateCommentFlag = 0
+              this.selectNoticeCommentList()
+            }
+          })
+          .catch((error) => {
+            console.log(error)
+          })
+          .finally(() => {
+
+          })
+      },
       deleteComment(val) {
         const data = { 'noticeCommentId': val }
         const isConfirmed = confirm('댓글을 삭제하시겠습니까?')
@@ -409,7 +439,7 @@ export default {
             })
         }
       },
-      updateComment(value) {
+      updateCommentList(value) {
         this.updateCommentFlag = value
       }
     }
