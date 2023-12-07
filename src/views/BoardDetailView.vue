@@ -80,7 +80,7 @@
                             </div>
                         </div>
                     </v-col>
-                    <v-col cols="12" sm="12" md="13">
+                    <v-col cols="12" sm="12" md="13" class="pb-3">
                         <v-subheader style="margin-left: 3px; margin-bottom: 5px; font-weight: bold;">댓글 <span style="color: #2889f1;">{{ commentTotal }}</span> 개</v-subheader>
                         <v-row>
                             <v-textarea
@@ -95,7 +95,7 @@
                                 flat
                                 label="댓글을 입력해주세요"
                                 ref="comment"
-                                counter
+                                hide-details
                                 no-resize
                                 maxlength="500"
                                 clearable
@@ -109,6 +109,11 @@
                             </v-btn>
                             <AuthDialog v-model="authDialog" v-if="authDialog"></AuthDialog>
                         </v-row>
+                        <v-row class="pl-7 pt-1">
+                          <v-btn icon>
+                          <v-icon>mood</v-icon>
+                          </v-btn>
+                        </v-row>
                     </v-col> 
                     <!-- 댓글 리스트 -->
                     <v-list three-line v-if="commentTotal !== 0">
@@ -120,7 +125,7 @@
                             </v-list-item-avatar>
                             <template v-if="commentList.noticeCommentId !== updateCommentFlag"> 
                               <v-list-item-content>
-                                <v-list-item-subtitle>{{ commentList.nickname }}</v-list-item-subtitle>
+                                <v-list-item-subtitle style="font-weight: 500;">{{ commentList.nickname }}</v-list-item-subtitle>
                                 <br>
                                 <v-list-item-title style="padding-bottom: 3px;">{{ commentList.comment }}</v-list-item-title>
                                 <v-list-item-subtitle>{{ commentList.createAt }}</v-list-item-subtitle>
@@ -160,12 +165,13 @@
                                   rows="1"
                                   dense
                                   :value="commentList.comment"
+                                  @input="saveCommentText"
                                 ></v-textarea>
                                 <v-sheet class="pb-3" style="text-align: right;">
                                   <v-btn text small rounded @click="() => { updateCommentFlag = 0 }">
                                     취소
                                   </v-btn>
-                                  <v-btn text small rounded color="primary" @click="updateComment(commentList.comment, commentList.noticeCommentId)">
+                                  <v-btn :disabled="saveCommentBtnFlag" text small rounded color="primary" @click="updateComment(commentList.comment, commentList.noticeCommentId)">
                                     저장
                                   </v-btn>
                                 </v-sheet>
@@ -299,7 +305,8 @@ export default {
           snackbarValue: false,
           snackbarContent: '',
           updateCommentFlag: 0,
-          //commentText: null,
+          commentText: null,
+          saveCommentBtnFlag: false
         }
     },
     components: {
@@ -308,6 +315,15 @@ export default {
     },
     computed: {
       ...mapState(['userInfoData', 'authState']),
+    },
+    watch: {
+      commentText(val) {
+        if(val === null || val === '') {
+          this.saveCommentBtnFlag = true
+        } else{
+          this.saveCommentBtnFlag = false
+        }
+      }
     },
     created() {
         
@@ -385,6 +401,7 @@ export default {
         } else { // 로그인 상태시
           if(this.comment === '' || this.comment === null) {
             alert('댓글을 입력해주세요')
+            this.$refs.comment.focus()
           } else {
             const data = {'comment': this.comment, 'noticeId': this.$route.query.board, 'userId': this.userInfoData.userId }
             insertNoticeComment(data)
@@ -402,10 +419,11 @@ export default {
           }
         }
       },
-      updateComment(comment, noticeCommentId) {
-        
-        console.log(this.$refs.commentTextArea)
-        const data = {'comment': comment, 'noticeId': this.$route.query.board, 'noticeCommentId': noticeCommentId, 'userId': this.userInfoData.userId }
+      updateComment(comment, noticeCommentId) {   
+        console.log(this.commentText)
+        if(this.commentText === null)
+          this.commentText = comment
+        const data = {'comment': this.commentText, 'noticeId': this.$route.query.board, 'noticeCommentId': noticeCommentId, 'userId': this.userInfoData.userId }
         console.log(data)
         updateNoticeComment(data)
           .then((res) => {
@@ -418,8 +436,11 @@ export default {
             console.log(error)
           })
           .finally(() => {
-
+            this.commentText = null
           })
+      },
+      saveCommentText(e) {
+        this.commentText = e
       },
       deleteComment(val) {
         const data = { 'noticeCommentId': val }
