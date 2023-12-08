@@ -102,6 +102,7 @@
                                 clear-icon="mdi-close-circle"
                                 background-color="#F9F9F9"
                                 @keydown.enter="saveComment()"
+                                @input="closeEmoji()"
                             >
                             </v-textarea>
                             <v-btn class="comment-btn rounded-0" @click="saveComment()" text color="black" outlined style="height: 130px; left: 1px;"  v-on="on">
@@ -110,9 +111,10 @@
                             <AuthDialog v-model="authDialog" v-if="authDialog"></AuthDialog>
                         </v-row>
                         <v-row class="pl-7 pt-1">
-                          <v-btn icon>
+                          <v-btn icon @click="openEmojiPicker()">
                           <v-icon>mood</v-icon>
                           </v-btn>
+                          <VEmojiPicker v-if="emojiFlag" @select="selectEmoji" style="position: absolute; z-index: 10; margin-top: 35px;"/>
                         </v-row>
                     </v-col> 
                     <!-- 댓글 리스트 -->
@@ -167,13 +169,18 @@
                                   :value="commentList.comment"
                                   @input="saveCommentText"
                                 ></v-textarea>
-                                <v-sheet class="pb-3" style="text-align: right;">
-                                  <v-btn text small rounded @click="() => { updateCommentFlag = 0 }">
-                                    취소
-                                  </v-btn>
-                                  <v-btn :disabled="saveCommentBtnFlag" text small rounded color="primary" @click="updateComment(commentList.comment, commentList.noticeCommentId)">
-                                    저장
-                                  </v-btn>
+                                <v-sheet>
+                                  <v-icon class="comment-list-emoji mb-3" size="22px" @click="openCommentListEmojiPicker()">mood</v-icon>
+                                  <VEmojiPicker v-if="commentListEmojiFlag" @select="selectCommentListEmoji(e, commentList.comment)" style="position: absolute; z-index: 9; margin-top: 35px;"/>
+                                  <span style="float: right;">
+                                    <v-btn text small rounded @click="() => { updateCommentFlag = 0, saveCommentBtnFlag = false }">
+                                      취소
+                                    </v-btn>
+                                    <v-btn :disabled="saveCommentBtnFlag" text small rounded color="primary" @click="updateComment(commentList.comment, commentList.noticeCommentId)">
+                                      저장
+                                    </v-btn>
+                                  </span>
+
                                 </v-sheet>
                               </div>
                             </template>
@@ -232,6 +239,7 @@
 import { deleteNoticeComment, insertNoticeComment, selectNoticeBoardDetail, selectNoticeBoardDetailList, selectNoticeComment, updateNoticeComment } from "@/api/noticeBoard/noticeBoard";
 import AuthDialog from '@/components/AuthDialog';
 import SnackBar from '@/components/snackbar/SnackBar.vue';
+import { VEmojiPicker } from 'v-emoji-picker';
 import { mapState } from "vuex";
 export default {
     data () {
@@ -291,7 +299,7 @@ export default {
           ],
           commentTotal: '',
           commentList: [],
-          comment: null, // 댓글 내용
+          comment: '', // 댓글 내용
           cruds: [
               ['Create', 'mdi-plus-outline'],
               ['Read', 'mdi-file-outline'],
@@ -306,12 +314,15 @@ export default {
           snackbarContent: '',
           updateCommentFlag: 0,
           commentText: null,
-          saveCommentBtnFlag: false
+          saveCommentBtnFlag: false,
+          emojiFlag: false,
+          commentListEmojiFlag: false
         }
     },
     components: {
       AuthDialog,
-      SnackBar
+      SnackBar,
+      VEmojiPicker
     },
     computed: {
       ...mapState(['userInfoData', 'authState']),
@@ -407,7 +418,7 @@ export default {
             insertNoticeComment(data)
               .then((res) => {
                 console.log(res.data.code)
-                this.comment = null
+                this.comment = ''
                 this.selectNoticeCommentList()
               })
               .catch((error) => {
@@ -420,7 +431,7 @@ export default {
         }
       },
       updateComment(comment, noticeCommentId) {   
-        console.log(this.commentText)
+        this.saveCommentBtnFlag = false 
         if(this.commentText === null)
           this.commentText = comment
         const data = {'comment': this.commentText, 'noticeId': this.$route.query.board, 'noticeCommentId': noticeCommentId, 'userId': this.userInfoData.userId }
@@ -462,6 +473,22 @@ export default {
       },
       updateCommentList(value) {
         this.updateCommentFlag = value
+      },
+      openEmojiPicker() {
+        this.emojiFlag = !this.emojiFlag
+      },
+      openCommentListEmojiPicker() {
+        this.commentListEmojiFlag = !this.commentListEmojiFlag
+      },
+      selectEmoji(emoji) {
+        this.comment = this.comment + emoji.data
+      },
+      selectCommentListEmoji(value, emoji) {
+        console.log(value)
+        console.log(emoji)
+      },
+      closeEmoji() {
+        this.emojiFlag = false
       }
     }
 }
@@ -513,6 +540,9 @@ export default {
       cursor: pointer;
     }
     .comment-update-btn {
+      cursor: pointer;
+    }
+    .comment-list-emoji {
       cursor: pointer;
     }
 </style>
