@@ -67,13 +67,13 @@
                         </div>
                         <div class="like-btn text-center">
                             <div v-if="like_btn">
-                            <v-btn class="ma-10" outlined rounded color="grey" @click="changeLikeBtn()">
+                            <v-btn class="ma-10" outlined rounded color="grey" @click="updateLikeNoticeBoard()">
                                 <v-icon color="primary">mdi-thumb-up</v-icon>
                                 <span style="position: relative; left: 5px;">10</span>
                             </v-btn>
                             </div>
                             <div v-else>
-                            <v-btn class="ma-10" outlined rounded color="grey" @click="changeLikeBtn()">
+                            <v-btn class="ma-10" outlined rounded color="grey" @click="updateLikeNoticeBoard()">
                                 <v-icon color="grey">mdi-thumb-up</v-icon>
                                 <span style="position: relative; left: 5px;">10</span>
                             </v-btn>
@@ -102,7 +102,7 @@
                                 clear-icon="mdi-close-circle"
                                 background-color="#F9F9F9"
                                 @keydown.enter="saveComment()"
-                                @input="closeEmoji()"
+                                @click="() => { emojiFlag = false }"
                             >
                             </v-textarea>
                             <v-btn class="comment-btn rounded-0" @click="saveComment()" text color="black" outlined style="height: 130px; left: 1px;"  v-on="on">
@@ -171,16 +171,15 @@
                                 ></v-textarea>
                                 <v-sheet>
                                   <v-icon class="comment-list-emoji mb-3" size="22px" @click="openCommentListEmojiPicker()">mood</v-icon>
-                                  <VEmojiPicker v-if="commentListEmojiFlag" @select="selectCommentListEmoji(e, commentList.comment)" style="position: absolute; z-index: 9; margin-top: 35px;"/>
+                                  <VEmojiPicker v-if="commentListEmojiFlag" @select="selectCommentListEmoji" style="position: absolute; z-index: 9; margin-top: 35px;"/>
                                   <span style="float: right;">
-                                    <v-btn text small rounded @click="() => { updateCommentFlag = 0, saveCommentBtnFlag = false }">
+                                    <v-btn text small rounded @click="() => { updateCommentFlag = 0, saveCommentBtnFlag = false, commentListEmojiFlag = false }">
                                       취소
                                     </v-btn>
                                     <v-btn :disabled="saveCommentBtnFlag" text small rounded color="primary" @click="updateComment(commentList.comment, commentList.noticeCommentId)">
                                       저장
                                     </v-btn>
                                   </span>
-
                                 </v-sheet>
                               </div>
                             </template>
@@ -236,7 +235,15 @@
 </template>
 
 <script>
-import { deleteNoticeComment, insertNoticeComment, selectNoticeBoardDetail, selectNoticeBoardDetailList, selectNoticeComment, updateNoticeComment } from "@/api/noticeBoard/noticeBoard";
+import {
+deleteNoticeComment,
+insertNoticeComment,
+likeNoticeBoard,
+selectNoticeBoardDetail,
+selectNoticeBoardDetailList,
+selectNoticeComment,
+updateNoticeComment
+} from "@/api/noticeBoard/noticeBoard";
 import AuthDialog from '@/components/AuthDialog';
 import SnackBar from '@/components/snackbar/SnackBar.vue';
 import { VEmojiPicker } from 'v-emoji-picker';
@@ -354,9 +361,6 @@ export default {
       toTop () {
         this.$vuetify.goTo(0)
       },
-      changeLikeBtn() {
-          this.like_btn =  !this.like_btn;
-      },
       async selectNoticeBoardList() {
           const data = { id: this.$route.query.board }
           await selectNoticeBoardDetail(data)
@@ -432,6 +436,7 @@ export default {
       },
       updateComment(comment, noticeCommentId) {   
         this.saveCommentBtnFlag = false 
+        this.commentText =  this.$refs.commentTextArea[0].value
         if(this.commentText === null)
           this.commentText = comment
         const data = {'comment': this.commentText, 'noticeId': this.$route.query.board, 'noticeCommentId': noticeCommentId, 'userId': this.userInfoData.userId }
@@ -448,6 +453,7 @@ export default {
           })
           .finally(() => {
             this.commentText = null
+            this.commentListEmojiFlag = false
           })
       },
       saveCommentText(e) {
@@ -482,13 +488,26 @@ export default {
       },
       selectEmoji(emoji) {
         this.comment = this.comment + emoji.data
+        this.$refs.comment.focus()
       },
-      selectCommentListEmoji(value, emoji) {
-        console.log(value)
-        console.log(emoji)
+      selectCommentListEmoji(emoji) {
+        this.$refs.commentTextArea[0].value = this.$refs.commentTextArea[0].value + emoji.data
+        this.$refs.commentTextArea[0].focus()
+        this.saveCommentBtnFlag = false
       },
-      closeEmoji() {
-        this.emojiFlag = false
+      updateLikeNoticeBoard() {
+        this.like_btn =  !this.like_btn;
+        const data = { 'noticeId': this.$route.query.board, 'userId': this.userInfoData.userId }
+        likeNoticeBoard(data)
+          .then((res) => {
+            console.log(res)
+          })
+          .catch((error) => {
+            console.log(error)
+          })
+          .finally(() => {
+
+          })
       }
     }
 }

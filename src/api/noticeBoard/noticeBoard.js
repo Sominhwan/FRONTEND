@@ -88,3 +88,13 @@ export function deleteNoticeComment(data) { // 공지사항 댓글 삭제하기
         headers: { 'Content-Type': 'application/json;charset=utf8' }
     })    
 }
+
+export function likeNoticeBoard(data) { // 공지사항 좋아요 활성
+    return request({
+        url: `/api/v1/noticeboard/like`,
+        method: 'POST',
+        data: data,
+        meta: { apiVersion: '1.0.0' },
+        headers: { 'Content-Type': 'application/json;charset=utf8' }
+    })    
+}
