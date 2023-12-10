@@ -47,8 +47,8 @@ export default new Vuex.Store({
 
         })
    },
-       /* 로그인 */
-      async login2 (dispatch, data) {
+    /* 로그인 */
+    async login2 (dispatch, data) {
       signIn(data)
         .then((res) => {  
             if(res.headers.authorization != null) {
@@ -63,8 +63,8 @@ export default new Vuex.Store({
         .finally(() => {
 
         })
-     },
-  /* 회원정보 */
+    },
+   /* 회원정보 */
    async userInfo({ commit }) {
     const token = localStorage.getItem("access-token")
     userInfo(token)
@@ -97,7 +97,7 @@ export default new Vuex.Store({
       .finally(() => {
         this.commit('setAuthState', false)
       })
- },
+  },
   },
   modules: {
   }

@@ -49,6 +49,16 @@ export function selectNoticeBoardDetailList(data) { // 공지사항 상세페이
     })
 }
 
+export function deleteNoticeBoard(data) { // 공지사항 삭제하기
+    return request({
+        url: `/api/v1/noticeboard/detail`,
+        method: 'DELETE',
+        data: data,
+        meta: { apiVersion: '1.0.0' },
+        headers: { 'Content-Type': 'application/json;charset=utf8' }
+    })    
+}
+
 export function selectNoticeComment(data) { // 공지사항 댓글 가져오기
     return request({
         url: `/api/v1/noticeboard/comment`,
@@ -98,3 +108,14 @@ export function likeNoticeBoard(data) { // 공지사항 좋아요 활성
         headers: { 'Content-Type': 'application/json;charset=utf8' }
     })    
 }
+
+export function unlikeNoticeBoard(data) { // 공지사항 좋아요 비활성
+    return request({
+        url: `/api/v1/noticeboard/unlike`,
+        method: 'POST',
+        data: data,
+        meta: { apiVersion: '1.0.0' },
+        headers: { 'Content-Type': 'application/json;charset=utf8' }
+    })    
+}
+

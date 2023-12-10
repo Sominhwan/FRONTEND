@@ -59,23 +59,46 @@
                                         <v-list-title-title>{{ board_detail_list.writer }}</v-list-title-title>
                                         <v-list-item-subtitle style="position: relative; top: 2px;">{{ board_detail_list.createAt }}</v-list-item-subtitle>
                                     </v-list-item-content>
-                                </v-list-item>
+                                    <v-spacer></v-spacer>
+                                    <v-list-item-action>
+                                      <v-menu v-if="this.noticeBoardUserId == this.userInfoData.userId" offset-y left content-class="elevation-0">
+                                        <template v-slot:activator="{ on, attrs }">
+                                            <v-btn icon v-bind="attrs" v-on="on">
+                                                <v-icon color="grey">mdi-dots-vertical</v-icon>
+                                            </v-btn> 
+                                        </template>
+                                        <v-card style="border: 1px solid #CCCCCC;" width="90px">                  
+                                          <v-list-item  class="notice-update-btn" @click="updateCommentList(commentList.noticeCommentId)">
+                                              <v-list-item-content>
+                                                  <v-list-item-title style="text-align: center;">수정</v-list-item-title>
+                                              </v-list-item-content>
+                                          </v-list-item>
+                                          <v-divider/>
+                                          <v-list-item class="notice-delete-btn" @click="deleteNotice()">
+                                              <v-list-item-content>
+                                                  <v-list-item-title style="text-align: center;">삭제</v-list-item-title>
+                                              </v-list-item-content>
+                                          </v-list-item> 
+                                        </v-card>
+                                      </v-menu>
+                                    </v-list-item-action>                                    
+                              </v-list-item>
                             </v-list>
                         </div>
                         <div class="board-detail-content" style="min-height: 300px;">
                             <div v-html="board_detail_list.content"></div>
                         </div>
-                        <div class="like-btn text-center">
+                        <div v-if="!loading" class="like-btn text-center">
                             <div v-if="like_btn">
-                            <v-btn class="ma-10" outlined rounded color="grey" @click="updateLikeNoticeBoard()">
+                            <v-btn class="ma-10" outlined rounded color="grey" @click="updateUnlikeNoticeBoard()" :disabled="this.userInfoData.userId == null">
                                 <v-icon color="primary">mdi-thumb-up</v-icon>
-                                <span style="position: relative; left: 5px;">10</span>
+                                <span style="position: relative; left: 5px;">{{ likeCount }}</span>
                             </v-btn>
                             </div>
                             <div v-else>
-                            <v-btn class="ma-10" outlined rounded color="grey" @click="updateLikeNoticeBoard()">
+                            <v-btn class="ma-10" outlined rounded color="grey" @click="updateLikeNoticeBoard()" :disabled="this.userInfoData.userId == null">
                                 <v-icon color="grey">mdi-thumb-up</v-icon>
-                                <span style="position: relative; left: 5px;">10</span>
+                                <span style="position: relative; left: 5px;">{{ likeCount }}</span>
                             </v-btn>
                             </div>
                         </div>
@@ -236,12 +259,14 @@
 
 <script>
 import {
+deleteNoticeBoard,
 deleteNoticeComment,
 insertNoticeComment,
 likeNoticeBoard,
 selectNoticeBoardDetail,
 selectNoticeBoardDetailList,
 selectNoticeComment,
+unlikeNoticeBoard,
 updateNoticeComment
 } from "@/api/noticeBoard/noticeBoard";
 import AuthDialog from '@/components/AuthDialog';
@@ -304,7 +329,7 @@ export default {
             'Fourth',
             'Fifth',
           ],
-          commentTotal: '',
+          commentTotal: 0,
           commentList: [],
           comment: '', // 댓글 내용
           cruds: [
@@ -317,13 +342,15 @@ export default {
           notice_list: [
             '1','2','3'
           ],
+          likeCount: 0,
           snackbarValue: false,
           snackbarContent: '',
           updateCommentFlag: 0,
           commentText: null,
           saveCommentBtnFlag: false,
           emojiFlag: false,
-          commentListEmojiFlag: false
+          commentListEmojiFlag: false,
+          noticeBoardUserId: null,
         }
     },
     components: {
@@ -341,15 +368,14 @@ export default {
         } else{
           this.saveCommentBtnFlag = false
         }
-      }
+      },
+
     },
     created() {
         
     },
     mounted() {
-      this.selectNoticeBoardList()
       this.selectNoticeCommentList()
-        //this.noticeBoardList()
     },
     methods: {
       onScroll (e) {
@@ -362,12 +388,21 @@ export default {
         this.$vuetify.goTo(0)
       },
       async selectNoticeBoardList() {
-          const data = { id: this.$route.query.board }
+        let data = {};
+          if(this.userInfoData.userId != null) {
+            data = { 'noticeId': this.$route.query.board, 'userId': this.userInfoData.userId  }
+          } else {
+            data = { 'noticeId': this.$route.query.board, 'userId': null  }
+          }
           await selectNoticeBoardDetail(data)
               .then((res) => {
+                console.log(res.data.data)
                 this.loading = false,
                 this.board_category = '[공지사항]',
-                this.board_detail_list = res.data.data[0]
+                this.board_detail_list = res.data.data
+                this.likeCount = res.data.data.likeCount
+                this.like_btn = res.data.data.likeCheck
+                this.noticeBoardUserId = res.data.data.userId
               })
               .catch((error) => {
                 console.log(error)
@@ -389,7 +424,7 @@ export default {
                 console.log(error)
               })
               .finally(() => {
-
+                this.selectNoticeBoardList()
               })
       },
       noticeBoardList() {
@@ -408,6 +443,22 @@ export default {
           .finally(() => {
 
           })
+      },
+      deleteNotice() {
+        const isConfirmed = confirm('댓글을 삭제하시겠습니까?')
+        const data = { 'noticeId': this.$route.query.board, 'userId': this.userInfoData.userId }
+        if(isConfirmed) {
+          deleteNoticeBoard(data) 
+            .then((res) => {
+              console.log(res)
+            })
+            .catch((error) => {
+              console.log(error)
+            })
+            .finally(() => {
+
+            })   
+        }     
       },
       saveComment() {
         if(!this.authState) { // 비로그인 상태시
@@ -500,7 +551,21 @@ export default {
         const data = { 'noticeId': this.$route.query.board, 'userId': this.userInfoData.userId }
         likeNoticeBoard(data)
           .then((res) => {
-            console.log(res)
+            this.likeCount = res.data.data
+          })
+          .catch((error) => {
+            console.log(error)
+          })
+          .finally(() => {
+
+          })
+      },
+      updateUnlikeNoticeBoard() {
+        this.like_btn =  !this.like_btn;
+        const data = { 'noticeId': this.$route.query.board, 'userId': this.userInfoData.userId }
+        unlikeNoticeBoard(data)
+          .then((res) => {
+            this.likeCount = res.data.data
           })
           .catch((error) => {
             console.log(error)
@@ -554,6 +619,12 @@ export default {
     }
     .notice_delimiter .v-btn--active {
       background-color: #2889f1 !important;
+    }
+    .notice-delete-btn {
+      cursor: pointer;
+    }
+    .notice-update-btn {
+      cursor: pointer;
     }
     .comment-delete-btn {
       cursor: pointer;
