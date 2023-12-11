@@ -85,7 +85,7 @@
                             <v-list-item-title style="font-weight: bold; font-size: 16px;">홈</v-list-item-title>
                         </v-list-item-content>
                     </v-list-item>
-                    <v-list-item :value="'공지사항'" @click="selectItem('공지사항', 'noticeDetail', 1, 2, '최신글순')" :key="'공지사항'" :class="{ 'selected': selectedItem === '공지사항' }">
+                    <v-list-item :value="'공지사항'" @click="selectItem('공지사항', 'noticeDetail', 1, '최신글순')" :key="'공지사항'" :class="{ 'selected': selectedItem === '공지사항' }">
                         <v-list-item-icon class="item-icon">
                             <v-icon size="25">mdi-clipboard-text</v-icon>
                         </v-list-item-icon>
@@ -168,7 +168,7 @@ export default {
       ],
       side_items: [
           { icon: 'home', title: '홈', link: 'home'},
-          { icon: 'mdi-clipboard-text', title: '공지사항', link: 'noticeDetail', page: 1, count: 2, category: '최신글순'},
+          { icon: 'mdi-clipboard-text', title: '공지사항', link: 'noticeDetail', page: 1, category: '최신글순'},
           { icon: 'settings', title: '설정'},
           { icon: 'logout', title: '로그아웃'},
       ],
@@ -204,10 +204,10 @@ export default {
         logout() {
             this.$store.dispatch('logout')
         },
-        selectItem(title, link, page ,count, category) {
+        selectItem(title, link, page, category) {
             this.$router.push({
                 name: link, 
-                query: { page: page, count: count, category: category }
+                query: { page: page, category: category }
             }, () => {});
         },
         headerListEvent(title) {

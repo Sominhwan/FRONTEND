@@ -72,13 +72,13 @@
         <!-- 페이징처리 버튼 -->
         <v-list style="margin-bottom: 200px;">
           <ul class="paging-ul">
-            <router-link class="prev-btn" :id="page == 1 ? activeBtnCss : ''" :to="{ name: 'noticeDetail', query: { page: page - 1, count: totalPage, category: this.$route.query.category }}">
+            <router-link class="prev-btn" :id="page == 1 ? activeBtnCss : ''" :to="{ name: 'noticeDetail', query: { page: page - 1, category: this.$route.query.category }}">
               이전
             </router-link>
               <div v-for="idx in parseInt(this.totalPage)" :key="idx">
                 <li :class="page == idx ? activePageCSS : ''" @click="changePage2(idx)"><span>{{ idx }}</span></li>
               </div>
-            <router-link class="next-btn" :id="page == totalPage ? activeBtnCss : ''" :to="{ name: 'noticeDetail', query: { page: page + 1 , count: totalPage, category: this.$route.query.category }}">
+            <router-link class="next-btn" :id="page == totalPage ? activeBtnCss : ''" :to="{ name: 'noticeDetail', query: { page: page + 1, category: this.$route.query.category }}">
               다음
             </router-link>
           </ul>
@@ -101,7 +101,7 @@ export default {
       pagingBtn: 0,
       loading: true,
       paging: 0,
-      totalPage: this.$route.query.count,
+      totalPage: 0,
       notice_board_list: [],
       activePageCSS: 'on',
       activeBtnCss: 'disabled-link',
@@ -153,9 +153,11 @@ export default {
     search(curPage, category){    
       selectNoticeBoard(curPage, category)
         .then((res) => {
-          if(res.data.data.noticeBoardList == '' ||  this.totalPage != res.data.data.totalPage || curPage == null || curPage == ''){ // url 값에 대한 error404 페이지 반환
+          console.log(res)
+          if(res.data.data.noticeBoardList == '' || curPage == null || curPage == ''){ // url 값에 대한 error404 페이지 반환
             this.$router.push({name: 'error404'})
           }
+          this.totalPage = res.data.data.totalPage
           this.loading = false,
           this.notice_board_list = res.data.data.noticeBoardList
         })
@@ -168,11 +170,11 @@ export default {
     },
     // 카테고리에 대한 url 반환
     changePage(){
-        this.$router.push({name: 'noticeDetail', query: { page: this.page, count: this.totalPage, category: this.items_select}})
+        this.$router.push({name: 'noticeDetail', query: { page: this.page, category: this.items_select}})
     },
     // 페이징 버튼을 통한 url 반환
     changePage2(page){
-        this.$router.push({name: 'noticeDetail', query: { page: page, count: this.totalPage, category: this.items_select}}).catch(() => {})
+        this.$router.push({name: 'noticeDetail', query: { page: page, category: this.items_select}}).catch(() => {})
     }
   }
 }

@@ -68,7 +68,7 @@
                                             </v-btn> 
                                         </template>
                                         <v-card style="border: 1px solid #CCCCCC;" width="90px">                  
-                                          <v-list-item  class="notice-update-btn" @click="updateCommentList(commentList.noticeCommentId)">
+                                          <v-list-item  class="notice-update-btn" @click="updateNotice()">
                                               <v-list-item-content>
                                                   <v-list-item-title style="text-align: center;">수정</v-list-item-title>
                                               </v-list-item-content>
@@ -444,13 +444,17 @@ export default {
 
           })
       },
+      updateNotice() {
+        this.$router.push({ name: 'write', params: {'noticeId': this.$route.query.board, 'category': '공지사항' } }).catch(() => {})
+      },
       deleteNotice() {
-        const isConfirmed = confirm('댓글을 삭제하시겠습니까?')
+        const isConfirmed = confirm('공지사항을 삭제하시겠습니까?')
         const data = { 'noticeId': this.$route.query.board, 'userId': this.userInfoData.userId }
         if(isConfirmed) {
           deleteNoticeBoard(data) 
             .then((res) => {
               console.log(res)
+              this.$router.push({ name: 'home' }).catch(() => {})
             })
             .catch((error) => {
               console.log(error)
@@ -487,7 +491,8 @@ export default {
       },
       updateComment(comment, noticeCommentId) {   
         this.saveCommentBtnFlag = false 
-        this.commentText =  this.$refs.commentTextArea[0].value
+        //this.commentText =  this.$refs.commentTextArea[0].value
+        console.log(this.commentText)
         if(this.commentText === null)
           this.commentText = comment
         const data = {'comment': this.commentText, 'noticeId': this.$route.query.board, 'noticeCommentId': noticeCommentId, 'userId': this.userInfoData.userId }
@@ -511,7 +516,7 @@ export default {
         this.commentText = e
       },
       deleteComment(val) {
-        const data = { 'noticeCommentId': val }
+        const data = { 'noticeCommentId': val, 'noticeId': this.$route.query.board }
         const isConfirmed = confirm('댓글을 삭제하시겠습니까?')
         if(isConfirmed) {
           deleteNoticeComment(data)

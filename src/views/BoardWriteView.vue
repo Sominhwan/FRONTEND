@@ -39,6 +39,7 @@
 <script>
 import { insertNoticeBoard } from "@/api/noticeBoard/noticeBoard";
 import { VueEditor } from "vue2-editor";
+import { mapState } from "vuex";
 export default {
     data() {
         return {
@@ -93,9 +94,33 @@ export default {
         default: false
       }
     },
+    created() {
+      const noticeId = this.$route.params.noticeId;
+      const category = this.$route.params.category;
+      if(noticeId != null && category == '공지사항') {
+        this.items_select = '공지사항'
+        this.select(noticeId)
+      }
+      if(noticeId != null && category == '자유게시판') {
+        this.items_select = '자유게시판'
+        this.select(noticeId)
+      }
+      if(noticeId != null && category == '주요소식') {
+        this.items_select = '주요소식'
+        this.select(noticeId)
+      }
+    },
+    computed: { 
+      // 회원정보, 권한 가져오기
+      ...mapState(['userInfoData', 'authState']),
+    },
     methods: {
+      select(noticeId) {
+        if(noticeId != null)
+          alert('zzz')
+      },
       write(){      
-        const data = { title: this.title, writer: "민환", content: this.content }
+        const data = { 'title': this.title, writer: "민환", 'content': this.content, 'userId': this.userInfoData.userId }
         if(this.items_select === "자유게시판") {
           insertNoticeBoard(data)
             .then((res) => {
