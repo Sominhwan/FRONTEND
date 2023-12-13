@@ -36,7 +36,7 @@
     </v-app>
 </template>
 <script>
-import { insertNoticeBoard, selectBoardContent } from "@/api/noticeBoard/noticeBoard";
+import { insertNoticeBoard, selectBoardContent, updateNoticeBoard } from "@/api/noticeBoard/noticeBoard";
 import { VueEditor } from "vue2-editor";
 import { mapState } from "vuex";
 export default {
@@ -119,7 +119,10 @@ export default {
       window.addEventListener('beforeunload', this.handleBeforeUnload);
     },
     beforeUnmount() {
-        window.removeEventListener('beforeunload', this.handleBeforeUnload);
+      window.removeEventListener('beforeunload', this.handleBeforeUnload);
+    },
+    destroyed() {
+      window.removeEventListener('beforeunload', this.handleBeforeUnload);
     },
     computed: { 
       // 회원정보, 권한 가져오기
@@ -166,7 +169,6 @@ export default {
           alert("주요소식")
         }
       },
-      // TODO 20231213 수정하기 추가
       update() {
         const data = { 
           'title': this.title, 
@@ -176,7 +178,18 @@ export default {
           'noticeId': this.noticeId 
         }
         if(this.items_select === "공지사항") {
-          console.log(data)
+          updateNoticeBoard(data)
+            .then((res) => {
+              if(res.data.code === 0) {
+                this.$router.push({ name: 'noticeDetail', query: {'page': 1, 'category': '최신글순' } }).catch(() => {})
+              }
+            })
+            .catch((error) => {
+              console.log(error)
+            })
+            .finally(() => {
+
+            })          
         }
       }
     }

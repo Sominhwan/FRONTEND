@@ -10,6 +10,16 @@ export function insertNoticeBoard(data) { // 게시판 등록
     })
 }
 
+export function updateNoticeBoard(data) { // 게시판 수정
+    return request({
+        url: `/api/v1/noticeboard/update`,
+        method: 'PUT',
+        data: data,
+        meta: { apiVersion: '1.0.0' },
+        headers: { 'Content-Type': 'application/json;charset=utf8' }
+    })
+}
+
 export function selectBoardContent(data) { // 게시판 내용 가져오기
     return request({
         url: `/api/v1/noticeboard/content`,
