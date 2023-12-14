@@ -150,10 +150,30 @@
                             </v-list-item-avatar>
                             <template v-if="commentList.noticeCommentId !== updateCommentFlag"> 
                               <v-list-item-content>
-                                <v-list-item-subtitle style="font-weight: 500;">{{ commentList.nickname }}</v-list-item-subtitle>
+                                <v-list-item-subtitle style="font-weight: 600; color: black;">
+                                  {{ commentList.nickname }}
+                                  <span class="pl-1" style="font-weight: normal; font-size: 12px; color: #00000099;">{{ commentList.createAt }}</span>
+                                </v-list-item-subtitle>
                                 <br>
                                 <v-list-item-title style="padding-bottom: 3px;">{{ commentList.comment }}</v-list-item-title>
-                                <v-list-item-subtitle>{{ commentList.createAt }}</v-list-item-subtitle>
+                                <v-list-item-subtitle>
+                                  <v-tooltip bottom>
+                                    <template v-slot:activator="{ on, attrs }">
+                                      <v-btn icon v-bind="attrs" v-on="on" @click="commentLike(commentList.noticeCommentId)">
+                                        <svg-icon type="mdi" size="22" :path="mdilThumbUp"/>
+                                      </v-btn>
+                                    </template>
+                                    <span>좋아요</span>
+                                  </v-tooltip>
+                                  <v-tooltip bottom>
+                                    <template v-slot:activator="{ on, attrs }">
+                                      <v-btn icon v-bind="attrs" v-on="on" @click="commentUnlike(commentList.noticeCommentId)">
+                                        <svg-icon type="mdi" size="22" :path="mdilThumbDown"/>
+                                      </v-btn>
+                                    </template>
+                                    <span>싫어요</span>
+                                  </v-tooltip>
+                                </v-list-item-subtitle>
                               </v-list-item-content>
                               <v-list-item-action>
                                 <v-menu v-if="commentList.userId === userInfoData.userId" offset-y left content-class="elevation-0">
@@ -207,7 +227,7 @@
                               </div>
                             </template>
                             </v-list-item>
-                            <!-- <v-divider v-if="commentList" :key="index"></v-divider> -->
+                            <v-divider v-if="commentList" :key="index"></v-divider>
                         </template>
                         </v-card>
                     </v-list>
@@ -271,11 +291,15 @@ updateNoticeComment
 } from "@/api/noticeBoard/noticeBoard";
 import AuthDialog from '@/components/AuthDialog';
 import SnackBar from '@/components/snackbar/SnackBar.vue';
+import SvgIcon from '@jamescoyle/vue-icon';
+import { mdilThumbDown, mdilThumbUp } from '@mdi/light-js';
 import { VEmojiPicker } from 'v-emoji-picker';
 import { mapState } from "vuex";
 export default {
     data () {
         return {
+          mdilThumbUp : mdilThumbUp,
+          mdilThumbDown : mdilThumbDown,
           authDialog: false,
           files: [
             {
@@ -356,7 +380,8 @@ export default {
     components: {
       AuthDialog,
       SnackBar,
-      VEmojiPicker
+      VEmojiPicker,
+      SvgIcon
     },
     computed: {
       ...mapState(['userInfoData', 'authState']),
@@ -578,6 +603,12 @@ export default {
           .finally(() => {
 
           })
+      },
+      commentLike(data) {
+        alert(data + ' 좋아요')
+      },
+      commentUnlike(data) {
+        alert(data + ' 싫어요')
       }
     }
 }
