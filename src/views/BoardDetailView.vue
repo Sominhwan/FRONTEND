@@ -162,9 +162,11 @@
                                       <v-btn icon v-bind="attrs" v-on="on" @click="commentLike(commentList.noticeCommentId)">
                                         <svg-icon type="mdi" size="22" :path="mdilThumbUp"/>
                                       </v-btn>
+                                      
                                     </template>
                                     <span>좋아요</span>
                                   </v-tooltip>
+                                  <span class="pr-1">0</span>
                                   <v-tooltip bottom>
                                     <template v-slot:activator="{ on, attrs }">
                                       <v-btn icon v-bind="attrs" v-on="on" @click="commentUnlike(commentList.noticeCommentId)">
@@ -173,6 +175,7 @@
                                     </template>
                                     <span>싫어요</span>
                                   </v-tooltip>
+                                  <span>0</span>
                                 </v-list-item-subtitle>
                               </v-list-item-content>
                               <v-list-item-action>
@@ -227,7 +230,7 @@
                               </div>
                             </template>
                             </v-list-item>
-                            <v-divider v-if="commentList" :key="index"></v-divider>
+                       <!--      <v-divider v-if="commentList" :key="index"></v-divider> -->
                         </template>
                         </v-card>
                     </v-list>
@@ -279,6 +282,7 @@
 
 <script>
 import {
+commentLikeNoticeBoard,
 deleteNoticeBoard,
 deleteNoticeComment,
 insertNoticeComment,
@@ -578,10 +582,12 @@ export default {
       },
       updateLikeNoticeBoard() {
         this.like_btn =  !this.like_btn;
+        this.likeCount = this.likeCount + 1
         const data = { 'noticeId': this.$route.query.board, 'userId': this.userInfoData.userId }
         likeNoticeBoard(data)
           .then((res) => {
-            this.likeCount = res.data.data
+            console.log(res)  
+            //this.likeCount = res.data.data
           })
           .catch((error) => {
             console.log(error)
@@ -592,10 +598,12 @@ export default {
       },
       updateUnlikeNoticeBoard() {
         this.like_btn =  !this.like_btn;
+        this.likeCount = this.likeCount - 1
         const data = { 'noticeId': this.$route.query.board, 'userId': this.userInfoData.userId }
         unlikeNoticeBoard(data)
           .then((res) => {
-            this.likeCount = res.data.data
+            console.log(res)
+            //this.likeCount = res.data.data
           })
           .catch((error) => {
             console.log(error)
@@ -604,8 +612,18 @@ export default {
 
           })
       },
-      commentLike(data) {
-        alert(data + ' 좋아요')
+      commentLike(noticeCommentId) {
+        const data = { 'noticeCommentId': noticeCommentId, 'noticeId': this.$route.query.board, 'userId': this.userInfoData.userId }
+        commentLikeNoticeBoard(data) 
+          .then((res) => {
+            console.log(res)
+          })
+          .catch((error) => {
+            console.log(error)
+          })
+          .finally(() => {
+
+          })        
       },
       commentUnlike(data) {
         alert(data + ' 싫어요')
