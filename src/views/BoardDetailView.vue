@@ -157,40 +157,24 @@
                                 <br>
                                 <v-list-item-title style="padding-bottom: 3px;">{{ commentList.comment }}</v-list-item-title>
                                 <v-list-item-subtitle>
-                                  <v-tooltip bottom v-if="true">
+                                  <v-tooltip bottom>
                                     <template v-slot:activator="{ on, attrs }">
-                                      <v-btn icon v-bind="attrs" v-on="on" @click="commentLike(commentList.noticeCommentId)">
-                                        <svg-icon type="mdi" size="22" :path="mdilThumbUp"/>
+                                      <v-btn icon v-bind="attrs" v-on="on" @click="commentLike(commentList.noticeCommentId, commentList.likeFlag, commentList.unlikeFlag)">
+                                        <svg-icon type="mdi" size="22" :path="commentList.likeFlag ? mdiThumbUp : mdilThumbUp"/>
                                       </v-btn>
                                     </template>
                                     <span>좋아요</span>
                                   </v-tooltip>
-                                  <v-tooltip bottom v-if="false">
+                                  <span class="pr-1">{{ commentList.likeCount }}</span>
+                                  <v-tooltip bottom>
                                     <template v-slot:activator="{ on, attrs }">
-                                      <v-btn icon v-bind="attrs" v-on="on" @click="commentLike(commentList.noticeCommentId)">
-                                        <svg-icon type="mdi" size="22" :path="mdilThumbUp"/>
-                                      </v-btn>
-                                    </template>
-                                    <span>좋아요 취소</span>
-                                  </v-tooltip>
-                                  <span class="pr-1">0</span>
-                                  <v-tooltip bottom v-if="true">
-                                    <template v-slot:activator="{ on, attrs }">
-                                      <v-btn icon v-bind="attrs" v-on="on" @click="commentUnlike(commentList.noticeCommentId)">
-                                        <svg-icon type="mdi" size="22" :path="mdilThumbDown"/>
+                                      <v-btn icon v-bind="attrs" v-on="on" @click="commentUnlike(commentList.noticeCommentId, commentList.likeFlag, commentList.unlikeFlag)">
+                                        <svg-icon type="mdi" size="22" :path="commentList.unlikeFlag ? mdiThumbDown : mdilThumbDown"/>
                                       </v-btn>
                                     </template>
                                     <span>싫어요</span>
                                   </v-tooltip>
-                                  <v-tooltip bottom v-if="false">
-                                    <template v-slot:activator="{ on, attrs }">
-                                      <v-btn icon v-bind="attrs" v-on="on" @click="commentUnlike(commentList.noticeCommentId)">
-                                        <svg-icon type="mdi" size="22" :path="mdilThumbDown"/>
-                                      </v-btn>
-                                    </template>
-                                    <span>싫어요 취소</span>
-                                  </v-tooltip>
-                                  <span>0</span>
+                                  <span>{{ commentList.unlikeCount }}</span>
                                 </v-list-item-subtitle>
                               </v-list-item-content>
                               <v-list-item-action>
@@ -298,6 +282,7 @@
 <script>
 import {
 commentLikeNoticeBoard,
+commentUnlikeNoticeBoard,
 deleteNoticeBoard,
 deleteNoticeComment,
 insertNoticeComment,
@@ -311,6 +296,7 @@ updateNoticeComment
 import AuthDialog from '@/components/AuthDialog';
 import SnackBar from '@/components/snackbar/SnackBar.vue';
 import SvgIcon from '@jamescoyle/vue-icon';
+import { mdiThumbDown, mdiThumbUp } from '@mdi/js';
 import { mdilThumbDown, mdilThumbUp } from '@mdi/light-js';
 import { VEmojiPicker } from 'v-emoji-picker';
 import { mapState } from "vuex";
@@ -319,6 +305,8 @@ export default {
         return {
           mdilThumbUp : mdilThumbUp,
           mdilThumbDown : mdilThumbDown,
+          mdiThumbUp: mdiThumbUp,
+          mdiThumbDown: mdiThumbDown,
           authDialog: false,
           files: [
             {
@@ -413,13 +401,21 @@ export default {
           this.saveCommentBtnFlag = false
         }
       },
-
+      userInfoData: {
+        handler() {
+          // 데이터가 변경될 때마다 실행될 코드
+          this.selectNoticeCommentList()
+        },
+        immediate: true, // 컴포넌트가 마운트될 때 즉시 실행
+      }   
     },
     created() {
         
     },
     mounted() {
-      this.selectNoticeCommentList()
+
+
+
     },
     methods: {
       onScroll (e) {
@@ -433,43 +429,46 @@ export default {
       },
       async selectNoticeBoardList() {
         let data = {};
-          if(this.userInfoData.userId != null) {
-            data = { 'noticeId': this.$route.query.board, 'userId': this.userInfoData.userId  }
-          } else {
-            data = { 'noticeId': this.$route.query.board, 'userId': null  }
-          }
-          await selectNoticeBoardDetail(data)
-              .then((res) => {
-                console.log(res.data.data)
-                this.loading = false,
-                this.board_category = '[공지사항]',
-                this.board_detail_list = res.data.data
-                this.likeCount = res.data.data.likeCount
-                this.like_btn = res.data.data.likeCheck
-                this.noticeBoardUserId = res.data.data.userId
-              })
-              .catch((error) => {
-                console.log(error)
-              })
-              .finally(() => {
+        if(this.userInfoData != null) {
+          data = { 'noticeId': this.$route.query.board, 'userId': this.userInfoData.userId  }
+        } 
 
-              })
+        await selectNoticeBoardDetail(data)
+            .then((res) => {
+              console.log(res.data.data)
+              this.loading = false,
+              this.board_category = '[공지사항]',
+              this.board_detail_list = res.data.data
+              this.likeCount = res.data.data.likeCount
+              this.like_btn = res.data.data.likeCheck
+              this.noticeBoardUserId = res.data.data.userId
+            })
+            .catch((error) => {
+              console.log(error)
+            })
+            .finally(() => {
+
+            })
       },
       async selectNoticeCommentList() {
-          const param = {'noticeId': this.$route.query.board}
-          await selectNoticeComment(param)
-            .then((res) => {
-                console.log(res.data.data)
-                this.commentTotal = res.data.data.length
-                this.commentList = res.data.data
-                this.snackbarValue = false
-              })
-              .catch((error) => {
-                console.log(error)
-              })
-              .finally(() => {
-                this.selectNoticeBoardList()
-              })
+        let data = {};
+        if(this.userInfoData != null) {
+          data = { 'noticeId': this.$route.query.board, 'userId': this.userInfoData.userId  }
+        } 
+
+        await selectNoticeComment(data)
+          .then((res) => {
+              console.log('댓글 리스트', res.data.data)
+              this.commentTotal = res.data.data.length
+              this.commentList = res.data.data
+              this.snackbarValue = false
+            })
+            .catch((error) => {
+              console.log(error)
+            })
+            .finally(() => {
+              this.selectNoticeBoardList()
+            })
       },
       noticeBoardList() {
         const data = { id: this.$route.query.board }
@@ -627,7 +626,15 @@ export default {
 
           })
       },
-      commentLike(noticeCommentId) {
+      commentLike(noticeCommentId, likeFlag, unlikeFlag) {
+        console.log('좋아요 플래그', likeFlag)
+        console.log('싫어요 플래그', unlikeFlag)
+        const index = this.commentList.findIndex(comment => comment.noticeCommentId === noticeCommentId);
+        if (index !== -1) {
+          this.commentList[index].likeCount = this.commentList[index].likeCount + 1;
+          this.commentList[index].likeFlag = true ;
+        }
+
         const data = { 'noticeCommentId': noticeCommentId, 'noticeId': this.$route.query.board, 'userId': this.userInfoData.userId }
         commentLikeNoticeBoard(data) 
           .then((res) => {
@@ -640,8 +647,26 @@ export default {
 
           })        
       },
-      commentUnlike(data) {
-        alert(data + ' 싫어요')
+      commentUnlike(noticeCommentId, likeFlag, unlikeFlag) {
+        console.log('좋아요 플래그', likeFlag)
+        console.log('싫어요 플래그', unlikeFlag)
+        const index = this.commentList.findIndex(comment => comment.noticeCommentId === noticeCommentId);
+        if (index !== -1) {
+          this.commentList[index].unlikeCount = this.commentList[index].unlikeCount + 1;
+          this.commentList[index].unlikeFlag = true ;
+        }
+
+        const data = { 'noticeCommentId': noticeCommentId, 'noticeId': this.$route.query.board, 'userId': this.userInfoData.userId }
+        commentUnlikeNoticeBoard(data)
+          .then((res) => {
+            console.log(res)
+          })
+          .catch((error) => {
+            console.log(error)
+          })
+          .finally(() => {
+
+          })    
       }
     }
 }

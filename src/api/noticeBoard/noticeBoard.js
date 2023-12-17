@@ -149,3 +149,12 @@ export function commentLikeNoticeBoard(data) { // 공지사항 댓글 좋아요 
     })    
 }
 
+export function commentUnlikeNoticeBoard(data) { // 공지사항 댓글 싫어요 활성
+    return request({
+        url: `/api/v1/noticeboard/comment/unlike`,
+        method: 'POST',
+        data: data,
+        meta: { apiVersion: '1.0.0' },
+        headers: { 'Content-Type': 'application/json;charset=utf8' }
+    })    
+}
