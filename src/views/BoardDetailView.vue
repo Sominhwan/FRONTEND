@@ -168,7 +168,7 @@
                                   <span class="pr-1">{{ commentList.likeCount }}</span>
                                   <v-tooltip bottom>
                                     <template v-slot:activator="{ on, attrs }">
-                                      <v-btn icon v-bind="attrs" v-on="on" @click="commentUnlike(commentList.noticeCommentId, commentList.likeFlag, commentList.unlikeFlag, commentList.noticeCommentLikeId, commentList.noticeCommentUnlike)">
+                                      <v-btn icon v-bind="attrs" v-on="on" @click="commentUnlike(commentList.noticeCommentId, commentList.likeFlag, commentList.unlikeFlag, commentList.noticeCommentLikeId, commentList.noticeCommentUnlikeId)">
                                         <svg-icon type="mdi" size="22" :path="commentList.unlikeFlag ? mdiThumbDown : mdilThumbDown"/>
                                       </v-btn>
                                     </template>
@@ -627,10 +627,6 @@ export default {
           })
       },
       commentLike(noticeCommentId, likeFlag, unlikeFlag, noticeCommentLikeId, noticeCommentUnlikeId) {
-        console.log('좋아요 플래그', likeFlag)
-        console.log('싫어요 플래그', unlikeFlag)
-        console.log('싫어요 플래그', noticeCommentLikeId)
-        console.log('싫어요 플래그', noticeCommentUnlikeId)
         const index = this.commentList.findIndex(comment => comment.noticeCommentId === noticeCommentId);
         if (index !== -1) {
           // 좋아요 활성화시
@@ -669,26 +665,36 @@ export default {
             console.log(error)
           })
           .finally(() => {
-
+            this.selectNoticeCommentList()
           })        
       },
       commentUnlike(noticeCommentId, likeFlag, unlikeFlag, noticeCommentLikeId, noticeCommentUnlikeId) {
-        console.log('좋아요 플래그', likeFlag)
-        console.log('싫어요 플래그', unlikeFlag)
-        console.log('싫어요 플래그', noticeCommentLikeId)
-        console.log('싫어요 플래그', noticeCommentUnlikeId)
         const index = this.commentList.findIndex(comment => comment.noticeCommentId === noticeCommentId);
-        if (index !== -1) {
+        // 싫어요 활성화시
+        if(unlikeFlag){
+          this.commentList[index].unlikeCount = this.commentList[index].unlikeCount - 1;
+          this.commentList[index].unlikeFlag = false;
+        }
+        // 싫어요, 좋아요 비활성화시
+        if(!unlikeFlag && !likeFlag) {
           this.commentList[index].unlikeCount = this.commentList[index].unlikeCount + 1;
           this.commentList[index].unlikeFlag = true ;
         }
-
+        // 좋아요 활성화시
+        if(!unlikeFlag && likeFlag) {
+          this.commentList[index].likeCount = this.commentList[index].likeCount - 1;
+          this.commentList[index].likeFlag = false;
+          this.commentList[index].unlikeCount = this.commentList[index].unlikeCount + 1;
+          this.commentList[index].unlikeFlag = true;
+        }
         const data = { 
           'noticeCommentId': noticeCommentId, 
           'noticeId': this.$route.query.board, 
           'userId': this.userInfoData.userId,
           'likeFlag': likeFlag,
-          'unlikeFlag': unlikeFlag
+          'unlikeFlag': unlikeFlag,
+          'noticeCommentLikeId': noticeCommentLikeId,
+          'noticeCommentUnlikeId': noticeCommentUnlikeId
         }
         commentUnlikeNoticeBoard(data)
           .then((res) => {
@@ -698,7 +704,7 @@ export default {
             console.log(error)
           })
           .finally(() => {
-
+            this.selectNoticeCommentList()
           })    
       }
     }
