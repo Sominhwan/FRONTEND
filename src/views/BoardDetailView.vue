@@ -263,6 +263,20 @@
                                 </v-sheet>
                               </div>
                             </template> 
+                            <template>
+                              <v-btn 
+                                :key="commentList.nickname" 
+                                class="mb-5" 
+                                text rounded small 
+                                color="primary" 
+                                style="font-size: 13px; position: relative; left: 60px; bottom: 10px;"
+                                @click="() => { replyIcon = !replyIcon }"
+                              >
+                                <v-icon class="mt-1" v-if="replyIcon">arrow_drop_down</v-icon> 
+                                <v-icon class="mt-1" v-else>arrow_drop_up</v-icon> 
+                                답글1개
+                              </v-btn>
+                            </template>
                         </template>
                         </v-card>
                     </v-list>
@@ -416,6 +430,7 @@ export default {
           emojiFlag: false,
           commentListEmojiFlag: false,
           noticeBoardUserId: null,
+          replyIcon: true
         }
     },
     components: {
