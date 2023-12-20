@@ -175,6 +175,9 @@
                                     <span>싫어요</span>
                                   </v-tooltip>
                                   <span>{{ commentList.unlikeCount }}</span>
+                                  <v-btn class="mb-1 ml-2" text rounded small style="font-size: 13px;" @click="openReplyComment(commentList.noticeCommentId)">
+                                    답글
+                                  </v-btn>                                  
                                 </v-list-item-subtitle>
                               </v-list-item-content>
                               <v-list-item-action>
@@ -227,9 +230,39 @@
                                   </span>
                                 </v-sheet>
                               </div>
-                            </template>
+                            </template>                                      
                             </v-list-item>
-                       <!--      <v-divider v-if="commentList" :key="index"></v-divider> -->
+                         <!--    <v-divider v-if="commentList" :key="index"></v-divider> -->
+                            <template v-if="commentList.noticeCommentId == replyCommentFlag">
+                              <div :key="commentList.nickname" style="width: 89%; display: flex; flex-direction: column; position: relative; left: 80px;">
+                                <div style="display: flex;">
+                                  <img class="mr-3" :src="userInfoData.profileUrl" style="border: 1px solid #eee; border-radius: 50%; height: 35px;"/>
+                                  <v-textarea
+                                    :key="index"
+                                    color="grey"
+                                    placeholder="답글 추가..."
+                                    ref="commentTextArea"
+                                    autofocus
+                                    auto-grow
+                                    rows="1"
+                                    dense
+                                    @input="saveCommentText"
+                                  ></v-textarea>
+                                </div>
+                                <v-sheet>
+                                  <v-icon class="comment-list-emoji mb-3 ml-12" size="22px" @click="openCommentListEmojiPicker()">mood</v-icon>
+                                  <VEmojiPicker v-if="commentListEmojiFlag" @select="selectCommentListEmoji" style="position: absolute; z-index: 9; margin-top: 35px;"/>
+                                  <span style="float: right; position: relative;">
+                                    <v-btn text small rounded @click="() => { replyCommentFlag = 0 }">
+                                      취소
+                                    </v-btn>
+                                    <v-btn :disabled="saveCommentBtnFlag" text small rounded color="primary" @click="updateComment(commentList.comment, commentList.noticeCommentId)">
+                                      저장
+                                    </v-btn>
+                                  </span>
+                                </v-sheet>
+                              </div>
+                            </template> 
                         </template>
                         </v-card>
                     </v-list>
@@ -377,6 +410,7 @@ export default {
           snackbarValue: false,
           snackbarContent: '',
           updateCommentFlag: 0,
+          replyCommentFlag: 0,
           commentText: null,
           saveCommentBtnFlag: false,
           emojiFlag: false,
@@ -584,6 +618,9 @@ export default {
       },
       openCommentListEmojiPicker() {
         this.commentListEmojiFlag = !this.commentListEmojiFlag
+      },
+      openReplyComment(value) {
+        this.replyCommentFlag = value
       },
       selectEmoji(emoji) {
         this.comment = this.comment + emoji.data
