@@ -269,13 +269,46 @@
                                 class="mb-5" 
                                 text rounded small 
                                 color="primary" 
-                                style="font-size: 13px; position: relative; left: 60px; bottom: 10px;"
+                                style="font-size: 13px; position: relative; left: 65px; bottom: 10px;"
                                 @click="() => { replyIcon = !replyIcon }"
                               >
                                 <v-icon class="mt-1" v-if="replyIcon">arrow_drop_down</v-icon> 
                                 <v-icon class="mt-1" v-else>arrow_drop_up</v-icon> 
                                 답글1개
-                              </v-btn>
+                              </v-btn>                             
+                              <v-list-item v-if="commentList" :key="commentList.nickname" class="" style="left: 55px; margin-top: -30px; margin-bottom: -10px;">
+                                <v-list-item-avatar style="position: relative; bottom: 15px;">
+                                    <v-img :src="commentList.profileUrl" style="border: 1px solid #eee;" max-height="27px" max-width="27px"></v-img>
+                                </v-list-item-avatar>
+                                <v-list-item-content style="position: relative; right: 5px;">
+                                  <v-list-item-subtitle style="font-weight: 600; color: black;">
+                                    {{ commentList.nickname }}
+                                    <span class="pl-1" style="font-weight: normal; font-size: 12px; color: #00000099;">{{ commentList.createAt }}</span>
+                                  </v-list-item-subtitle>
+                                  <br>
+                                  <v-list-item-title style="padding-bottom: 3px;">{{ commentList.comment }}</v-list-item-title>
+                                  <v-list-item-subtitle>
+                                    <v-tooltip bottom>
+                                      <template v-slot:activator="{ on, attrs }">
+                                        <v-btn icon v-bind="attrs" v-on="on" @click="commentLike(commentList.noticeCommentId, commentList.likeFlag, commentList.unlikeFlag, commentList.noticeCommentLikeId, commentList.noticeCommentUnlikeId)">
+                                          <svg-icon type="mdi" size="22" :path="commentList.likeFlag ? mdiThumbUp : mdilThumbUp"/>
+                                        </v-btn>
+                                      </template>
+                                      <span>좋아요</span>
+                                    </v-tooltip>
+                                    <span class="pr-1">{{ commentList.likeCount }}</span>
+                                    <v-tooltip bottom>
+                                      <template v-slot:activator="{ on, attrs }">
+                                        <v-btn icon v-bind="attrs" v-on="on" @click="commentUnlike(commentList.noticeCommentId, commentList.likeFlag, commentList.unlikeFlag, commentList.noticeCommentLikeId, commentList.noticeCommentUnlikeId)">
+                                          <svg-icon type="mdi" size="22" :path="commentList.unlikeFlag ? mdiThumbDown : mdilThumbDown"/>
+                                        </v-btn>
+                                      </template>
+                                      <span>싫어요</span>
+                                    </v-tooltip>
+                                    <span>{{ commentList.unlikeCount }}</span>                                 
+                                  </v-list-item-subtitle>
+                                </v-list-item-content>                                   
+                              </v-list-item>
                             </template>
                         </template>
                         </v-card>
