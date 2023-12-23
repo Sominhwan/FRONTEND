@@ -203,7 +203,7 @@
                                 </v-menu>
                               </v-list-item-action>
                             </template>
-                            <template v-else>
+                            <template v-if="commentList.noticeCommentId === updateCommentFlag">
                               <div style="width: 100%; display: flex; flex-direction: column;">
                                 <v-textarea
                                   :key="index"
@@ -234,7 +234,7 @@
                             </v-list-item>
                          <!--    <v-divider v-if="commentList" :key="index"></v-divider> -->
                             <template v-if="commentList.noticeCommentId == replyCommentFlag">
-                              <div :key="commentList.nickname" style="width: 89%; display: flex; flex-direction: column; position: relative; left: 80px;">
+                              <div :key="commentList" style="width: 89%; display: flex; flex-direction: column; position: relative; left: 80px;">
                                 <div style="display: flex;">
                                   <img class="mr-3" :src="userInfoData.profileUrl" style="border: 1px solid #eee; border-radius: 50%; height: 35px;"/>
                                   <v-textarea
@@ -246,7 +246,7 @@
                                     auto-grow
                                     rows="1"
                                     dense
-                                    @input="saveCommentText"
+                                    @input="saveReplyCommentText"
                                   ></v-textarea>
                                 </div>
                                 <v-sheet>
@@ -256,7 +256,7 @@
                                     <v-btn text small rounded @click="() => { replyCommentFlag = 0 }">
                                       취소
                                     </v-btn>
-                                    <v-btn :disabled="saveCommentBtnFlag" text small rounded color="primary" @click="updateComment(commentList.comment, commentList.noticeCommentId)">
+                                    <v-btn :disabled="saveCommentBtnFlag" text small rounded color="primary" @click="updateReplyComment(commentList.noticeCommentId)">
                                       저장
                                     </v-btn>
                                   </span>
@@ -459,6 +459,7 @@ export default {
           updateCommentFlag: 0,
           replyCommentFlag: 0,
           commentText: null,
+          replyCommentText: null,
           saveCommentBtnFlag: false,
           emojiFlag: false,
           commentListEmojiFlag: false,
@@ -515,7 +516,7 @@ export default {
           data = { 'noticeId': this.$route.query.board, 'userId': this.userInfoData.userId  }
         } 
 
-        await selectNoticeBoardDetail(data)
+        selectNoticeBoardDetail(data)
             .then((res) => {
               console.log(res.data.data)
               this.loading = false,
@@ -637,8 +638,16 @@ export default {
             this.commentListEmojiFlag = false
           })
       },
+      updateReplyComment(noticeCommentId) {
+        alert(this.replyCommentText)
+        console.log(noticeCommentId)
+        console.log(this.replyCommentText)
+      },  
       saveCommentText(e) {
         this.commentText = e
+      },
+      saveReplyCommentText(e) {
+        this.replyCommentText = e
       },
       deleteComment(val) {
         const data = { 'noticeCommentId': val, 'noticeId': this.$route.query.board }
